@@ -84,9 +84,8 @@ cd claude-setup
 ```
 
 The installer will guide you through selecting:
-- Coding standards (Python, TypeScript, Design Patterns)
 - MCP servers (PDF Reader, Brave Search, Google Search)
-- Skills (Slidev Presentations)
+- Skills (Python Standards, TypeScript Standards, Slidev Presentations)
 
 ## Installation Options
 
@@ -105,18 +104,15 @@ The installer will guide you through selecting:
 ```
 claude-setup/
 ├── templates/
-│   ├── base/
-│   │   └── global-CLAUDE.md      # Core: Workflow, conventions
-│   └── modules/
-│       └── standards/
-│           ├── python.md         # Python coding standards
-│           ├── typescript.md     # TypeScript/JS standards
-│           └── design-patterns.md # Architecture patterns
+│   └── base/
+│       └── global-CLAUDE.md      # Core: Workflow, conventions
 ├── mcp/                          # MCP server configurations
 │   ├── pdf-reader.json
 │   ├── brave-search.json
 │   └── google-search.json
-├── skills/                       # Optional skills
+├── skills/                       # Skills (coding standards + tools)
+│   ├── standards-python/         # Python standards (context skill)
+│   ├── standards-typescript/     # TypeScript standards (context skill)
 │   └── create-slidev-presentation/
 ├── commands/                     # Workflow commands (always installed)
 │   ├── catchup.md
@@ -143,13 +139,21 @@ claude-setup/
 
 ## Available Modules
 
-### Coding Standards
+### Coding Standards (Context Skills)
 
-| Module | Description |
-|--------|-------------|
-| `python` | Python coding standards (PEP 8, type hints, best practices) |
-| `typescript` | TypeScript/JavaScript standards (naming, async/await, error handling) |
-| `design-patterns` | Architecture patterns (Strategy, Base Class, Batch Query) |
+Coding standards are now **context skills** that auto-load based on your project's Tech Stack.
+
+| Skill | Auto-loads when Tech Stack contains |
+|-------|-------------------------------------|
+| `standards-python` | python, fastapi, django, flask, pytest |
+| `standards-typescript` | typescript, nodejs, react, nextjs, vue, angular |
+
+**How it works:**
+1. Your project `CLAUDE.md` defines: `Tech Stack: Python, FastAPI`
+2. At session start, `standards-python` skill auto-loads
+3. No manual invocation needed
+
+**Custom standards:** Override with `~/.claude/custom/skills/standards-python/` (see [Custom Skills](#custom-skills))
 
 ### MCP Servers
 
@@ -173,27 +177,40 @@ Add your own modules without forking the repository.
 
 ```
 ~/.claude/custom/
-├── standards/
-│   └── my-company.md     # Custom coding standards
 ├── mcp/
 │   └── internal-api.json # Custom MCP server
 └── skills/
     └── my-skill/         # Custom skill
 ```
 
-### Custom Standards Format
+### Custom Skills
 
-Create a markdown file in `~/.claude/custom/standards/`:
+Custom skills in `~/.claude/custom/skills/` **override** installed skills with the same name.
+
+**Example:** Override Python standards with your company's version:
+
+```
+~/.claude/custom/skills/standards-python/
+├── SKILL.md              # Your custom Python standards
+└── references/
+    └── code-review-checklist.md
+```
+
+When `standards-python` would load, your custom version is used instead.
+
+**SKILL.md format for context skills:**
 
 ```markdown
-## My Company Standards
+---
+name: standards-python
+description: Company Python coding standards
+type: context
+applies_to: [python, fastapi, django]
+---
 
-**Naming Conventions:**
-- Use prefix `mc_` for all internal functions
-- ...
+# Python Standards
 
-**Code Style:**
-...
+Your custom content here...
 ```
 
 ### Custom MCP Format
@@ -316,6 +333,28 @@ Automated code reviews before committing:
 /marketplace add wshobson/agents
 /install code-review-ai@claude-code-workflows
 ```
+
+## Upgrading
+
+When running `./install.sh --update`, you may be prompted to migrate between versions.
+
+### v1 → v2: Coding Standards to Skills
+
+Inline coding standards in `CLAUDE.md` are replaced by context-aware skills:
+
+| Before (v1) | After (v2) |
+|-------------|------------|
+| `## Coding Standards` in CLAUDE.md | `~/.claude/skills/standards-python/` |
+| Always loaded | Auto-loads based on Tech Stack |
+| One size fits all | Language-specific |
+
+**What happens during migration:**
+1. Backup created: `~/.claude/CLAUDE.md.bak`
+2. `## Coding Standards` section removed from CLAUDE.md
+3. `## Code Review Checklist` section removed from CLAUDE.md
+4. Skills installed separately in `~/.claude/skills/`
+
+See [ADR-007](docs/adr/007-coding-standards-as-skills.md) for technical details.
 
 ## Contributing
 
