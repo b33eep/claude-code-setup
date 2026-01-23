@@ -7,15 +7,13 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CLAUDE_DIR="$HOME/.claude"
-CUSTOM_DIR="$CLAUDE_DIR/custom"
-INSTALLED_FILE="$CLAUDE_DIR/installed.json"
-MCP_CONFIG_FILE="$HOME/.claude.json"
 
-# Version history:
-# 1 = Legacy (inline Coding Standards in CLAUDE.md)
-# 2 = Context Skills (standards-python, standards-typescript)
-CURRENT_VERSION=2
+# Paths - can be overridden via environment for testing
+CLAUDE_DIR="${CLAUDE_DIR:-$HOME/.claude}"
+CUSTOM_DIR="${CUSTOM_DIR:-$CLAUDE_DIR/custom}"
+INSTALLED_FILE="${INSTALLED_FILE:-$CLAUDE_DIR/installed.json}"
+MCP_CONFIG_FILE="${MCP_CONFIG_FILE:-$HOME/.claude.json}"
+CONTENT_VERSION_FILE="${CONTENT_VERSION_FILE:-$SCRIPT_DIR/templates/VERSION}"
 
 # Colors for output
 RED='\033[0;31m'
@@ -54,7 +52,7 @@ print_error() {
 init_installed_json() {
     mkdir -p "$CLAUDE_DIR"
     if [ ! -f "$INSTALLED_FILE" ]; then
-        echo "{\"version\":$CURRENT_VERSION,\"standards\":[],\"mcp\":[],\"skills\":[]}" > "$INSTALLED_FILE"
+        echo "{\"content_version\":$(get_content_version),\"mcp\":[],\"skills\":[]}" > "$INSTALLED_FILE"
     fi
 }
 
@@ -80,15 +78,20 @@ get_installed() {
     jq -r ".${category}[]" "$INSTALLED_FILE" 2>/dev/null || echo ""
 }
 
-# Get current version (missing = version 1 legacy)
-get_version() {
-    jq -r '.version // 1' "$INSTALLED_FILE" 2>/dev/null || echo "1"
+# Get available content version from templates/VERSION
+get_content_version() {
+    cat "$CONTENT_VERSION_FILE" 2>/dev/null || echo "1"
 }
 
-# Set version
-set_version() {
+# Get installed content version from .installed.json
+get_installed_content_version() {
+    jq -r '.content_version // 0' "$INSTALLED_FILE" 2>/dev/null || echo "0"
+}
+
+# Set installed content version
+set_installed_content_version() {
     local version=$1
-    jq ".version = $version" "$INSTALLED_FILE" > "$INSTALLED_FILE.tmp" && mv "$INSTALLED_FILE.tmp" "$INSTALLED_FILE"
+    jq ".content_version = $version" "$INSTALLED_FILE" > "$INSTALLED_FILE.tmp" && mv "$INSTALLED_FILE.tmp" "$INSTALLED_FILE"
 }
 
 # ============================================
@@ -563,133 +566,6 @@ do_install() {
 }
 
 # ============================================
-# MIGRATIONS
-# ============================================
-
-# Run all pending migrations based on version
-run_migrations() {
-    local user_version
-    user_version=$(get_version)
-
-    if [ "$user_version" -ge "$CURRENT_VERSION" ]; then
-        return 0  # No migrations needed
-    fi
-
-    print_header "Migrations Available"
-    echo ""
-    echo "Your setup version: $user_version"
-    echo "Current version: $CURRENT_VERSION"
-    echo ""
-
-    # v1 → v2: Standards to Skills (ADR-007)
-    if [ "$user_version" -lt 2 ]; then
-        prompt_migration_v1_to_v2
-    fi
-
-    # Future: v2 → v3
-    # if [ "$user_version" -lt 3 ]; then
-    #     prompt_migration_v2_to_v3
-    # fi
-}
-
-# Migration v1 → v2: Coding Standards to Skills
-prompt_migration_v1_to_v2() {
-    echo -e "${YELLOW}Migration v1 → v2: Coding Standards to Skills (ADR-007)${NC}"
-    echo ""
-    echo "Inline standards in CLAUDE.md are replaced by context-aware skills."
-    echo ""
-    echo "Options:"
-    echo "  [a] Automatic migration (backup created)"
-    echo "  [m] Manual migration (show instructions)"
-    echo "  [s] Skip for now (keep old setup)"
-    echo ""
-    read -rp "Choice [a/m/s]: " choice
-
-    case "$choice" in
-        a|A)
-            execute_migration_v1_to_v2
-            set_version 2
-            ;;
-        m|M)
-            show_migration_v1_to_v2_instructions
-            ;;
-        s|S)
-            echo ""
-            print_info "Skipped. Your current setup continues to work."
-            print_info "Run './install.sh --update' again when ready to migrate."
-            echo ""
-            ;;
-        *)
-            print_warning "Invalid choice. Skipping migration."
-            ;;
-    esac
-}
-
-execute_migration_v1_to_v2() {
-    local claude_md="$CLAUDE_DIR/CLAUDE.md"
-    local backup_file="$CLAUDE_DIR/CLAUDE.md.bak"
-
-    print_header "Executing Migration v1 → v2"
-
-    # 1. Create backup
-    if [ -f "$claude_md" ]; then
-        cp "$claude_md" "$backup_file"
-        print_success "Backup created: $backup_file"
-
-        # 2. Remove old sections using awk (works on both macOS and Linux)
-        awk '
-            /^## Coding Standards$/ { skip=1; next }
-            /^## Code Review Checklist$/ { skip=1; next }
-            /^## / && skip { skip=0 }
-            /^---$/ && skip { skip=0; print; next }
-            !skip { print }
-        ' "$claude_md" > "$claude_md.tmp" && mv "$claude_md.tmp" "$claude_md"
-
-        print_success "Removed inline Coding Standards section"
-        print_success "Removed inline Code Review Checklist section"
-    fi
-
-    # 3. Install standards skills
-    local skills_to_install=("standards-python" "standards-typescript")
-    for skill in "${skills_to_install[@]}"; do
-        if [ -d "$SCRIPT_DIR/skills/$skill" ]; then
-            install_skill "$skill"
-            add_to_installed "skills" "$skill"
-            print_success "Installed $skill skill"
-        fi
-    done
-
-    # 4. Rebuild CLAUDE.md with new template (includes Context Skills documentation)
-    build_claude_md
-    print_success "Rebuilt CLAUDE.md with Context Skills documentation"
-
-    echo ""
-    print_success "Migration v1 → v2 complete!"
-    print_info "Standards are now loaded automatically based on your project's Tech Stack."
-    print_info "Add 'Tech Stack: Python, FastAPI' (or similar) to your project CLAUDE.md."
-    print_info "Your old CLAUDE.md is backed up at: $backup_file"
-    print_info "To customize standards, copy to ~/.claude/custom/skills/"
-    echo ""
-}
-
-show_migration_v1_to_v2_instructions() {
-    echo ""
-    print_header "Manual Migration v1 → v2"
-    echo ""
-    echo "Steps:"
-    echo "  1. Open ~/.claude/CLAUDE.md"
-    echo "  2. Remove the '## Coding Standards' section"
-    echo "  3. Remove the '## Code Review Checklist' section"
-    echo "  4. Run: ./install.sh --add"
-    echo "  5. Select 'standards-python' and/or 'standards-typescript' skills"
-    echo "  6. Add 'Tech Stack: Python' to your project CLAUDE.md"
-    echo "  7. Update version: jq '.version = 2' ~/.claude/installed.json"
-    echo ""
-    echo "See: docs/adr/007-coding-standards-as-skills.md"
-    echo ""
-}
-
-# ============================================
 # UPDATE INSTALLATION
 # ============================================
 
@@ -700,8 +576,29 @@ do_update() {
 
     init_installed_json
 
-    # Run pending migrations
-    run_migrations
+    # Check content version
+    local installed_v
+    local available_v
+    installed_v=$(get_installed_content_version)
+    available_v=$(get_content_version)
+
+    if [ "$installed_v" -eq "$available_v" ]; then
+        echo ""
+        echo "Content version: v$available_v (up to date)"
+        echo "Nothing to update."
+        echo ""
+        exit 0
+    fi
+
+    echo ""
+    echo "Content version: v$installed_v → v$available_v"
+    echo "See CHANGELOG.md for details."
+    echo ""
+    read -rp "Proceed? (y/N): " confirm
+    if [ "$confirm" != "y" ] && [ "$confirm" != "Y" ]; then
+        echo "Cancelled."
+        exit 0
+    fi
 
     # Update commands
     print_header "Updating Commands"
@@ -752,8 +649,11 @@ do_update() {
         fi
     done
 
+    # Update content version
+    set_installed_content_version "$available_v"
+
     echo ""
-    print_success "Update complete!"
+    print_success "Update complete! (v$available_v)"
     echo ""
 }
 
@@ -786,8 +686,8 @@ case "${1:-}" in
                 echo "Cancelled."
                 exit 0
             fi
-            # Reset installed.json for fresh install (include current version)
-            echo "{\"version\":$CURRENT_VERSION,\"standards\":[],\"mcp\":[],\"skills\":[]}" > "$INSTALLED_FILE"
+            # Reset installed.json for fresh install
+            echo "{\"content_version\":$(get_content_version),\"mcp\":[],\"skills\":[]}" > "$INSTALLED_FILE"
         fi
         do_install "install"
         ;;

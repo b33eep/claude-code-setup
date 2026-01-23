@@ -21,7 +21,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Custom Modules | Done | ~/.claude/custom/ for user modules |
 | Solo/Team Mode | Done | /init-project asks for .gitignore preference |
 | Install Script | Done | --add, --update, --list flags, ShellCheck compliant |
-| ADRs | Done | 8 ADRs (000-007) |
+| ADRs | Done | 9 ADRs (000-008) |
 | Open Source Release | Done | Published to b33eep/claude-setup |
 | GitHub Actions E2E | Done | Full test coverage |
 | Open Source Polish | Done | SECURITY.md, CONTRIBUTING.md, CHANGELOG.md, templates |
@@ -37,14 +37,16 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | ~~Coding standards → Skills~~ | ~~High~~ | ~~Done~~ | Context skills implemented. See [ADR-007](docs/adr/007-coding-standards-as-skills.md). PR #2 |
 | ADR guidance | Medium | Unclear when ADR is needed vs just a comment | Refine global prompt or create /adr command |
 | ~~Security hint~~ | ~~Medium~~ | ~~Done~~ | Added warning in global prompt: use .env for secrets |
-| Template versioning | Medium | --update überschreibt blind, keine Versionskontrolle | templates/VERSION + tracking in .installed.json |
+| ~~Content versioning~~ | ~~Medium~~ | ~~Done~~ | [ADR-008](docs/adr/008-content-versioning.md). Hash-based test validation |
 | MCP web search | Medium | Claude doesn't automatically use installed MCP search tools | Instruct in global prompt to prefer google/brave MCP |
 | ccstatusline in install.sh | Low | Users must manually configure ccstatusline | Auto-configure during install (skip if complex) |
 | Auto-compact prompt | Low | Users must remember to disable auto-compact manually | Ask during install if they want to disable (skip if complex) |
 
 **What was done in this session:**
-- Added Security warning to global template (never put secrets in CLAUDE.md, use .env)
-- Added todo: Template versioning (separate from code version)
+- Implemented ADR-008: Content Versioning
+- Removed legacy migration code (~100 lines)
+- Created modular test suite with hash-based content validation
+- Parameterized paths in install.sh for isolated testing
 
 **Next Step:** Implement /todo and /do-review commands (High priority)
 
@@ -62,6 +64,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | E2E Tests | GitHub Actions, full validation | [ADR-005](docs/adr/005-e2e-tests-github-actions.md) |
 | Shell Architecture | Single-file bash, review at 1000 lines | [ADR-006](docs/adr/006-shell-script-architecture.md) |
 | Coding Standards as Skills | Context skills, partial match, override | [ADR-007](docs/adr/007-coding-standards-as-skills.md) |
+| Content Versioning | Incrementing number + CHANGELOG.md | [ADR-008](docs/adr/008-content-versioning.md) |
 
 ---
 
@@ -83,18 +86,39 @@ claude-setup/
 ├── mcp/
 ├── commands/
 ├── skills/
-└── docs/adr/000-007-*.md
+└── docs/adr/000-008-*.md
 ```
 
 ---
 
 ## Development
 
-```bash
-# Status
-git status
+### Tests
 
-# Push
+```bash
+./tests/test.sh              # Run all tests
+./tests/test.sh 01           # Run scenario 01 only
+./tests/test.sh version      # Pattern match
+```
+
+Tests run in isolation (`/tmp/claude-test-*`), real `~/.claude` stays untouched.
+
+### Bump Content Version
+
+When changing managed content (templates, commands, skills, mcp):
+
+1. Increment `templates/VERSION`
+2. Add CHANGELOG.md entry:
+   ```markdown
+   ## [Unreleased]
+   - Content vX: Description of change
+   ```
+3. Run tests: `./tests/test.sh`
+
+### Git
+
+```bash
+git status
 git push
 
 # Tag release

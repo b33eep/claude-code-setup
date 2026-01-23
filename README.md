@@ -104,6 +104,7 @@ The installer will guide you through selecting:
 ```
 claude-setup/
 ├── templates/
+│   ├── VERSION                   # Content version number
 │   └── base/
 │       └── global-CLAUDE.md      # Core: Workflow, conventions
 ├── mcp/                          # MCP server configurations
@@ -118,6 +119,10 @@ claude-setup/
 │   ├── catchup.md
 │   ├── clear-session.md
 │   └── init-project.md
+├── tests/                        # Test suite
+│   ├── test.sh                   # Test runner
+│   ├── helpers.sh                # Assertion functions
+│   └── scenarios/                # Test scenarios
 └── install.sh
 ```
 
@@ -336,25 +341,47 @@ Automated code reviews before committing:
 
 ## Upgrading
 
-When running `./install.sh --update`, you may be prompted to migrate between versions.
+When running `./install.sh --update`, content versions are compared:
 
-### v1 → v2: Coding Standards to Skills
+```
+Content version: v1 → v3
+See CHANGELOG.md for details.
+Proceed? (y/N)
+```
 
-Inline coding standards in `CLAUDE.md` are replaced by context-aware skills:
+If already up-to-date:
+```
+Content version: v3 (up to date)
+Nothing to update.
+```
 
-| Before (v1) | After (v2) |
-|-------------|------------|
-| `## Coding Standards` in CLAUDE.md | `~/.claude/skills/standards-python/` |
-| Always loaded | Auto-loads based on Tech Stack |
-| One size fits all | Language-specific |
+See [ADR-008](docs/adr/008-content-versioning.md) for technical details.
 
-**What happens during migration:**
-1. Backup created: `~/.claude/CLAUDE.md.bak`
-2. `## Coding Standards` section removed from CLAUDE.md
-3. `## Code Review Checklist` section removed from CLAUDE.md
-4. Skills installed separately in `~/.claude/skills/`
+## Development
 
-See [ADR-007](docs/adr/007-coding-standards-as-skills.md) for technical details.
+### Running Tests
+
+```bash
+./tests/test.sh              # Run all tests
+./tests/test.sh 01           # Run scenario 01 only
+./tests/test.sh version      # Pattern match
+```
+
+Tests run in isolation (`/tmp/claude-test-*`) - your real `~/.claude` stays untouched.
+
+### Bump Content Version
+
+When changing managed content (templates, commands, skills, mcp):
+
+1. Increment `templates/VERSION`
+2. Add CHANGELOG.md entry:
+   ```markdown
+   ## [Unreleased]
+   - Content vX: Description of change
+   ```
+3. Run tests: `./tests/test.sh`
+
+Tests use hash validation - if you change a template without bumping the version, tests will fail.
 
 ## Contributing
 

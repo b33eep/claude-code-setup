@@ -14,77 +14,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Test --help
-        run: ./install.sh --help
+      - name: Run test suite
+        run: ./tests/test.sh
 
-      - name: Test --list (before install)
-        run: ./install.sh --list
-
-      - name: Test fresh install (non-interactive)
+      - name: Verify ShellCheck compliance
         run: |
-          # Remove installed.json from --list test to start fresh
-          rm -f ~/.claude/installed.json
-          # Modules are alphabetically sorted:
-          # MCP: 1=brave-search, 2=google-search, 3=pdf-reader
-          # Skills: 1=create-slidev-presentation, 2=standards-python, 3=standards-typescript
-          # Select pdf-reader(3), slidev(1) + standards-python(2)
-          echo -e "3\n1 2" | ./install.sh
-
-      - name: Verify installation
-        run: |
-          # Check files exist
-          test -f ~/.claude/CLAUDE.md
-          test -f ~/.claude/installed.json
-          test -d ~/.claude/commands
-          test -f ~/.claude.json
-
-          # Check CLAUDE.md contains context skills documentation
-          grep -q "Context Skills Auto-Loading" ~/.claude/CLAUDE.md
-
-          # Check installed.json has version
-          cat ~/.claude/installed.json
-          jq -e '.version >= 2' ~/.claude/installed.json
-
-          # Check MCP config
-          jq -e '.mcpServers["pdf-reader"]' ~/.claude.json
-
-          # Check skills installed
-          test -d ~/.claude/skills/create-slidev-presentation
-          test -d ~/.claude/skills/standards-python
-
-      - name: Test --list (after install)
-        run: ./install.sh --list
-
-      - name: Test --add skill (non-interactive)
-        run: |
-          # Add standards-typescript skill
-          # MCP: 1=brave-search, 2=google-search available
-          # Skills: 1=standards-typescript available
-          echo -e "none\n1" | ./install.sh --add
-
-      - name: Test --add MCP with API key (non-interactive)
-        run: |
-          # Add brave-search with dummy API key
-          # MCP: 1=brave-search, 2=google-search available
-          # Skills: (none available after previous --add)
-          echo -e "1\ntest-dummy-api-key\nnone" | ./install.sh --add
-
-      - name: Verify MCP with API key
-        run: |
-          # Check brave-search is configured with the dummy key
-          jq -e '.mcpServers["brave-search"]' ~/.claude.json
-          jq -e '.mcpServers["brave-search"].env.BRAVE_API_KEY == "test-dummy-api-key"' ~/.claude.json
-
-      - name: Test --update
-        run: ./install.sh --update
-
-      - name: Final verification
-        run: |
-          echo "=== CLAUDE.md ==="
-          head -50 ~/.claude/CLAUDE.md
-          echo ""
-          echo "=== installed.json ==="
-          cat ~/.claude/installed.json
-          echo ""
-          echo "=== .claude.json ==="
-          cat ~/.claude.json
+          brew install shellcheck
+          shellcheck install.sh
+          shellcheck tests/test.sh
+          shellcheck tests/helpers.sh
+          # Use --severity=warning to ignore info-level source-path hints
+          shellcheck --severity=warning -x tests/scenarios/*.sh
