@@ -22,6 +22,8 @@ jobs:
 
       - name: Test fresh install (non-interactive)
         run: |
+          # Remove installed.json from --list test to start fresh
+          rm -f ~/.claude/installed.json
           # Simulate selecting: python + typescript standards, pdf-reader, slidev skill
           echo -e "1 2\n1\n1" | ./install.sh
 
