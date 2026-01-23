@@ -659,10 +659,16 @@ execute_migration_v1_to_v2() {
         fi
     done
 
+    # 4. Rebuild CLAUDE.md with new template (includes Context Skills documentation)
+    build_claude_md
+    print_success "Rebuilt CLAUDE.md with Context Skills documentation"
+
     echo ""
     print_success "Migration v1 → v2 complete!"
     print_info "Standards are now loaded automatically based on your project's Tech Stack."
     print_info "Add 'Tech Stack: Python, FastAPI' (or similar) to your project CLAUDE.md."
+    print_info "Your old CLAUDE.md is backed up at: $backup_file"
+    print_info "To customize standards, copy to ~/.claude/custom/skills/"
     echo ""
 }
 
@@ -780,8 +786,8 @@ case "${1:-}" in
                 echo "Cancelled."
                 exit 0
             fi
-            # Reset installed.json for fresh install
-            echo '{"standards":[],"mcp":[],"skills":[]}' > "$INSTALLED_FILE"
+            # Reset installed.json for fresh install (include current version)
+            echo "{\"version\":$CURRENT_VERSION,\"standards\":[],\"mcp\":[],\"skills\":[]}" > "$INSTALLED_FILE"
         fi
         do_install "install"
         ;;

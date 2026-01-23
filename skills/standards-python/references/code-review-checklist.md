@@ -1,5 +1,7 @@
 # Python Code Review Checklist
 
+> **Reference checklist** - Use as a guide when reviewing Python code. Not an interactive form.
+
 ## Functionality
 
 - [ ] Does the code work as expected?

@@ -1,5 +1,7 @@
 # TypeScript Code Review Checklist
 
+> **Reference checklist** - Use as a guide when reviewing TypeScript code. Not an interactive form.
+
 ## Functionality
 
 - [ ] Does the code work as expected?

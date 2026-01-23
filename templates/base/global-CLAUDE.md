@@ -145,6 +145,8 @@ Tech Stack: Python, FastAPI
 
 **Custom standards:** Override with `~/.claude/custom/skills/standards-python/`
 
+> See [ADR-007](https://github.com/b33eep/claude-setup/blob/main/docs/adr/007-coding-standards-as-skills.md) for technical details.
+
 ---
 
 ## Template: Project CLAUDE.md

@@ -320,6 +320,8 @@ await rateLimiter.acquire();
 
 ## tsconfig.json Recommendations
 
+> **Note:** These are strict settings for new projects. For existing codebases, enable incrementally.
+
 ```json
 {
   "compilerOptions": {
