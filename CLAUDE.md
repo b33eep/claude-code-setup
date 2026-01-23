@@ -34,7 +34,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | /todo command | High | Manually editing CLAUDE.md for todos is cumbersome | Create command that appends todos directly to CLAUDE.md |
 | /do-review command | High | Unclear when to trigger code review, easy to forget | Create command + refine global prompt guidance |
 | ~~Slidev skill attribution~~ | ~~High~~ | ~~Done~~ | Added source + author to SKILL.md (AJBcoding) |
-| Coding standards → Skills | High | Standards in global CLAUDE.md are static, don't adapt to project type | Context skills with `type: context` and `applies_to`. See [ADR-007](docs/adr/007-coding-standards-as-skills.md) |
+| ~~Coding standards → Skills~~ | ~~High~~ | ~~Done~~ | Context skills implemented. See [ADR-007](docs/adr/007-coding-standards-as-skills.md). PR #2 |
 | ADR guidance | Medium | Unclear when ADR is needed vs just a comment | Refine global prompt or create /adr command |
 | Security hint | Medium | Users might put secrets in CLAUDE.md (risky in Team mode) | Add warning in global prompt: use .env for secrets |
 | MCP web search | Medium | Claude doesn't automatically use installed MCP search tools | Instruct in global prompt to prefer google/brave MCP |
@@ -42,14 +42,16 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Auto-compact prompt | Low | Users must remember to disable auto-compact manually | Ask during install if they want to disable (skip if complex) |
 
 **What was done in this session:**
-- Implemented ADR-007: Coding standards → Context skills
+- Designed and implemented ADR-007: Coding standards → Context skills
 - Created `skills/standards-python/` with SKILL.md and code-review-checklist
 - Removed old `templates/modules/standards/` (python, typescript, design-patterns)
 - Updated global-CLAUDE.md template (removed inline standards, added context skills docs)
 - Added version-based migration system to install.sh (v1→v2)
 - Updated GitHub Actions tests for new structure
+- Created feature branch `feat/context-skills` and PR #2
+- CI passed, local `./install.sh --update` migration tested successfully
 
-**Next Step:** Create standards-typescript skill, then test with `./install.sh --update`
+**Next Step:** Create standards-typescript skill, merge PR #2
 
 ---
 
