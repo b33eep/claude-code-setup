@@ -36,18 +36,13 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | ~~Slidev skill attribution~~ | ~~High~~ | ~~Done~~ | Added source + author to SKILL.md (AJBcoding) |
 | ~~Coding standards → Skills~~ | ~~High~~ | ~~Done~~ | Context skills implemented. See [ADR-007](docs/adr/007-coding-standards-as-skills.md). PR #2 |
 | ADR guidance | Medium | Unclear when ADR is needed vs just a comment | Refine global prompt or create /adr command |
-| Security hint | Medium | Users might put secrets in CLAUDE.md (risky in Team mode) | Add warning in global prompt: use .env for secrets |
+| ~~Security hint~~ | ~~Medium~~ | ~~Done~~ | Added warning in global prompt: use .env for secrets |
 | MCP web search | Medium | Claude doesn't automatically use installed MCP search tools | Instruct in global prompt to prefer google/brave MCP |
 | ccstatusline in install.sh | Low | Users must manually configure ccstatusline | Auto-configure during install (skip if complex) |
 | Auto-compact prompt | Low | Users must remember to disable auto-compact manually | Ask during install if they want to disable (skip if complex) |
 
 **What was done in this session:**
-- Created `skills/standards-typescript/` with SKILL.md and code-review-checklist
-- Added Utility Types, Discriminated Unions, Zod sections (inspired by AJBcoding)
-- Updated README: Repository structure, Context Skills explanation, Upgrading section
-- Code review of PR #2 (9 issues found: 2 critical, 7 suggestions)
-- Fixed all 9 issues
-- PR #2 merged to main
+- Added Security warning to global template (never put secrets in CLAUDE.md, use .env)
 
 **Next Step:** Implement /todo and /do-review commands (High priority)
 

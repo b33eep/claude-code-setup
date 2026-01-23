@@ -5,6 +5,10 @@
 - Commits in English
 - No emojis in code/docs unless explicitly requested
 
+## Security
+
+> **Never put secrets in CLAUDE.md** - API keys, passwords, tokens belong in `.env` files (add to `.gitignore`). CLAUDE.md is version-controlled and visible to the team.
+
 ---
 
 ## Workflow: Session & Context Management
