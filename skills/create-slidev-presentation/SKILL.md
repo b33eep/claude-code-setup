@@ -1,6 +1,8 @@
 ---
 name: create-slidev-presentation
 description: This skill should be used when asked to create or edit Slidev (sli.dev) presentation slide decks.
+source: https://github.com/AJBcoding/claude-skill-eval
+author: AJBcoding
 ---
 
 # Slidev

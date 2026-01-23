@@ -33,7 +33,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 |------|----------|---------|----------|
 | /todo command | High | Manually editing CLAUDE.md for todos is cumbersome | Create command that appends todos directly to CLAUDE.md |
 | /do-review command | High | Unclear when to trigger code review, easy to forget | Create command + refine global prompt guidance |
-| Slidev skill attribution | High | Skill may be based on external source, need to give credit | Find original source, add proper attribution |
+| ~~Slidev skill attribution~~ | ~~High~~ | ~~Done~~ | Added source + author to SKILL.md (AJBcoding) |
 | ADR guidance | Medium | Unclear when ADR is needed vs just a comment | Refine global prompt or create /adr command |
 | Java standards + Gradle | Medium | No Java/Gradle support for Java developers | Find/create coding standards and build skill |
 | Security hint | Medium | Users might put secrets in CLAUDE.md (risky in Team mode) | Add warning in global prompt: use .env for secrets |
@@ -42,11 +42,9 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Auto-compact prompt | Low | Users must remember to disable auto-compact manually | Ask during install if they want to disable (skip if complex) |
 
 **What was done in this session:**
-- README improved: clarified Global vs Project CLAUDE.md, added FIRST TIME box for /init-project, ADR workflow explained
-- Added CLAUDE.md to Git (switched from Solo to Team mode) as real-world example for users
-- Created comprehensive v1.0.0 todo list with Problem/Solution columns (9 todos)
+- Slidev skill attribution: Found original source (AJBcoding on GitHub/Smithery.ai), added `source` and `author` to SKILL.md frontmatter
 
-**Next Step:** Work on High priority todos: /todo command, /do-review command, Slidev attribution
+**Next Step:** Work on remaining High priority todos: /todo command, /do-review command
 
 ---
 
