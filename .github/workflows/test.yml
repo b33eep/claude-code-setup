@@ -47,13 +47,35 @@ jobs:
           cat ~/.claude/installed.json
           jq -e '.standards | length > 0' ~/.claude/installed.json
 
+          # Check MCP config
+          jq -e '.mcpServers["pdf-reader"]' ~/.claude.json
+
+          # Check skills installed
+          test -d ~/.claude/skills/create-slidev-presentation
+
       - name: Test --list (after install)
         run: ./install.sh --list
 
-      - name: Test --add (non-interactive)
+      - name: Test --add standards (non-interactive)
         run: |
-          # Add design-patterns
+          # Add design-patterns (standards only)
+          # After fresh install: python, typescript installed
+          # Available: 1=design-patterns
           echo -e "1\nnone\nnone" | ./install.sh --add
+
+      - name: Test --add MCP with API key (non-interactive)
+        run: |
+          # Add brave-search with dummy API key
+          # Standards: all installed (no prompt)
+          # MCP: 1=brave-search, 2=google-search available
+          # Skills: all installed (no prompt)
+          echo -e "1\ntest-dummy-api-key" | ./install.sh --add
+
+      - name: Verify MCP with API key
+        run: |
+          # Check brave-search is configured with the dummy key
+          jq -e '.mcpServers["brave-search"]' ~/.claude.json
+          jq -e '.mcpServers["brave-search"].env.BRAVE_API_KEY == "test-dummy-api-key"' ~/.claude.json
 
       - name: Test --update
         run: ./install.sh --update
