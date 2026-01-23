@@ -1,5 +1,8 @@
 # Claude Code Setup
 
+[![CI](https://github.com/b33eep/claude-setup/actions/workflows/test.yml/badge.svg)](https://github.com/b33eep/claude-setup/actions/workflows/test.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 A modular, minimal setup for Claude Code with a clear workflow and persistent memory via Markdown files.
 
 > **Origin:** This project started as an innersource tool and has been open-sourced for the community. The clean Git history reflects a fresh start for public release.
@@ -11,6 +14,12 @@ A modular, minimal setup for Claude Code with a clear workflow and persistent me
 - **No /compact** - Uses "Document & Clear" workflow instead
 - **External Memory** - CLAUDE.md + ADR files as persistent, versioned memory
 - **Easy Updates** - Update modules without losing customizations
+
+## Prerequisites
+
+- **macOS** (primary platform)
+- **[Homebrew](https://brew.sh/)** (for installing dependencies)
+- **Claude Code CLI** installed
 
 ## Quick Start
 

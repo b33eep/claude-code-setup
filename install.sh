@@ -26,7 +26,7 @@ NC='\033[0m' # No Color
 print_header() {
     echo ""
     echo -e "${BLUE}$1${NC}"
-    echo "$(echo "$1" | sed 's/./-/g')"
+    printf '%*s\n' "${#1}" '' | tr ' ' '-'
 }
 
 print_success() {
@@ -106,7 +106,8 @@ list_modules() {
 
     echo ""
     echo "Standards:"
-    local installed_standards=$(get_installed "standards")
+    local installed_standards
+    installed_standards=$(get_installed "standards")
     if [ -z "$installed_standards" ]; then
         print_info "(none)"
     else
@@ -117,7 +118,8 @@ list_modules() {
 
     echo ""
     echo "MCP Servers:"
-    local installed_mcp=$(get_installed "mcp")
+    local installed_mcp
+    installed_mcp=$(get_installed "mcp")
     if [ -z "$installed_mcp" ]; then
         print_info "(none)"
     else
@@ -128,7 +130,8 @@ list_modules() {
 
     echo ""
     echo "Skills:"
-    local installed_skills=$(get_installed "skills")
+    local installed_skills
+    installed_skills=$(get_installed "skills")
     if [ -z "$installed_skills" ]; then
         print_info "(none)"
     else
@@ -141,9 +144,10 @@ list_modules() {
 
     echo ""
     echo "Standards:"
+    local name
     for f in "$SCRIPT_DIR/templates/modules/standards/"*.md; do
         [ -f "$f" ] || continue
-        local name=$(basename "$f" .md)
+        name=$(basename "$f" .md)
         if is_installed "standards" "$name"; then
             print_info "$name (installed)"
         else
@@ -153,10 +157,11 @@ list_modules() {
 
     echo ""
     echo "MCP Servers:"
+    local desc
     for f in "$SCRIPT_DIR/mcp/"*.json; do
         [ -f "$f" ] || continue
-        local name=$(basename "$f" .json)
-        local desc=$(jq -r '.description' "$f")
+        name=$(basename "$f" .json)
+        desc=$(jq -r '.description' "$f")
         if is_installed "mcp" "$name"; then
             print_info "$name (installed)"
         else
@@ -168,7 +173,7 @@ list_modules() {
     echo "Skills:"
     for d in "$SCRIPT_DIR/skills/"*/; do
         [ -d "$d" ] || continue
-        local name=$(basename "$d")
+        name=$(basename "$d")
         if is_installed "skills" "$name"; then
             print_info "$name (installed)"
         else
@@ -185,7 +190,7 @@ list_modules() {
             echo "Custom Standards:"
             for f in "$CUSTOM_DIR/standards/"*.md; do
                 [ -f "$f" ] || continue
-                local name=$(basename "$f" .md)
+                name=$(basename "$f" .md)
                 if is_installed "standards" "custom:$name"; then
                     print_success "$name (installed)"
                 else
@@ -199,7 +204,7 @@ list_modules() {
             echo "Custom MCP Servers:"
             for f in "$CUSTOM_DIR/mcp/"*.json; do
                 [ -f "$f" ] || continue
-                local name=$(basename "$f" .json)
+                name=$(basename "$f" .json)
                 if is_installed "mcp" "custom:$name"; then
                     print_success "$name (installed)"
                 else
@@ -213,7 +218,7 @@ list_modules() {
             echo "Custom Skills:"
             for d in "$CUSTOM_DIR/skills/"*/; do
                 [ -d "$d" ] || continue
-                local name=$(basename "$d")
+                name=$(basename "$d")
                 if is_installed "skills" "custom:$name"; then
                     print_success "$name (installed)"
                 else
@@ -240,10 +245,11 @@ select_standards() {
 
     local i=1
     local standards=()
+    local name
 
     for f in "$SCRIPT_DIR/templates/modules/standards/"*.md; do
         [ -f "$f" ] || continue
-        local name=$(basename "$f" .md)
+        name=$(basename "$f" .md)
         if [ "$mode" = "add" ] && is_installed "standards" "$name"; then
             continue
         fi
@@ -256,7 +262,7 @@ select_standards() {
     if [ -d "$CUSTOM_DIR/standards" ]; then
         for f in "$CUSTOM_DIR/standards/"*.md; do
             [ -f "$f" ] || continue
-            local name=$(basename "$f" .md)
+            name=$(basename "$f" .md)
             if [ "$mode" = "add" ] && is_installed "standards" "custom:$name"; then
                 continue
             fi
@@ -272,7 +278,7 @@ select_standards() {
     fi
 
     echo ""
-    read -p "Select (e.g., '1 2' or 'none'): " selection
+    read -rp "Select (e.g., '1 2' or 'none'): " selection
 
     if [ "$selection" != "none" ] && [ -n "$selection" ]; then
         for num in $selection; do
@@ -293,11 +299,13 @@ select_mcp() {
 
     local i=1
     local mcps=()
+    local name
+    local desc
 
     for f in "$SCRIPT_DIR/mcp/"*.json; do
         [ -f "$f" ] || continue
-        local name=$(basename "$f" .json)
-        local desc=$(jq -r '.description' "$f")
+        name=$(basename "$f" .json)
+        desc=$(jq -r '.description' "$f")
         if [ "$mode" = "add" ] && is_installed "mcp" "$name"; then
             continue
         fi
@@ -310,8 +318,8 @@ select_mcp() {
     if [ -d "$CUSTOM_DIR/mcp" ]; then
         for f in "$CUSTOM_DIR/mcp/"*.json; do
             [ -f "$f" ] || continue
-            local name=$(basename "$f" .json)
-            local desc=$(jq -r '.description' "$f" 2>/dev/null || echo "Custom MCP server")
+            name=$(basename "$f" .json)
+            desc=$(jq -r '.description' "$f" 2>/dev/null || echo "Custom MCP server")
             if [ "$mode" = "add" ] && is_installed "mcp" "custom:$name"; then
                 continue
             fi
@@ -327,7 +335,7 @@ select_mcp() {
     fi
 
     echo ""
-    read -p "Select (e.g., '1 2' or 'none'): " selection
+    read -rp "Select (e.g., '1 2' or 'none'): " selection
 
     if [ "$selection" != "none" ] && [ -n "$selection" ]; then
         for num in $selection; do
@@ -348,10 +356,11 @@ select_skills() {
 
     local i=1
     local skills=()
+    local name
 
     for d in "$SCRIPT_DIR/skills/"*/; do
         [ -d "$d" ] || continue
-        local name=$(basename "$d")
+        name=$(basename "$d")
         if [ "$mode" = "add" ] && is_installed "skills" "$name"; then
             continue
         fi
@@ -364,7 +373,7 @@ select_skills() {
     if [ -d "$CUSTOM_DIR/skills" ]; then
         for d in "$CUSTOM_DIR/skills/"*/; do
             [ -d "$d" ] || continue
-            local name=$(basename "$d")
+            name=$(basename "$d")
             if [ "$mode" = "add" ] && is_installed "skills" "custom:$name"; then
                 continue
             fi
@@ -380,7 +389,7 @@ select_skills() {
     fi
 
     echo ""
-    read -p "Select (e.g., '1' or 'none'): " selection
+    read -rp "Select (e.g., '1' or 'none'): " selection
 
     if [ "$selection" != "none" ] && [ -n "$selection" ]; then
         for num in $selection; do
@@ -399,23 +408,27 @@ build_claude_md() {
     local standards_to_include=("$@")
 
     # Start with base template
-    local content=$(cat "$SCRIPT_DIR/templates/base/global-CLAUDE.md")
+    local content
+    content=$(cat "$SCRIPT_DIR/templates/base/global-CLAUDE.md")
 
     # Build standards section
     local standards_content=""
 
     # Get all installed standards + new selections
-    local all_standards=$(get_installed "standards")
+    local all_standards
+    all_standards=$(get_installed "standards")
     for s in "${standards_to_include[@]}"; do
-        if [[ ! " $all_standards " =~ " $s " ]]; then
+        if [[ ! " $all_standards " =~ \ $s\  ]]; then
             all_standards="$all_standards $s"
         fi
     done
 
+    local file
+    local name
     for standard in $all_standards; do
-        local file=""
+        file=""
         if [[ "$standard" == custom:* ]]; then
-            local name="${standard#custom:}"
+            name="${standard#custom:}"
             file="$CUSTOM_DIR/standards/${name}.md"
         else
             file="$SCRIPT_DIR/templates/modules/standards/${standard}.md"
@@ -443,9 +456,12 @@ build_claude_md() {
 install_mcp() {
     local mcp_name=$1
     local config_file=""
+    local name
+    local requires_key
+    local config
 
     if [[ "$mcp_name" == custom:* ]]; then
-        local name="${mcp_name#custom:}"
+        name="${mcp_name#custom:}"
         config_file="$CUSTOM_DIR/mcp/${name}.json"
     else
         config_file="$SCRIPT_DIR/mcp/${mcp_name}.json"
@@ -456,9 +472,9 @@ install_mcp() {
         return 1
     fi
 
-    local name=$(jq -r '.name' "$config_file")
-    local requires_key=$(jq -r '.requiresApiKey' "$config_file")
-    local config=$(jq -r '.config' "$config_file")
+    name=$(jq -r '.name' "$config_file")
+    requires_key=$(jq -r '.requiresApiKey' "$config_file")
+    config=$(jq -r '.config' "$config_file")
 
     # Initialize .claude.json if needed
     if [ ! -f "$MCP_CONFIG_FILE" ]; then
@@ -466,9 +482,14 @@ install_mcp() {
     fi
 
     # Handle API keys if required
+    local instructions
+    local api_keys
+    local key_count
+    local key_name
+    local key_prompt
     if [ "$requires_key" = "true" ]; then
         # Show instructions
-        local instructions=$(jq -r '.apiKeyInstructions[]' "$config_file" 2>/dev/null)
+        instructions=$(jq -r '.apiKeyInstructions[]' "$config_file" 2>/dev/null)
         if [ -n "$instructions" ]; then
             echo ""
             echo "  Setup instructions:"
@@ -479,31 +500,31 @@ install_mcp() {
         fi
 
         # Check if single key or multiple
-        local api_keys=$(jq -r '.apiKeys' "$config_file" 2>/dev/null)
+        api_keys=$(jq -r '.apiKeys' "$config_file" 2>/dev/null)
 
         if [ "$api_keys" != "null" ]; then
             # Multiple API keys
-            local key_count=$(jq -r '.apiKeys | length' "$config_file")
+            key_count=$(jq -r '.apiKeys | length' "$config_file")
             for ((i=0; i<key_count; i++)); do
-                local key_name=$(jq -r ".apiKeys[$i].name" "$config_file")
-                local key_prompt=$(jq -r ".apiKeys[$i].prompt" "$config_file")
-                read -p "  $key_prompt: " key_value
+                key_name=$(jq -r ".apiKeys[$i].name" "$config_file")
+                key_prompt=$(jq -r ".apiKeys[$i].prompt" "$config_file")
+                read -rp "  $key_prompt: " key_value
                 if [ -z "$key_value" ]; then
                     print_warning "Skipping $name (no API key provided)"
                     return 1
                 fi
-                config=$(echo "$config" | sed "s/{{${key_name}}}/${key_value}/g")
+                config=${config//\{\{${key_name}\}\}/${key_value}}
             done
         else
             # Single API key
-            local key_name=$(jq -r '.apiKeyName' "$config_file")
-            local key_prompt=$(jq -r '.apiKeyPrompt' "$config_file")
-            read -p "  $key_prompt: " key_value
+            key_name=$(jq -r '.apiKeyName' "$config_file")
+            key_prompt=$(jq -r '.apiKeyPrompt' "$config_file")
+            read -rp "  $key_prompt: " key_value
             if [ -z "$key_value" ]; then
                 print_warning "Skipping $name (no API key provided)"
                 return 1
             fi
-            config=$(echo "$config" | sed "s/{{${key_name}}}/${key_value}/g")
+            config=${config//\{\{${key_name}\}\}/${key_value}}
         fi
     fi
 
@@ -520,9 +541,11 @@ install_mcp() {
 install_skill() {
     local skill_name=$1
     local source_dir=""
+    local name
+    local target_dir
 
     if [[ "$skill_name" == custom:* ]]; then
-        local name="${skill_name#custom:}"
+        name="${skill_name#custom:}"
         source_dir="$CUSTOM_DIR/skills/$name"
     else
         source_dir="$SCRIPT_DIR/skills/$skill_name"
@@ -533,7 +556,7 @@ install_skill() {
         return 1
     fi
 
-    local target_dir="$CLAUDE_DIR/skills/$(basename "$source_dir")"
+    target_dir="$CLAUDE_DIR/skills/$(basename "$source_dir")"
     mkdir -p "$CLAUDE_DIR/skills"
     cp -r "$source_dir" "$target_dir"
 
@@ -593,9 +616,10 @@ do_install() {
     # Install commands (always)
     print_header "Installing Commands"
 
+    local filename
     for cmd in "$SCRIPT_DIR/commands/"*.md; do
         [ -f "$cmd" ] || continue
-        local filename=$(basename "$cmd")
+        filename=$(basename "$cmd")
         cp "$cmd" "$CLAUDE_DIR/commands/"
         print_success "$filename"
     done
@@ -610,15 +634,17 @@ do_install() {
         add_to_installed "standards" "$s"
     done
 
-    local installed_count=$(get_installed "standards" | wc -w | tr -d ' ')
+    local installed_count
+    installed_count=$(get_installed "standards" | wc -w | tr -d ' ')
     print_success "CLAUDE.md built with $installed_count standard module(s)"
 
     # Install MCP servers
+    local display_name
     if [ ${#SELECTED_MCP[@]} -gt 0 ]; then
         print_header "Installing MCP Servers"
 
         for mcp in "${SELECTED_MCP[@]}"; do
-            local display_name="${mcp#custom:}"
+            display_name="${mcp#custom:}"
             echo ""
             echo "  Installing $display_name..."
             if install_mcp "$mcp"; then
@@ -633,7 +659,7 @@ do_install() {
         print_header "Installing Skills"
 
         for skill in "${SELECTED_SKILLS[@]}"; do
-            local display_name="${skill#custom:}"
+            display_name="${skill#custom:}"
             if install_skill "$skill"; then
                 add_to_installed "skills" "$skill"
                 print_success "$display_name installed"
@@ -676,9 +702,10 @@ do_update() {
     # Update commands
     print_header "Updating Commands"
 
+    local filename
     for cmd in "$SCRIPT_DIR/commands/"*.md; do
         [ -f "$cmd" ] || continue
-        local filename=$(basename "$cmd")
+        filename=$(basename "$cmd")
         cp "$cmd" "$CLAUDE_DIR/commands/"
         print_success "$filename"
     done
@@ -686,20 +713,27 @@ do_update() {
     # Rebuild CLAUDE.md with current installed standards
     print_header "Rebuilding CLAUDE.md"
 
-    local installed_standards=$(get_installed "standards")
+    local installed_standards
+    installed_standards=$(get_installed "standards")
+    # shellcheck disable=SC2086  # Word splitting intended for multiple standards
     build_claude_md $installed_standards
     print_success "CLAUDE.md rebuilt"
 
     # Update skills
     print_header "Updating Skills"
 
-    local installed_skills=$(get_installed "skills")
+    local installed_skills
+    installed_skills=$(get_installed "skills")
+    local source_dir
+    local display_name
+    local name
+    local target_dir
     for skill in $installed_skills; do
-        local source_dir=""
-        local display_name=""
+        source_dir=""
+        display_name=""
 
         if [[ "$skill" == custom:* ]]; then
-            local name="${skill#custom:}"
+            name="${skill#custom:}"
             source_dir="$CUSTOM_DIR/skills/$name"
             display_name="$name (custom)"
         else
@@ -708,7 +742,7 @@ do_update() {
         fi
 
         if [ -d "$source_dir" ]; then
-            local target_dir="$CLAUDE_DIR/skills/$(basename "$source_dir")"
+            target_dir="$CLAUDE_DIR/skills/$(basename "$source_dir")"
             rm -rf "$target_dir"
             cp -r "$source_dir" "$target_dir"
             print_success "$display_name"
@@ -746,7 +780,7 @@ case "${1:-}" in
             echo "Existing installation detected."
             echo "Use --add to add modules or --update to update."
             echo ""
-            read -p "Continue with fresh install? (y/N): " confirm
+            read -rp "Continue with fresh install? (y/N): " confirm
             if [ "$confirm" != "y" ] && [ "$confirm" != "Y" ]; then
                 echo "Cancelled."
                 exit 0

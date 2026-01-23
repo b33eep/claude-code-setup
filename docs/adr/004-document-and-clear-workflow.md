@@ -1,7 +1,7 @@
 # ADR-004: Document & Clear Workflow
 
 **Status:** Accepted
-**Date:** 2025-01-23
+**Date:** 2026-01-23
 
 ## Context
 

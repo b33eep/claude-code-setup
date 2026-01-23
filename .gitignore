@@ -3,3 +3,18 @@ CLAUDE.md
 
 # Local Claude settings (contains personal paths)
 .claude/
+
+# macOS
+.DS_Store
+
+# Editor
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
