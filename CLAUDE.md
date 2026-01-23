@@ -34,8 +34,8 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | /todo command | High | Manually editing CLAUDE.md for todos is cumbersome | Create command that appends todos directly to CLAUDE.md |
 | /do-review command | High | Unclear when to trigger code review, easy to forget | Create command + refine global prompt guidance |
 | ~~Slidev skill attribution~~ | ~~High~~ | ~~Done~~ | Added source + author to SKILL.md (AJBcoding) |
+| Coding standards → Skills | High | Standards in global CLAUDE.md are static, don't adapt to project type | Convert to skills per language (Python, TypeScript, Java). Activate contextually. Custom via ~/.claude/custom/ |
 | ADR guidance | Medium | Unclear when ADR is needed vs just a comment | Refine global prompt or create /adr command |
-| Java standards + Gradle | Medium | No Java/Gradle support for Java developers | Find/create coding standards and build skill |
 | Security hint | Medium | Users might put secrets in CLAUDE.md (risky in Team mode) | Add warning in global prompt: use .env for secrets |
 | MCP web search | Medium | Claude doesn't automatically use installed MCP search tools | Instruct in global prompt to prefer google/brave MCP |
 | ccstatusline in install.sh | Low | Users must manually configure ccstatusline | Auto-configure during install (skip if complex) |
@@ -43,8 +43,10 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 
 **What was done in this session:**
 - Slidev skill attribution: Found original source (AJBcoding on GitHub/Smithery.ai), added `source` and `author` to SKILL.md frontmatter
+- Git commit message standards: Added IMPORTANT note that scope is REQUIRED, updated template
+- New todo: "Coding standards → Skills" - convert static standards to context-aware skills
 
-**Next Step:** Work on remaining High priority todos: /todo command, /do-review command
+**Next Step:** Work on High priority todos: /todo command, /do-review command, Coding standards → Skills
 
 ---
 
