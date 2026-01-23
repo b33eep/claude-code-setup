@@ -29,17 +29,24 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 
 ### Before v1.0.0
 
-| Todo | Priority | Notes |
-|------|----------|-------|
-| /todo command | High | Quick capture todos → adds to CLAUDE.md |
-| ADR guidance | Medium | Refine when ADR needed in global prompt, or create /adr command, or both |
-| Code Review command | High | Create /do-review command, refine when review needed in global prompt |
-| Slidev skill attribution | High | Find original source, add proper attribution |
-| ccstatusline in install.sh | Low | Auto-configure if not too complex, skip if complex |
-| Auto-compact prompt | Low | Ask user in install.sh if they want to disable, skip if complex |
-| Java standards + Gradle skill | Medium | Find/create Java coding standards and Gradle build skill |
+| Todo | Priority | Problem | Solution |
+|------|----------|---------|----------|
+| /todo command | High | Manually editing CLAUDE.md for todos is cumbersome | Create command that appends todos directly to CLAUDE.md |
+| /do-review command | High | Unclear when to trigger code review, easy to forget | Create command + refine global prompt guidance |
+| Slidev skill attribution | High | Skill may be based on external source, need to give credit | Find original source, add proper attribution |
+| ADR guidance | Medium | Unclear when ADR is needed vs just a comment | Refine global prompt or create /adr command |
+| Java standards + Gradle | Medium | No Java/Gradle support for Java developers | Find/create coding standards and build skill |
+| Security hint | Medium | Users might put secrets in CLAUDE.md (risky in Team mode) | Add warning in global prompt: use .env for secrets |
+| MCP web search | Medium | Claude doesn't automatically use installed MCP search tools | Instruct in global prompt to prefer google/brave MCP |
+| ccstatusline in install.sh | Low | Users must manually configure ccstatusline | Auto-configure during install (skip if complex) |
+| Auto-compact prompt | Low | Users must remember to disable auto-compact manually | Ask during install if they want to disable (skip if complex) |
 
-**Next Step:** Work on v1.0.0 todos (see above)
+**What was done in this session:**
+- README improved: clarified Global vs Project CLAUDE.md, added FIRST TIME box for /init-project, ADR workflow explained
+- Added CLAUDE.md to Git (switched from Solo to Team mode) as real-world example for users
+- Created comprehensive v1.0.0 todo list with Problem/Solution columns (9 todos)
+
+**Next Step:** Work on High priority todos: /todo command, /do-review command, Slidev attribution
 
 ---
 
