@@ -37,12 +37,14 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | ~~Coding standards → Skills~~ | ~~High~~ | ~~Done~~ | Context skills implemented. See [ADR-007](docs/adr/007-coding-standards-as-skills.md). PR #2 |
 | ADR guidance | Medium | Unclear when ADR is needed vs just a comment | Refine global prompt or create /adr command |
 | ~~Security hint~~ | ~~Medium~~ | ~~Done~~ | Added warning in global prompt: use .env for secrets |
+| Template versioning | Medium | --update überschreibt blind, keine Versionskontrolle | templates/VERSION + tracking in .installed.json |
 | MCP web search | Medium | Claude doesn't automatically use installed MCP search tools | Instruct in global prompt to prefer google/brave MCP |
 | ccstatusline in install.sh | Low | Users must manually configure ccstatusline | Auto-configure during install (skip if complex) |
 | Auto-compact prompt | Low | Users must remember to disable auto-compact manually | Ask during install if they want to disable (skip if complex) |
 
 **What was done in this session:**
 - Added Security warning to global template (never put secrets in CLAUDE.md, use .env)
+- Added todo: Template versioning (separate from code version)
 
 **Next Step:** Implement /todo and /do-review commands (High priority)
 
