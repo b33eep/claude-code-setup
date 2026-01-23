@@ -207,6 +207,8 @@ Available skills for specialized tasks (`~/.claude/skills/`):
 
 Format: `<type>(<scope>): <description>`
 
+**IMPORTANT:** Scope is REQUIRED. Always include a scope in parentheses.
+
 Types:
 - `feat`: New features
 - `fix`: Bug fixes
@@ -215,11 +217,14 @@ Types:
 - `test`: Add/modify tests
 - `chore`: Maintenance tasks
 
+Scope examples: `(auth)`, `(api)`, `(skills)`, `(install)`, `(ci)`, `(readme)`, `(config)`
+
 Examples:
 ```
 feat(auth): add OAuth2 login support
 fix(api): handle null response from user endpoint
-refactor(user-service): extract validation logic
+docs(skills): add attribution to Slidev skill
+chore(ci): update GitHub Actions workflow
 ```
 
 **No Co-Authored-By** - Create commits without Co-Authored-By line.
