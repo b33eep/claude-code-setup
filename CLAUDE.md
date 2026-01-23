@@ -46,12 +46,10 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 - Added Utility Types, Discriminated Unions, Zod sections (inspired by AJBcoding)
 - Updated README: Repository structure, Context Skills explanation, Upgrading section
 - Code review of PR #2 (9 issues found: 2 critical, 7 suggestions)
-- Fixed all 9 issues:
-  - Critical: Fresh install version reset, migration rebuilds CLAUDE.md
-  - Suggestions: applies_to lists, checklist notes, tsconfig note, ADR reference
-- PR #2 ready to merge (6 commits)
+- Fixed all 9 issues
+- PR #2 merged to main
 
-**Next Step:** Merge PR #2, then continue with v1.0.0 todos (/todo, /do-review commands)
+**Next Step:** Implement /todo and /do-review commands (High priority)
 
 ---
 
