@@ -47,6 +47,7 @@ print_error() {
 
 # Initialize installed.json if it doesn't exist
 init_installed_json() {
+    mkdir -p "$CLAUDE_DIR"
     if [ ! -f "$INSTALLED_FILE" ]; then
         echo '{"standards":[],"mcp":[],"skills":[]}' > "$INSTALLED_FILE"
     fi
