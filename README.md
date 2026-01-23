@@ -145,8 +145,8 @@ Coding standards are now **context skills** that auto-load based on your project
 
 | Skill | Auto-loads when Tech Stack contains |
 |-------|-------------------------------------|
-| `standards-python` | python, fastapi, django, flask, pytest |
-| `standards-typescript` | typescript, nodejs, react, nextjs, vue, angular |
+| `standards-python` | python, fastapi, django, flask, pytest, pydantic, sqlalchemy, celery, poetry, asyncio, aiohttp, httpx |
+| `standards-typescript` | typescript, nodejs, react, nextjs, vue, angular, express, nestjs, deno, bun, zod |
 
 **How it works:**
 1. Your project `CLAUDE.md` defines: `Tech Stack: Python, FastAPI`
