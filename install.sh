@@ -12,6 +12,11 @@ CUSTOM_DIR="$CLAUDE_DIR/custom"
 INSTALLED_FILE="$CLAUDE_DIR/installed.json"
 MCP_CONFIG_FILE="$HOME/.claude.json"
 
+# Version history:
+# 1 = Legacy (inline Coding Standards in CLAUDE.md)
+# 2 = Context Skills (standards-python, standards-typescript)
+CURRENT_VERSION=2
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -49,7 +54,7 @@ print_error() {
 init_installed_json() {
     mkdir -p "$CLAUDE_DIR"
     if [ ! -f "$INSTALLED_FILE" ]; then
-        echo '{"standards":[],"mcp":[],"skills":[]}' > "$INSTALLED_FILE"
+        echo "{\"version\":$CURRENT_VERSION,\"standards\":[],\"mcp\":[],\"skills\":[]}" > "$INSTALLED_FILE"
     fi
 }
 
@@ -75,6 +80,17 @@ get_installed() {
     jq -r ".${category}[]" "$INSTALLED_FILE" 2>/dev/null || echo ""
 }
 
+# Get current version (missing = version 1 legacy)
+get_version() {
+    jq -r '.version // 1' "$INSTALLED_FILE" 2>/dev/null || echo "1"
+}
+
+# Set version
+set_version() {
+    local version=$1
+    jq ".version = $version" "$INSTALLED_FILE" > "$INSTALLED_FILE.tmp" && mv "$INSTALLED_FILE.tmp" "$INSTALLED_FILE"
+}
+
 # ============================================
 # USAGE
 # ============================================
@@ -93,7 +109,7 @@ show_usage() {
     echo ""
     echo "Custom Modules:"
     echo "  Place custom modules in ~/.claude/custom/"
-    echo "  Structure: custom/{standards,mcp,skills}/"
+    echo "  Structure: custom/{mcp,skills}/"
     echo ""
 }
 
@@ -103,18 +119,6 @@ show_usage() {
 
 list_modules() {
     print_header "Installed Modules"
-
-    echo ""
-    echo "Standards:"
-    local installed_standards
-    installed_standards=$(get_installed "standards")
-    if [ -z "$installed_standards" ]; then
-        print_info "(none)"
-    else
-        for s in $installed_standards; do
-            print_success "$s"
-        done
-    fi
 
     echo ""
     echo "MCP Servers:"
@@ -143,19 +147,7 @@ list_modules() {
     print_header "Available Modules"
 
     echo ""
-    echo "Standards:"
     local name
-    for f in "$SCRIPT_DIR/templates/modules/standards/"*.md; do
-        [ -f "$f" ] || continue
-        name=$(basename "$f" .md)
-        if is_installed "standards" "$name"; then
-            print_info "$name (installed)"
-        else
-            echo "  [ ] $name"
-        fi
-    done
-
-    echo ""
     echo "MCP Servers:"
     local desc
     for f in "$SCRIPT_DIR/mcp/"*.json; do
@@ -184,20 +176,6 @@ list_modules() {
     # Check for custom modules
     if [ -d "$CUSTOM_DIR" ]; then
         print_header "Custom Modules"
-
-        if [ -d "$CUSTOM_DIR/standards" ] && [ "$(ls -A "$CUSTOM_DIR/standards" 2>/dev/null)" ]; then
-            echo ""
-            echo "Custom Standards:"
-            for f in "$CUSTOM_DIR/standards/"*.md; do
-                [ -f "$f" ] || continue
-                name=$(basename "$f" .md)
-                if is_installed "standards" "custom:$name"; then
-                    print_success "$name (installed)"
-                else
-                    echo "  [ ] $name"
-                fi
-            done
-        fi
 
         if [ -d "$CUSTOM_DIR/mcp" ] && [ "$(ls -A "$CUSTOM_DIR/mcp" 2>/dev/null)" ]; then
             echo ""
@@ -234,60 +212,6 @@ list_modules() {
 # ============================================
 # SELECT MODULES (Interactive)
 # ============================================
-
-select_standards() {
-    local mode=$1  # "install" or "add"
-    SELECTED_STANDARDS=()
-
-    echo ""
-    echo "Coding Standards (enter numbers separated by space, or 'none'):"
-    echo ""
-
-    local i=1
-    local standards=()
-    local name
-
-    for f in "$SCRIPT_DIR/templates/modules/standards/"*.md; do
-        [ -f "$f" ] || continue
-        name=$(basename "$f" .md)
-        if [ "$mode" = "add" ] && is_installed "standards" "$name"; then
-            continue
-        fi
-        standards+=("$name")
-        echo "  $i) $name"
-        ((i++))
-    done
-
-    # Custom standards
-    if [ -d "$CUSTOM_DIR/standards" ]; then
-        for f in "$CUSTOM_DIR/standards/"*.md; do
-            [ -f "$f" ] || continue
-            name=$(basename "$f" .md)
-            if [ "$mode" = "add" ] && is_installed "standards" "custom:$name"; then
-                continue
-            fi
-            standards+=("custom:$name")
-            echo "  $i) $name (custom)"
-            ((i++))
-        done
-    fi
-
-    if [ ${#standards[@]} -eq 0 ]; then
-        echo "  (all standards already installed)"
-        return
-    fi
-
-    echo ""
-    read -rp "Select (e.g., '1 2' or 'none'): " selection
-
-    if [ "$selection" != "none" ] && [ -n "$selection" ]; then
-        for num in $selection; do
-            if [ "$num" -ge 1 ] && [ "$num" -le ${#standards[@]} ] 2>/dev/null; then
-                SELECTED_STANDARDS+=("${standards[$((num-1))]}")
-            fi
-        done
-    fi
-}
 
 select_mcp() {
     local mode=$1
@@ -405,48 +329,8 @@ select_skills() {
 # ============================================
 
 build_claude_md() {
-    local standards_to_include=("$@")
-
-    # Start with base template
-    local content
-    content=$(cat "$SCRIPT_DIR/templates/base/global-CLAUDE.md")
-
-    # Build standards section
-    local standards_content=""
-
-    # Get all installed standards + new selections
-    local all_standards
-    all_standards=$(get_installed "standards")
-    for s in "${standards_to_include[@]}"; do
-        if [[ ! " $all_standards " =~ \ $s\  ]]; then
-            all_standards="$all_standards $s"
-        fi
-    done
-
-    local file
-    local name
-    for standard in $all_standards; do
-        file=""
-        if [[ "$standard" == custom:* ]]; then
-            name="${standard#custom:}"
-            file="$CUSTOM_DIR/standards/${name}.md"
-        else
-            file="$SCRIPT_DIR/templates/modules/standards/${standard}.md"
-        fi
-
-        if [ -f "$file" ]; then
-            standards_content+="\n---\n\n$(cat "$file")\n"
-        fi
-    done
-
-    # Replace placeholder with standards content
-    if [ -n "$standards_content" ]; then
-        content="${content//\{\{STANDARDS_MODULES\}\}/$standards_content}"
-    else
-        content="${content//\{\{STANDARDS_MODULES\}\}/}"
-    fi
-
-    echo -e "$content" > "$CLAUDE_DIR/CLAUDE.md"
+    # Copy base template (coding standards are now in skills)
+    cp "$SCRIPT_DIR/templates/base/global-CLAUDE.md" "$CLAUDE_DIR/CLAUDE.md"
 }
 
 # ============================================
@@ -600,7 +484,6 @@ do_install() {
     mkdir -p "$CLAUDE_DIR"
     mkdir -p "$CLAUDE_DIR/commands"
     mkdir -p "$CLAUDE_DIR/skills"
-    mkdir -p "$CUSTOM_DIR/standards"
     mkdir -p "$CUSTOM_DIR/mcp"
     mkdir -p "$CUSTOM_DIR/skills"
 
@@ -609,7 +492,6 @@ do_install() {
     # Select modules
     print_header "Select Modules"
 
-    select_standards "$mode"
     select_mcp "$mode"
     select_skills "$mode"
 
@@ -627,16 +509,8 @@ do_install() {
     # Build CLAUDE.md
     print_header "Building CLAUDE.md"
 
-    build_claude_md "${SELECTED_STANDARDS[@]}"
-
-    # Track installed standards
-    for s in "${SELECTED_STANDARDS[@]}"; do
-        add_to_installed "standards" "$s"
-    done
-
-    local installed_count
-    installed_count=$(get_installed "standards" | wc -w | tr -d ' ')
-    print_success "CLAUDE.md built with $installed_count standard module(s)"
+    build_claude_md
+    print_success "CLAUDE.md created (coding standards are now in skills)"
 
     # Install MCP servers
     local display_name
@@ -689,6 +563,127 @@ do_install() {
 }
 
 # ============================================
+# MIGRATIONS
+# ============================================
+
+# Run all pending migrations based on version
+run_migrations() {
+    local user_version
+    user_version=$(get_version)
+
+    if [ "$user_version" -ge "$CURRENT_VERSION" ]; then
+        return 0  # No migrations needed
+    fi
+
+    print_header "Migrations Available"
+    echo ""
+    echo "Your setup version: $user_version"
+    echo "Current version: $CURRENT_VERSION"
+    echo ""
+
+    # v1 → v2: Standards to Skills (ADR-007)
+    if [ "$user_version" -lt 2 ]; then
+        prompt_migration_v1_to_v2
+    fi
+
+    # Future: v2 → v3
+    # if [ "$user_version" -lt 3 ]; then
+    #     prompt_migration_v2_to_v3
+    # fi
+}
+
+# Migration v1 → v2: Coding Standards to Skills
+prompt_migration_v1_to_v2() {
+    echo -e "${YELLOW}Migration v1 → v2: Coding Standards to Skills (ADR-007)${NC}"
+    echo ""
+    echo "Inline standards in CLAUDE.md are replaced by context-aware skills."
+    echo ""
+    echo "Options:"
+    echo "  [a] Automatic migration (backup created)"
+    echo "  [m] Manual migration (show instructions)"
+    echo "  [s] Skip for now (keep old setup)"
+    echo ""
+    read -rp "Choice [a/m/s]: " choice
+
+    case "$choice" in
+        a|A)
+            execute_migration_v1_to_v2
+            set_version 2
+            ;;
+        m|M)
+            show_migration_v1_to_v2_instructions
+            ;;
+        s|S)
+            echo ""
+            print_info "Skipped. Your current setup continues to work."
+            print_info "Run './install.sh --update' again when ready to migrate."
+            echo ""
+            ;;
+        *)
+            print_warning "Invalid choice. Skipping migration."
+            ;;
+    esac
+}
+
+execute_migration_v1_to_v2() {
+    local claude_md="$CLAUDE_DIR/CLAUDE.md"
+    local backup_file="$CLAUDE_DIR/CLAUDE.md.bak"
+
+    print_header "Executing Migration v1 → v2"
+
+    # 1. Create backup
+    if [ -f "$claude_md" ]; then
+        cp "$claude_md" "$backup_file"
+        print_success "Backup created: $backup_file"
+
+        # 2. Remove old sections using awk (works on both macOS and Linux)
+        awk '
+            /^## Coding Standards$/ { skip=1; next }
+            /^## Code Review Checklist$/ { skip=1; next }
+            /^## / && skip { skip=0 }
+            /^---$/ && skip { skip=0; print; next }
+            !skip { print }
+        ' "$claude_md" > "$claude_md.tmp" && mv "$claude_md.tmp" "$claude_md"
+
+        print_success "Removed inline Coding Standards section"
+        print_success "Removed inline Code Review Checklist section"
+    fi
+
+    # 3. Install standards skills
+    local skills_to_install=("standards-python" "standards-typescript")
+    for skill in "${skills_to_install[@]}"; do
+        if [ -d "$SCRIPT_DIR/skills/$skill" ]; then
+            install_skill "$skill"
+            add_to_installed "skills" "$skill"
+            print_success "Installed $skill skill"
+        fi
+    done
+
+    echo ""
+    print_success "Migration v1 → v2 complete!"
+    print_info "Standards are now loaded automatically based on your project's Tech Stack."
+    print_info "Add 'Tech Stack: Python, FastAPI' (or similar) to your project CLAUDE.md."
+    echo ""
+}
+
+show_migration_v1_to_v2_instructions() {
+    echo ""
+    print_header "Manual Migration v1 → v2"
+    echo ""
+    echo "Steps:"
+    echo "  1. Open ~/.claude/CLAUDE.md"
+    echo "  2. Remove the '## Coding Standards' section"
+    echo "  3. Remove the '## Code Review Checklist' section"
+    echo "  4. Run: ./install.sh --add"
+    echo "  5. Select 'standards-python' and/or 'standards-typescript' skills"
+    echo "  6. Add 'Tech Stack: Python' to your project CLAUDE.md"
+    echo "  7. Update version: jq '.version = 2' ~/.claude/installed.json"
+    echo ""
+    echo "See: docs/adr/007-coding-standards-as-skills.md"
+    echo ""
+}
+
+# ============================================
 # UPDATE INSTALLATION
 # ============================================
 
@@ -698,6 +693,9 @@ do_update() {
     echo "=========================="
 
     init_installed_json
+
+    # Run pending migrations
+    run_migrations
 
     # Update commands
     print_header "Updating Commands"
@@ -710,13 +708,10 @@ do_update() {
         print_success "$filename"
     done
 
-    # Rebuild CLAUDE.md with current installed standards
+    # Rebuild CLAUDE.md
     print_header "Rebuilding CLAUDE.md"
 
-    local installed_standards
-    installed_standards=$(get_installed "standards")
-    # shellcheck disable=SC2086  # Word splitting intended for multiple standards
-    build_claude_md $installed_standards
+    build_claude_md
     print_success "CLAUDE.md rebuilt"
 
     # Update skills
