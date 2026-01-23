@@ -24,8 +24,12 @@ jobs:
         run: |
           # Remove installed.json from --list test to start fresh
           rm -f ~/.claude/installed.json
-          # Simulate selecting: python + typescript standards, pdf-reader, slidev skill
-          echo -e "1 2\n1\n1" | ./install.sh
+          # Modules are alphabetically sorted:
+          # Standards: 1=design-patterns, 2=python, 3=typescript
+          # MCP: 1=brave-search, 2=google-search, 3=pdf-reader
+          # Skills: 1=create-slidev-presentation
+          # Select python(2) + typescript(3), pdf-reader(3), slidev(1)
+          echo -e "2 3\n3\n1" | ./install.sh
 
       - name: Verify installation
         run: |
