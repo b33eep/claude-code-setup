@@ -42,16 +42,16 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Auto-compact prompt | Low | Users must remember to disable auto-compact manually | Ask during install if they want to disable (skip if complex) |
 
 **What was done in this session:**
-- Designed and implemented ADR-007: Coding standards → Context skills
-- Created `skills/standards-python/` with SKILL.md and code-review-checklist
-- Removed old `templates/modules/standards/` (python, typescript, design-patterns)
-- Updated global-CLAUDE.md template (removed inline standards, added context skills docs)
-- Added version-based migration system to install.sh (v1→v2)
-- Updated GitHub Actions tests for new structure
-- Created feature branch `feat/context-skills` and PR #2
-- CI passed, local `./install.sh --update` migration tested successfully
+- Created `skills/standards-typescript/` with SKILL.md and code-review-checklist
+- Added Utility Types, Discriminated Unions, Zod sections (inspired by AJBcoding)
+- Updated README: Repository structure, Context Skills explanation, Upgrading section
+- Code review of PR #2 (9 issues found: 2 critical, 7 suggestions)
+- Fixed all 9 issues:
+  - Critical: Fresh install version reset, migration rebuilds CLAUDE.md
+  - Suggestions: applies_to lists, checklist notes, tsconfig note, ADR reference
+- PR #2 ready to merge (6 commits)
 
-**Next Step:** Create standards-typescript skill, merge PR #2
+**Next Step:** Merge PR #2, then continue with v1.0.0 todos (/todo, /do-review commands)
 
 ---
 
