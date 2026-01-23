@@ -1,0 +1,20 @@
+{
+  "name": "brave-search",
+  "description": "Web search via Brave Search API (2000 free queries/month)",
+  "config": {
+    "type": "stdio",
+    "command": "npx",
+    "args": ["-y", "@brave/brave-search-mcp-server"],
+    "env": {
+      "BRAVE_API_KEY": "{{BRAVE_API_KEY}}"
+    }
+  },
+  "requiresApiKey": true,
+  "apiKeyName": "BRAVE_API_KEY",
+  "apiKeyPrompt": "Enter your Brave Search API key",
+  "apiKeyInstructions": [
+    "1. Visit: https://brave.com/search/api/",
+    "2. Sign up for 'Data for AI' plan",
+    "3. Create an API key (free tier: 2000 queries/month)"
+  ]
+}

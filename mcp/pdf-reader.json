@@ -1,0 +1,10 @@
+{
+  "name": "pdf-reader",
+  "description": "Read and analyze PDF documents",
+  "config": {
+    "type": "stdio",
+    "command": "npx",
+    "args": ["-y", "@sylphx/pdf-reader-mcp"]
+  },
+  "requiresApiKey": false
+}
