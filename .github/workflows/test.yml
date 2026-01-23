@@ -1,0 +1,64 @@
+name: Test Install Script
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-install:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Test --help
+        run: ./install.sh --help
+
+      - name: Test --list (before install)
+        run: ./install.sh --list
+
+      - name: Test fresh install (non-interactive)
+        run: |
+          # Simulate selecting: python + typescript standards, pdf-reader, slidev skill
+          echo -e "1 2\n1\n1" | ./install.sh
+
+      - name: Verify installation
+        run: |
+          # Check files exist
+          test -f ~/.claude/CLAUDE.md
+          test -f ~/.claude/installed.json
+          test -d ~/.claude/commands
+          test -f ~/.claude.json
+
+          # Check CLAUDE.md contains selected standards
+          grep -q "Python Standards" ~/.claude/CLAUDE.md
+          grep -q "TypeScript Standards" ~/.claude/CLAUDE.md
+
+          # Check installed.json tracks modules
+          cat ~/.claude/installed.json
+          jq -e '.standards | length > 0' ~/.claude/installed.json
+
+      - name: Test --list (after install)
+        run: ./install.sh --list
+
+      - name: Test --add (non-interactive)
+        run: |
+          # Add design-patterns
+          echo -e "1\nnone\nnone" | ./install.sh --add
+
+      - name: Test --update
+        run: ./install.sh --update
+
+      - name: Final verification
+        run: |
+          echo "=== CLAUDE.md ==="
+          head -50 ~/.claude/CLAUDE.md
+          echo ""
+          echo "=== installed.json ==="
+          cat ~/.claude/installed.json
+          echo ""
+          echo "=== .claude.json ==="
+          cat ~/.claude.json
