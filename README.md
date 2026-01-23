@@ -5,13 +5,67 @@
 
 A modular, minimal setup for Claude Code with a clear workflow and persistent memory via Markdown files.
 
-> **Origin:** This project started as an innersource tool and has been open-sourced for the community. The clean Git history reflects a fresh start for public release.
+## Core Concept: Document & Clear
+
+**The Problem with `/compact` and `/resume`:**
+
+| Issue | Impact |
+|-------|--------|
+| Context loss | Important decisions, progress, and details are forgotten |
+| Unpredictable | Unclear what gets summarized, what gets dropped |
+| Token waste | `/resume` reloads outdated details you no longer need |
+| Quality degradation | Compacted context leads to less precise responses |
+
+**The Solution:** External memory via two CLAUDE.md files:
+
+| File | Location | Content | Created by |
+|------|----------|---------|------------|
+| **Global** | `~/.claude/CLAUDE.md` | Workflow, coding standards, skills | `install.sh` |
+| **Project** | `your-project/CLAUDE.md` | Status, tasks, decisions | `/init-project` |
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  FIRST TIME: /init-project                                  │
+│  - New project → Creates fresh project CLAUDE.md            │
+│  - Existing project → Analyzes codebase first               │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│  SESSION START                                              │
+│  1. Global + Project CLAUDE.md load automatically           │
+│  2. /catchup → Understand changes + next steps              │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│  WORK                                                       │
+│  - Define tasks in project CLAUDE.md                        │
+│  - Implement + Test                                         │
+│  - Architecture decisions → Create ADRs                     │
+│  - ADRs loaded when relevant (e.g., "Why did we choose X?") │
+│  - Monitor context via ccstatusline                         │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│  SESSION END (at context limit)                             │
+│  1. /clear-session → Updates project CLAUDE.md, commits     │
+│  2. /clear → Fresh context                                  │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**External Memory:**
+- `~/.claude/CLAUDE.md` - Workflow, standards (static, global)
+- `project/CLAUDE.md` - Current status, tasks (dynamic, per-project)
+- `docs/adr/` - Architecture Decision Records (persistent, versioned)
+- Git commits - Progress is saved, not lost
+
+> **Tip:** Enable the Claude Code status line (`/config` → set `ccstatusline` to `true`) to see context usage (e.g., `Ctx: 70.2%`) and know when to `/clear-session`.
 
 ## Features
 
 - **Modular Installation** - Choose only the modules you need
 - **Custom Modules** - Add your own standards, MCP servers, and skills
-- **No /compact** - Uses "Document & Clear" workflow instead
 - **External Memory** - CLAUDE.md + ADR files as persistent, versioned memory
 - **Easy Updates** - Update modules without losing customizations
 
@@ -19,7 +73,7 @@ A modular, minimal setup for Claude Code with a clear workflow and persistent me
 
 - **macOS** (primary platform)
 - **[Homebrew](https://brew.sh/)** (for installing dependencies)
-- **Claude Code CLI** installed
+- **[Claude Code](https://claude.ai/code)** CLI installed
 
 ## Quick Start
 
@@ -212,55 +266,27 @@ cd ~/.claude/custom && git pull
 ./install.sh --update
 ```
 
-## Workflow
-
-### Session Start
-
-```
-1. CLAUDE.md is automatically loaded
-2. Run /catchup to read changed files
-```
-
-### Development Flow
-
-```
-┌─────────────────────────────────────────────────────────┐
-│  1. SPECIFY                                             │
-│     - Define user story / task in CLAUDE.md             │
-└─────────────────────────────────────────────────────────┘
-                          │
-                          ▼
-┌─────────────────────────────────────────────────────────┐
-│  2. IMPLEMENT                                           │
-│     - Write code + tests                                │
-└─────────────────────────────────────────────────────────┘
-                          │
-                          ▼
-┌─────────────────────────────────────────────────────────┐
-│  3. CODE REVIEW                                         │
-│     - Run code-review-ai agent                          │
-└─────────────────────────────────────────────────────────┘
-                          │
-                          ▼
-                    Back to 1.
-                         or
-              /clear-session → /clear
-```
-
-### Session End (at context limit)
-
-```
-1. /clear-session  → Documents status, commits changes
-2. /clear          → Clear context
-```
-
 ## Commands
 
 | Command | Description |
 |---------|-------------|
-| `/catchup` | Read changed files after /clear |
-| `/clear-session` | Document status before /clear |
-| `/init-project` | Create CLAUDE.md for new project |
+| `/init-project` | Analyze project, create CLAUDE.md + ADR folder, choose Solo/Team mode |
+| `/catchup` | Understand changes + determine next steps (after /clear) |
+| `/clear-session` | Update CLAUDE.md status, create ADRs if needed, commit (before /clear) |
+
+### Solo vs Team Mode
+
+When running `/init-project`, you choose how CLAUDE.md is handled:
+
+| Mode | CLAUDE.md | Use Case |
+|------|-----------|----------|
+| **Solo** | Added to `.gitignore` | Personal workflow, not shared with team |
+| **Team** | Tracked in Git | Shared context for all developers |
+
+- **Solo**: Your status, tasks, and notes stay local
+- **Team**: Everyone sees project status, decisions, and next steps
+
+`/clear-session` respects this: in Solo mode, only ADRs are committed.
 
 ## Configuration
 
@@ -274,31 +300,29 @@ Auto-compaction can cause context loss. Disable it:
 
 ## Plugins (Optional)
 
-### Code Review Agent
+Claude Code supports plugins via the built-in marketplace:
 
-```bash
-# Add marketplace
+```
+/plugin                              # Open plugin menu
+  → /marketplace                     # Browse available plugins
+    → /marketplace add wshobson/agents   # Add a marketplace
+  → /install code-review-ai          # Install a plugin
+```
+
+### Recommended: Code Review Agent
+
+Automated code reviews before committing:
+```
 /marketplace add wshobson/agents
-
-# Install agent
 /install code-review-ai@claude-code-workflows
 ```
 
-## Philosophy
-
-Based on "How I Use Every Claude Code Feature":
-
-> "Treat your CLAUDE.md as a high-level, curated set of guardrails and pointers."
-
-> "Don't trust auto-compaction. Use /clear for simple reboots and the 'Document & Clear' method to create durable, external memory."
-
 ## Contributing
 
-1. Fork the repository
-2. Add your module to the appropriate directory
-3. Submit a pull request
-
-For new module types, open an issue first to discuss.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to:
+- Report bugs and suggest features
+- Submit pull requests
+- Add new modules
 
 ## License
 
