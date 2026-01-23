@@ -1,0 +1,5 @@
+# Project-specific Claude context (personal workflow/status)
+CLAUDE.md
+
+# Local Claude settings (contains personal paths)
+.claude/
