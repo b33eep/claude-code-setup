@@ -2,7 +2,7 @@
 name: standards-typescript
 description: This skill provides TypeScript coding standards and is automatically loaded for TypeScript projects. It includes naming conventions, best practices, and recommended tooling.
 type: context
-applies_to: [typescript, nodejs, express, nestjs, nextjs, react, vue, angular, deno, bun]
+applies_to: [typescript, nodejs, express, nestjs, nextjs, react, vue, angular, deno, bun, zod]
 ---
 
 # TypeScript Coding Standards
@@ -129,6 +129,113 @@ function isUser(value: unknown): value is User {
 }
 ```
 
+## Utility Types
+
+```typescript
+// Partial<T> - Make all properties optional
+type UserUpdate = Partial<User>;
+// { id?: string; name?: string; email?: string; age?: number }
+
+// Pick<T, K> - Select specific properties
+type UserPreview = Pick<User, "id" | "name">;
+// { id: string; name: string }
+
+// Omit<T, K> - Exclude specific properties
+type UserWithoutEmail = Omit<User, "email">;
+// { id: string; name: string; age?: number }
+
+// Record<K, T> - Object with specific keys and value type
+type RolePermissions = Record<"admin" | "user" | "guest", string[]>;
+// { admin: string[]; user: string[]; guest: string[] }
+
+// ReturnType<F> - Extract return type of function
+type FetchResult = ReturnType<typeof fetchUser>;
+// Promise<User | undefined>
+
+// Parameters<F> - Extract parameter types
+type FetchParams = Parameters<typeof fetchUser>;
+// [userId: string]
+
+// Awaited<T> - Unwrap Promise type
+type ResolvedUser = Awaited<ReturnType<typeof fetchUser>>;
+// User | undefined
+```
+
+## Discriminated Unions
+
+```typescript
+// Use a common "type" or "status" field as discriminator
+type ApiResponse<T> =
+  | { status: "success"; data: T }
+  | { status: "error"; error: string }
+  | { status: "loading" };
+
+function handleResponse(response: ApiResponse<User>) {
+  switch (response.status) {
+    case "success":
+      console.log(response.data.name); // TypeScript knows data exists
+      break;
+    case "error":
+      console.error(response.error); // TypeScript knows error exists
+      break;
+    case "loading":
+      console.log("Loading...");
+      break;
+  }
+}
+
+// State machines with discriminated unions
+type AuthState =
+  | { state: "idle" }
+  | { state: "loading" }
+  | { state: "authenticated"; user: User }
+  | { state: "error"; message: string };
+
+// Action types for reducers
+type UserAction =
+  | { type: "SET_USER"; payload: User }
+  | { type: "CLEAR_USER" }
+  | { type: "UPDATE_NAME"; payload: string };
+```
+
+## Runtime Validation with Zod
+
+```typescript
+import { z } from "zod";
+
+// Define schema
+const UserSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string().min(1).max(100),
+  email: z.string().email(),
+  age: z.number().int().min(0).max(150).optional(),
+});
+
+// Infer TypeScript type from schema
+type User = z.infer<typeof UserSchema>;
+
+// Validate data (throws on error)
+const user = UserSchema.parse(untrustedData);
+
+// Safe validation (returns result object)
+const result = UserSchema.safeParse(untrustedData);
+if (result.success) {
+  console.log(result.data); // User
+} else {
+  console.error(result.error.issues);
+}
+
+// Common patterns
+const ConfigSchema = z.object({
+  apiUrl: z.string().url(),
+  timeout: z.number().default(5000),
+  retries: z.number().min(0).max(10).default(3),
+});
+
+// Transform and validate
+const EmailSchema = z.string().email().transform((val) => val.toLowerCase());
+```
+
 ## Async/Await
 
 ```typescript
@@ -209,6 +316,7 @@ await rateLimiter.acquire();
 | `prettier` | Code formatting |
 | `vitest` or `jest` | Testing framework |
 | `tsx` or `ts-node` | TypeScript execution |
+| `zod` | Runtime validation with type inference |
 
 ## tsconfig.json Recommendations
 
@@ -239,3 +347,9 @@ await rateLimiter.acquire();
 8. **Environment variables** - Type-safe config with validation (zod, env-var)
 9. **Barrel exports** - Use index.ts for clean imports
 10. **Path aliases** - Configure `@/` paths in tsconfig for cleaner imports
+
+---
+
+## References
+
+- Utility Types, Discriminated Unions, and Zod sections inspired by [moai-lang-typescript](https://github.com/AJBcoding/claude-skill-eval/tree/main/skills/moai-lang-typescript) by AJBcoding
