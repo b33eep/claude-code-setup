@@ -17,11 +17,11 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 
 | Task | Status | Notes |
 |------|--------|-------|
-| Modular Architecture | Done | Base + modules (standards, mcp, skills) |
+| Modular Architecture | Done | Base + mcp + skills (standards now in skills) |
 | Custom Modules | Done | ~/.claude/custom/ for user modules |
 | Solo/Team Mode | Done | /init-project asks for .gitignore preference |
 | Install Script | Done | --add, --update, --list flags, ShellCheck compliant |
-| ADRs | Done | 7 ADRs (000-006) |
+| ADRs | Done | 8 ADRs (000-007) |
 | Open Source Release | Done | Published to b33eep/claude-setup |
 | GitHub Actions E2E | Done | Full test coverage |
 | Open Source Polish | Done | SECURITY.md, CONTRIBUTING.md, CHANGELOG.md, templates |
@@ -34,7 +34,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | /todo command | High | Manually editing CLAUDE.md for todos is cumbersome | Create command that appends todos directly to CLAUDE.md |
 | /do-review command | High | Unclear when to trigger code review, easy to forget | Create command + refine global prompt guidance |
 | ~~Slidev skill attribution~~ | ~~High~~ | ~~Done~~ | Added source + author to SKILL.md (AJBcoding) |
-| Coding standards → Skills | High | Standards in global CLAUDE.md are static, don't adapt to project type | Convert to skills per language (Python, TypeScript, Java). Activate contextually. Custom via ~/.claude/custom/ |
+| Coding standards → Skills | High | Standards in global CLAUDE.md are static, don't adapt to project type | Context skills with `type: context` and `applies_to`. See [ADR-007](docs/adr/007-coding-standards-as-skills.md) |
 | ADR guidance | Medium | Unclear when ADR is needed vs just a comment | Refine global prompt or create /adr command |
 | Security hint | Medium | Users might put secrets in CLAUDE.md (risky in Team mode) | Add warning in global prompt: use .env for secrets |
 | MCP web search | Medium | Claude doesn't automatically use installed MCP search tools | Instruct in global prompt to prefer google/brave MCP |
@@ -42,11 +42,14 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Auto-compact prompt | Low | Users must remember to disable auto-compact manually | Ask during install if they want to disable (skip if complex) |
 
 **What was done in this session:**
-- Slidev skill attribution: Found original source (AJBcoding on GitHub/Smithery.ai), added `source` and `author` to SKILL.md frontmatter
-- Git commit message standards: Added IMPORTANT note that scope is REQUIRED, updated template
-- New todo: "Coding standards → Skills" - convert static standards to context-aware skills
+- Implemented ADR-007: Coding standards → Context skills
+- Created `skills/standards-python/` with SKILL.md and code-review-checklist
+- Removed old `templates/modules/standards/` (python, typescript, design-patterns)
+- Updated global-CLAUDE.md template (removed inline standards, added context skills docs)
+- Added version-based migration system to install.sh (v1→v2)
+- Updated GitHub Actions tests for new structure
 
-**Next Step:** Work on High priority todos: /todo command, /do-review command, Coding standards → Skills
+**Next Step:** Create standards-typescript skill, then test with `./install.sh --update`
 
 ---
 
@@ -61,6 +64,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Document & Clear | No /compact, use CLAUDE.md | [ADR-004](docs/adr/004-document-and-clear-workflow.md) |
 | E2E Tests | GitHub Actions, full validation | [ADR-005](docs/adr/005-e2e-tests-github-actions.md) |
 | Shell Architecture | Single-file bash, review at 1000 lines | [ADR-006](docs/adr/006-shell-script-architecture.md) |
+| Coding Standards as Skills | Context skills, partial match, override | [ADR-007](docs/adr/007-coding-standards-as-skills.md) |
 
 ---
 
@@ -82,7 +86,7 @@ claude-setup/
 ├── mcp/
 ├── commands/
 ├── skills/
-└── docs/adr/000-006-*.md
+└── docs/adr/000-007-*.md
 ```
 
 ---

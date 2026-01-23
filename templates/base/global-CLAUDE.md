@@ -81,9 +81,9 @@
 
 ### Global (~/.claude/CLAUDE.md)
 
-- Coding standards (selected during install)
 - General conventions
 - This workflow
+- Coding standards loaded automatically via context skills (based on Tech Stack)
 
 ### Project (project/CLAUDE.md)
 
@@ -121,11 +121,29 @@ Available MCP servers for extended functionality (configured during install):
 
 Available skills for specialized tasks (`~/.claude/skills/`):
 
-| Skill | Description |
-|-------|-------------|
-| `create-slidev-presentation` | Create/edit Slidev presentations |
+| Skill | Type | Description |
+|-------|------|-------------|
+| `create-slidev-presentation` | command | Create/edit Slidev presentations |
+| `standards-python` | context | Python coding standards (auto-loaded) |
+| `standards-typescript` | context | TypeScript coding standards (auto-loaded) |
+
+**Skill Types:**
+- `command`: Invoked explicitly via `/skill-name`
+- `context`: Auto-loaded when project's Tech Stack matches `applies_to`
 
 > **Note:** Run `./install.sh --list` to see installed skills.
+
+### Context Skills Auto-Loading
+
+Context skills are automatically loaded at session start based on the project's Tech Stack.
+
+**Example:** If your project CLAUDE.md contains:
+```
+Tech Stack: Python, FastAPI
+```
+→ The `standards-python` skill is auto-loaded (matches `python` in `applies_to`).
+
+**Custom standards:** Override with `~/.claude/custom/skills/standards-python/`
 
 ---
 
@@ -181,28 +199,6 @@ Available skills for specialized tasks (`~/.claude/skills/`):
 
 ---
 
-## Coding Standards
-
-### Core Principles
-
-1. **Simplicity**: Simple, understandable code
-2. **Readability**: Readability over cleverness
-3. **Maintainability**: Code that's easy to maintain
-4. **Testability**: Code that's easy to test
-5. **DRY**: Don't Repeat Yourself - but don't overdo it
-
-### General Rules
-
-- **Early Returns**: Use early returns to avoid nesting
-- **Descriptive Names**: Meaningful names for variables and functions
-- **Minimal Changes**: Only change relevant code parts
-- **No Over-Engineering**: No unnecessary complexity
-- **Minimal Comments**: Code should be self-explanatory. No redundant comments!
-
-{{STANDARDS_MODULES}}
-
----
-
 ## Git Commit Messages
 
 Format: `<type>(<scope>): <description>`
@@ -228,26 +224,3 @@ chore(ci): update GitHub Actions workflow
 ```
 
 **No Co-Authored-By** - Create commits without Co-Authored-By line.
-
----
-
-## Code Review Checklist
-
-**Functionality:**
-- [ ] Does the code work as expected?
-- [ ] Are all edge cases handled?
-- [ ] Is there sufficient error handling?
-
-**Code Quality:**
-- [ ] Are names descriptive?
-- [ ] Is the code testable and tested?
-- [ ] No hardcoded values (secrets, URLs)?
-- [ ] No console.log/print statements?
-- [ ] Typing complete?
-
-**Architecture & Patterns:**
-- [ ] No duplicated code across classes? → Extract Base Class
-- [ ] No if/elif chains for types/variants? → Strategy Pattern
-- [ ] No N queries in loops? → Batch Query
-- [ ] No repeated transformation logic? → Helper Function
-- [ ] DTOs immutable where appropriate? → `frozen=True`
