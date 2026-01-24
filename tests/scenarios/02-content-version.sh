@@ -57,6 +57,9 @@ printf 'y\nn\n' | "$PROJECT_DIR/install.sh" --update > /dev/null
 # Verify version updated to current
 assert_json_eq "$INSTALLED_FILE" ".content_version" "$EXPECTED_VERSION" "content_version updated to v${EXPECTED_VERSION}"
 
+# Verify project template was updated
+assert_file_exists "$CLAUDE_DIR/templates/CLAUDE.template.md" "Project template updated"
+
 scenario "Update shows new modules available"
 
 # Set lower version again

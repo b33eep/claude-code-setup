@@ -32,24 +32,39 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Todo | Priority | Problem | Solution |
 |------|----------|---------|----------|
 | ~~Skill auto-loading~~ | ~~High~~ | ~~Done~~ | Prompt improvement in global-CLAUDE.md. [ADR-010](docs/adr/010-improved-skill-autoloading.md) |
-| /upgrade-claude-setup | High | Updates require leaving Claude Code | Command created. [ADR-011](docs/adr/011-upgrade-command.md). In `feature/upgrade-command` |
-| /todo command | High | Manually editing CLAUDE.md for todos is cumbersome | Create command that appends todos directly to CLAUDE.md |
-| /do-review command | High | Unclear when to trigger code review, easy to forget | Create command + refine global prompt guidance |
+| ADR-011 Implementation | High | Installation & upgrade needs streamlining | See iterations below |
+| /todo command | Medium | Manually editing CLAUDE.md for todos is cumbersome | Create command that appends todos directly to CLAUDE.md |
+| /do-review command | Medium | Unclear when to trigger code review, easy to forget | Create command + refine global prompt guidance |
 | ~~Slidev skill attribution~~ | ~~High~~ | ~~Done~~ | Added source + author to SKILL.md (AJBcoding) |
 | ~~Coding standards → Skills~~ | ~~High~~ | ~~Done~~ | Context skills implemented. See [ADR-007](docs/adr/007-coding-standards-as-skills.md). PR #2 |
-| ADR guidance | Medium | Unclear when ADR is needed vs just a comment | Refine global prompt or create /adr command |
+| ADR guidance | Low | Unclear when ADR is needed vs just a comment | Refine global prompt or create /adr command |
 | ~~Security hint~~ | ~~Medium~~ | ~~Done~~ | Added warning in global prompt: use .env for secrets |
 | ~~Content versioning~~ | ~~Medium~~ | ~~Done~~ | [ADR-008](docs/adr/008-content-versioning.md). Hash-based test validation |
 | ~~MCP web search~~ | ~~Medium~~ | ~~Done~~ | Added "Web Search Preference" section in global-CLAUDE.md |
 | ~~ccstatusline in install.sh~~ | ~~Low~~ | ~~Done~~ | [ADR-009](docs/adr/009-ccstatusline-integration.md). Auto-configured during install |
 | ~~Auto-compact prompt~~ | ~~Low~~ | ~~Skipped~~ | Not configurable via settings.json (hardcoded). Documented in README instead. |
 
-**What was done in this session:**
-- Renamed repo: `claude-setup` → `claude-code-setup`
-- Created `/upgrade-claude-setup` command + ADR-011
-- Branch `feature/upgrade-command` ready for review
+### ADR-011 Implementation Progress
 
-**Next Step:** Merge PR, then continue with /todo and /do-review commands
+| Iteration | Name | Status | Description |
+|-----------|------|--------|-------------|
+| 1 | Template Separation | Done | Extract template from global-CLAUDE.md |
+| 2 | quick-install.sh | Done | Curl one-liner for new users |
+| 3 | /upgrade-claude-setup | Done | Fixed URLs, ready for merge |
+| 4 | /add-custom | Done | Command for custom repos |
+| 5 | /upgrade-custom | Done | Command for custom updates |
+| 6 | Documentation & Release | Done | README, CHANGELOG, VERSION bump |
+
+**What was done:**
+- Iteration 1: Extracted template from global-CLAUDE.md → `templates/project-CLAUDE.md`
+- Iteration 2: Created quick-install.sh, updated README, added test 06
+- Iteration 3: Fixed URLs in /upgrade-claude-setup command, added test 09
+- Iteration 4: Created /add-custom command, added test 07
+- Iteration 5: Created /upgrade-custom command, added test 08
+- Iteration 6: Updated README (Updates section), CHANGELOG, VERSION bump to v5
+- All tests passing (96 tests, 9 scenarios)
+
+**Next Step:** ADR-011 complete. Ready for merge to main.
 
 ---
 

@@ -64,5 +64,18 @@ for cmd in catchup.md clear-session.md init-project.md; do
     fi
 done
 
+# Verify project template installed
+assert_file_exists "$CLAUDE_DIR/templates/CLAUDE.template.md" "Project template installed"
+expected=$(shasum -a 256 "$PROJECT_DIR/templates/project-CLAUDE.md" | cut -d' ' -f1)
+actual=$(shasum -a 256 "$CLAUDE_DIR/templates/CLAUDE.template.md" | cut -d' ' -f1)
+if [ "$expected" = "$actual" ]; then
+    pass "CLAUDE.template.md matches source"
+else
+    fail "CLAUDE.template.md differs from source"
+fi
+
+# Verify init-project.md references the template path
+assert_file_contains "$CLAUDE_DIR/commands/init-project.md" "CLAUDE.template.md" "init-project references template"
+
 # Print summary
 print_summary
