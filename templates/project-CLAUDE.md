@@ -14,7 +14,7 @@
 
 | Story | Status | Tests | Notes |
 |-------|--------|-------|-------|
-| US-1 | Open | - | {Brief info} |
+| US-1 | {Status} | {N} | {Brief info} |
 
 **Legend:** Open | In Progress | Done
 
@@ -33,12 +33,6 @@
 ## User Stories
 
 ### US-1: {Title}
-
-**Acceptance Criteria:**
-- [ ] Criterion 1
-- [ ] Criterion 2
-
-**Tasks:**
 - [ ] Task 1
 - [ ] Task 2
 
@@ -46,16 +40,4 @@
 
 ## Development
 
-```bash
-# Setup
-{setup commands}
-
-# Run
-{run commands}
-
-# Test
-{test commands}
-
-# Build
-{build commands}
-```
+{Build, test, run commands}

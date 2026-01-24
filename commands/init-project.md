@@ -23,7 +23,7 @@ Initialize a new project with CLAUDE.md and folder structure.
    - **Team**: Keep `CLAUDE.md` tracked in Git
 
 3. **Create CLAUDE.md**
-   - Use project template from global CLAUDE.md
+   - Read template from `~/.claude/templates/CLAUDE.template.md`
    - Fill in detected project info
    - Add common development commands
 

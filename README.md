@@ -78,6 +78,12 @@ A modular, minimal setup for Claude Code with a clear workflow and persistent me
 ## Quick Start
 
 ```bash
+curl -fsSL https://raw.githubusercontent.com/b33eep/claude-code-setup/main/quick-install.sh | bash
+```
+
+Or clone manually:
+
+```bash
 git clone https://github.com/b33eep/claude-code-setup.git
 cd claude-code-setup
 ./install.sh
@@ -108,6 +114,32 @@ The installer will guide you through selecting:
 ./install.sh --help       # Show help
 ```
 
+## Updates
+
+Update without leaving Claude Code:
+
+| Command | Description |
+|---------|-------------|
+| `/upgrade-claude-setup` | Update base installation to latest version |
+| `/add-custom <url>` | Add custom module repository (company/personal) |
+| `/upgrade-custom` | Pull latest changes from custom repo |
+
+**Example: Update base installation**
+```
+You: /upgrade-claude-setup
+Claude: Checking for updates...
+        Upgraded claude-code-setup: v4 -> v5
+        Run /catchup to reload context.
+```
+
+**Example: Add company modules**
+```
+You: /add-custom git@github.com:company/claude-modules.git
+Claude: Cloned custom modules.
+        Found: 3 skills, 2 MCP servers
+        Run install.sh --add to select and install modules.
+```
+
 ## File Structure
 
 ### Repository Structure
@@ -116,6 +148,7 @@ The installer will guide you through selecting:
 claude-code-setup/
 ├── templates/
 │   ├── VERSION                   # Content version number
+│   ├── project-CLAUDE.md         # Project template for /init-project
 │   └── base/
 │       └── global-CLAUDE.md      # Core: Workflow, conventions
 ├── mcp/                          # MCP server configurations
@@ -130,11 +163,15 @@ claude-code-setup/
 ├── commands/                     # Workflow commands (always installed)
 │   ├── catchup.md
 │   ├── clear-session.md
-│   └── init-project.md
+│   ├── init-project.md
+│   ├── upgrade-claude-setup.md   # Update base installation
+│   ├── add-custom.md             # Add custom module repo
+│   └── upgrade-custom.md         # Update custom modules
 ├── tests/                        # Test suite
 │   ├── test.sh                   # Test runner
 │   ├── helpers.sh                # Assertion functions
-│   └── scenarios/                # Test scenarios
+│   └── scenarios/                # 9 test scenarios
+├── quick-install.sh              # One-liner installation
 └── install.sh
 ```
 
@@ -144,11 +181,12 @@ claude-code-setup/
 ~/.claude/
 ├── CLAUDE.md              # Generated from base + selected modules
 ├── settings.json          # User settings (statusLine, etc.)
+├── installed.json         # Tracks installed modules
 ├── commands/              # Workflow commands
 ├── skills/                # Installed skills
-├── installed.json         # Tracks installed modules
+├── templates/
+│   └── CLAUDE.template.md # Project template for /init-project
 └── custom/                # Your custom modules (see below)
-    ├── standards/
     ├── mcp/
     └── skills/
 

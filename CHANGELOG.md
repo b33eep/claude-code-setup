@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Content v5: Installation & upgrade improvements (ADR-011)
+  - Add `quick-install.sh` for curl one-liner installation
+  - Add `/upgrade-claude-setup` command for in-session updates
+  - Add `/add-custom` command for custom module repositories
+  - Add `/upgrade-custom` command for updating custom repos
+  - Separate project template to `templates/project-CLAUDE.md`
+  - Add 4 new test scenarios (06-09)
 - Content v4: Add MCP web search preference - prefer google-search/brave-search over built-in WebSearch when installed
 - Content v3: Improved skill auto-loading (ADR-010) - concrete instructions for session-start, task-based, and review-agent loading
 - Content v2: Add Shell/Bash coding standards skill (standards-shell)

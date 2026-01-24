@@ -653,6 +653,7 @@ do_install() {
     mkdir -p "$CLAUDE_DIR"
     mkdir -p "$CLAUDE_DIR/commands"
     mkdir -p "$CLAUDE_DIR/skills"
+    mkdir -p "$CLAUDE_DIR/templates"
     mkdir -p "$CUSTOM_DIR/mcp"
     mkdir -p "$CUSTOM_DIR/skills"
 
@@ -679,7 +680,11 @@ do_install() {
     print_header "Building CLAUDE.md"
 
     build_claude_md
-    print_success "CLAUDE.md created (coding standards are now in skills)"
+    print_success "CLAUDE.md created"
+
+    # Install project template
+    cp "$SCRIPT_DIR/templates/project-CLAUDE.md" "$CLAUDE_DIR/templates/CLAUDE.template.md"
+    print_success "Project template installed"
 
     # Install MCP servers
     local display_name
@@ -787,6 +792,11 @@ do_update() {
 
     build_claude_md
     print_success "CLAUDE.md rebuilt"
+
+    # Update project template
+    mkdir -p "$CLAUDE_DIR/templates"
+    cp "$SCRIPT_DIR/templates/project-CLAUDE.md" "$CLAUDE_DIR/templates/CLAUDE.template.md"
+    print_success "Project template updated"
 
     # Update skills
     print_header "Updating Skills"
