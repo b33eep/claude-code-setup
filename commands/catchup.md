@@ -9,6 +9,11 @@ After `/clear` or new chat, understand recent changes.
    - Or: `git status` for uncommitted changes
    - Read relevant changed files
 
-2. **Summary**
+2. **Load context skills**
+   - Check `Tech Stack:` in project CLAUDE.md
+   - Load matching skills from `~/.claude/skills/` (see Skill Loading in global CLAUDE.md)
+   - Example: Tech Stack includes "Bash" → Read `standards-shell/SKILL.md`
+
+3. **Summary**
    - What was recently changed?
    - What's the next step according to CLAUDE.md?

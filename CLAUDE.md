@@ -21,7 +21,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Custom Modules | Done | ~/.claude/custom/ for user modules |
 | Solo/Team Mode | Done | /init-project asks for .gitignore preference |
 | Install Script | Done | --add, --update, --list flags, ShellCheck compliant |
-| ADRs | Done | 10 ADRs (000-009) |
+| ADRs | Done | 11 ADRs (000-010) |
 | Open Source Release | Done | Published to b33eep/claude-setup |
 | GitHub Actions E2E | Done | Full test coverage |
 | Open Source Polish | Done | SECURITY.md, CONTRIBUTING.md, CHANGELOG.md, templates |
@@ -31,6 +31,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 
 | Todo | Priority | Problem | Solution |
 |------|----------|---------|----------|
+| ~~Skill auto-loading~~ | ~~High~~ | ~~Done~~ | Prompt improvement in global-CLAUDE.md. [ADR-010](docs/adr/010-improved-skill-autoloading.md) |
 | /todo command | High | Manually editing CLAUDE.md for todos is cumbersome | Create command that appends todos directly to CLAUDE.md |
 | /do-review command | High | Unclear when to trigger code review, easy to forget | Create command + refine global prompt guidance |
 | ~~Slidev skill attribution~~ | ~~High~~ | ~~Done~~ | Added source + author to SKILL.md (AJBcoding) |
@@ -43,14 +44,13 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Auto-compact prompt | Low | Users must remember to disable auto-compact manually | Ask during install if they want to disable (skip if complex) |
 
 **What was done in this session:**
-- Implemented ccstatusline auto-configuration in install.sh
-- Added `configure_statusline()` with error handling and corrupted JSON recovery
-- Created ADR-009 with rollback instructions and prompt behavior docs
-- Added 19 new tests in `05-statusline.sh` (57 total tests)
-- Updated README.md with new documentation
-- PR [#5](https://github.com/b33eep/claude-setup/pull/5) merged
+- Created and implemented ADR-010 for improved skill auto-loading
+- Problem: Claude forgets to load context skills, users must remind
+- Solution: Concrete prompt instructions for session-start, task-based, and review-agent loading
+- Updated global-CLAUDE.md with new "Skill Loading" section
+- Content version bumped to v3
 
-**Next Step:** Implement /todo and /do-review commands (High priority)
+**Next Step:** Merge PR, then continue with /todo and /do-review commands
 
 ---
 
@@ -68,6 +68,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Coding Standards as Skills | Context skills, partial match, override | [ADR-007](docs/adr/007-coding-standards-as-skills.md) |
 | Content Versioning | Incrementing number + CHANGELOG.md | [ADR-008](docs/adr/008-content-versioning.md) |
 | ccstatusline | Context visibility in status bar | [ADR-009](docs/adr/009-ccstatusline-integration.md) |
+| Skill Auto-Loading | Task-based + review agent integration | [ADR-010](docs/adr/010-improved-skill-autoloading.md) |
 
 ---
 
@@ -89,7 +90,7 @@ claude-setup/
 ├── mcp/
 ├── commands/
 ├── skills/
-└── docs/adr/000-009-*.md
+└── docs/adr/000-010-*.md
 ```
 
 ---

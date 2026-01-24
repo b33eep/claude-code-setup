@@ -128,29 +128,67 @@ Available skills for specialized tasks (`~/.claude/skills/`):
 | Skill | Type | Description |
 |-------|------|-------------|
 | `create-slidev-presentation` | command | Create/edit Slidev presentations |
-| `standards-python` | context | Python coding standards (auto-loaded) |
-| `standards-shell` | context | Shell/Bash coding standards (auto-loaded) |
-| `standards-typescript` | context | TypeScript coding standards (auto-loaded) |
+| `standards-python` | context | Python coding standards |
+| `standards-shell` | context | Shell/Bash coding standards |
+| `standards-typescript` | context | TypeScript coding standards |
 
 **Skill Types:**
 - `command`: Invoked explicitly via `/skill-name`
-- `context`: Auto-loaded when project's Tech Stack matches `applies_to`
+- `context`: Auto-loaded based on Tech Stack AND task
 
 > **Note:** Run `./install.sh --list` to see installed skills.
 
-### Context Skills Auto-Loading
+---
 
-Context skills are automatically loaded at session start based on the project's Tech Stack.
+## Skill Loading
 
-**Example:** If your project CLAUDE.md contains:
+**Claude MUST load context skills proactively.** Don't wait for reminders.
+
+### 1. At Session Start (Tech Stack)
+
+After reading project CLAUDE.md, load skills matching the `Tech Stack:` field:
+
+1. Parse Tech Stack (e.g., `Tech Stack: Python, FastAPI`)
+2. For each context skill in `~/.claude/skills/`:
+   - If any Tech Stack item appears in skill's `applies_to` → **READ the SKILL.md**
+3. Custom skills (`~/.claude/custom/skills/`) override installed skills
+
+**Matching:**
+| Project Tech Stack | Skill `applies_to` | Action |
+|--------------------|-------------------|--------|
+| Python, FastAPI | `[python, fastapi, django]` | LOAD (python matches) |
+| React, TypeScript | `[typescript, react, nextjs]` | LOAD (both match) |
+| Rust | `[python, ...]` | Skip (no match) |
+
+### 2. Before Writing/Editing Code (Task-Based)
+
+**BEFORE writing or editing a file**, load the matching skill - even if not in Tech Stack:
+
+| File Extension | Skill to Load |
+|----------------|---------------|
+| `.py` | `~/.claude/skills/standards-python/SKILL.md` |
+| `.ts`, `.tsx`, `.js`, `.jsx` | `~/.claude/skills/standards-typescript/SKILL.md` |
+| `.sh`, `.bash`, or Bash scripts | `~/.claude/skills/standards-shell/SKILL.md` |
+
+**Example:** Project has `Tech Stack: Python` but user asks for a shell script test.
+→ Load `standards-shell` BEFORE writing the `.sh` file.
+
+### 3. Code Review Agent
+
+When spawning `code-review-ai:architect-review`, include relevant skills:
+
+1. Identify languages in files being reviewed
+2. Read matching skill(s)
+3. Include skill content in the Task tool's prompt
+
+**Example prompt for review agent:**
 ```
-Tech Stack: Python, FastAPI
+Review these changes. Apply these coding standards:
+
+[paste relevant sections from standards-python/SKILL.md]
 ```
-→ The `standards-python` skill is auto-loaded (matches `python` in `applies_to`).
 
-**Custom standards:** Override with `~/.claude/custom/skills/standards-python/`
-
-> See [ADR-007](https://github.com/b33eep/claude-setup/blob/main/docs/adr/007-coding-standards-as-skills.md) for technical details.
+> See [ADR-007](https://github.com/b33eep/claude-setup/blob/main/docs/adr/007-coding-standards-as-skills.md) and [ADR-010](https://github.com/b33eep/claude-setup/blob/main/docs/adr/010-improved-skill-autoloading.md) for details.
 
 ---
 
