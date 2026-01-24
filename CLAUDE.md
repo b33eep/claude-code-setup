@@ -21,7 +21,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Custom Modules | Done | ~/.claude/custom/ for user modules |
 | Solo/Team Mode | Done | /init-project asks for .gitignore preference |
 | Install Script | Done | --add, --update, --list flags, ShellCheck compliant |
-| ADRs | Done | 9 ADRs (000-008) |
+| ADRs | Done | 10 ADRs (000-009) |
 | Open Source Release | Done | Published to b33eep/claude-setup |
 | GitHub Actions E2E | Done | Full test coverage |
 | Open Source Polish | Done | SECURITY.md, CONTRIBUTING.md, CHANGELOG.md, templates |
@@ -39,7 +39,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | ~~Security hint~~ | ~~Medium~~ | ~~Done~~ | Added warning in global prompt: use .env for secrets |
 | ~~Content versioning~~ | ~~Medium~~ | ~~Done~~ | [ADR-008](docs/adr/008-content-versioning.md). Hash-based test validation |
 | MCP web search | Medium | Claude doesn't automatically use installed MCP search tools | Instruct in global prompt to prefer google/brave MCP |
-| ccstatusline in install.sh | Low | Users must manually configure ccstatusline | Auto-configure during install (skip if complex) |
+| ~~ccstatusline in install.sh~~ | ~~Low~~ | ~~Done~~ | [ADR-009](docs/adr/009-ccstatusline-integration.md). Auto-configured during install |
 | Auto-compact prompt | Low | Users must remember to disable auto-compact manually | Ask during install if they want to disable (skip if complex) |
 
 **What was done in this session:**
@@ -68,6 +68,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Shell Architecture | Single-file bash, review at 1000 lines | [ADR-006](docs/adr/006-shell-script-architecture.md) |
 | Coding Standards as Skills | Context skills, partial match, override | [ADR-007](docs/adr/007-coding-standards-as-skills.md) |
 | Content Versioning | Incrementing number + CHANGELOG.md | [ADR-008](docs/adr/008-content-versioning.md) |
+| ccstatusline | Context visibility in status bar | [ADR-009](docs/adr/009-ccstatusline-integration.md) |
 
 ---
 
@@ -89,7 +90,7 @@ claude-setup/
 ├── mcp/
 ├── commands/
 ├── skills/
-└── docs/adr/000-008-*.md
+└── docs/adr/000-009-*.md
 ```
 
 ---

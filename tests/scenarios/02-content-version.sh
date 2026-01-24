@@ -17,8 +17,8 @@ trap cleanup_test_env EXIT
 
 scenario "Content version is tracked correctly"
 
-# Fresh install
-printf 'none\nnone\n' | "$PROJECT_DIR/install.sh" > /dev/null
+# Fresh install (no MCP, no skills, decline status line for simpler test)
+printf 'none\nnone\nn\n' | "$PROJECT_DIR/install.sh" > /dev/null
 
 # Verify initial content version
 assert_json_eq "$INSTALLED_FILE" ".content_version" "2" "Initial content_version is 2"
