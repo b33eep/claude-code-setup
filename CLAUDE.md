@@ -21,7 +21,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Custom Modules | Done | ~/.claude/custom/ for user modules |
 | Solo/Team Mode | Done | /init-project asks for .gitignore preference |
 | Install Script | Done | --add, --update, --list, --yes flags, ShellCheck compliant |
-| Records | Done | 12 Records (000-011) |
+| Records | Done | 13 Records (000-012) |
 | Open Source Release | Done | Published to b33eep/claude-code-setup |
 | GitHub Actions E2E | Done | Full test coverage |
 | Open Source Polish | Done | SECURITY.md, CONTRIBUTING.md, CHANGELOG.md, templates |
@@ -38,6 +38,12 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | /do-review command | Medium | Unclear when to trigger code review, easy to forget | Create command + refine global prompt guidance |
 
 **Next Step:** Decide which command to implement next, or proceed to v1.0.0 release.
+
+### Future (Post v1.0.0)
+
+| Todo | Priority | Problem | Solution |
+|------|----------|---------|----------|
+| Optional Hooks | Medium | User must remember 3 manual steps (/clear-session, /clear, /catchup) | Hooks automate 2 of 3 steps, user only types /clear ([Record 012](docs/records/012-optional-hooks-automation.md)) |
 
 ---
 
@@ -57,6 +63,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | ccstatusline | Context visibility in status bar | [009](docs/records/009-ccstatusline-integration.md) |
 | Skill Auto-Loading | Task-based + review agent integration | [010](docs/records/010-improved-skill-autoloading.md) |
 | Upgrade Command | Claude command for in-session updates | [011](docs/records/011-upgrade-command.md) |
+| Optional Hooks | Assisted mode for workflow automation | [012](docs/records/012-optional-hooks-automation.md) |
 
 ---
 
@@ -78,7 +85,7 @@ claude-code-setup/
 ├── mcp/
 ├── commands/
 ├── skills/
-└── docs/records/000-011-*.md
+└── docs/records/000-012-*.md
 ```
 
 ---
