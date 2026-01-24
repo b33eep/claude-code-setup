@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Content v3: Improved skill auto-loading (ADR-010) - concrete instructions for session-start, task-based, and review-agent loading
 - Content v2: Add Shell/Bash coding standards skill (standards-shell)
 - Content v1: Initial managed content (global prompt, commands, skills, MCP configs)
 
