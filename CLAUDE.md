@@ -41,16 +41,18 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | ~~Content versioning~~ | ~~Medium~~ | ~~Done~~ | [ADR-008](docs/adr/008-content-versioning.md). Hash-based test validation |
 | MCP web search | Medium | Claude doesn't automatically use installed MCP search tools | Instruct in global prompt to prefer google/brave MCP |
 | ~~ccstatusline in install.sh~~ | ~~Low~~ | ~~Done~~ | [ADR-009](docs/adr/009-ccstatusline-integration.md). Auto-configured during install |
-| Auto-compact prompt | Low | Users must remember to disable auto-compact manually | Ask during install if they want to disable (skip if complex) |
+| ~~Auto-compact prompt~~ | ~~Low~~ | ~~Skipped~~ | Not configurable via settings.json (hardcoded). Documented in README instead. |
 
 **What was done in this session:**
-- Created and implemented ADR-010 for improved skill auto-loading
-- Problem: Claude forgets to load context skills, users must remind
-- Solution: Concrete prompt instructions for session-start, task-based, and review-agent loading
-- Updated global-CLAUDE.md with new "Skill Loading" section
-- Content version bumped to v3
+- Investigated auto-compact configuration for install.sh
+- Found: Auto-compact is NOT configurable via settings.json (hardcoded in Claude Code)
+- Open feature requests: GitHub #10691, #15719
+- Improved README instead: prominent Post-Install section with disable instructions
+- Added standards-shell to README tables and file structure
+- Added Acknowledgments section (ccstatusline, AJBcoding)
+- Renamed "Skills" to "Command Skills" for clarity
 
-**Next Step:** Merge PR, then continue with /todo and /do-review commands
+**Next Step:** Continue with /todo and /do-review commands
 
 ---
 
