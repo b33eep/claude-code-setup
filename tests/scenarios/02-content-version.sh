@@ -15,13 +15,16 @@ source "$SCRIPT_DIR/../helpers.sh"
 setup_test_env
 trap cleanup_test_env EXIT
 
+# Read expected version dynamically
+EXPECTED_VERSION=$(cat "$PROJECT_DIR/templates/VERSION" | tr -d '[:space:]')
+
 scenario "Content version is tracked correctly"
 
 # Fresh install (no MCP, no skills, decline status line for simpler test)
 printf 'none\nnone\nn\n' | "$PROJECT_DIR/install.sh" > /dev/null
 
-# Verify initial content version
-assert_json_eq "$INSTALLED_FILE" ".content_version" "4" "Initial content_version is 4"
+# Verify content_version field exists (not the specific value - that changes with every release)
+assert_json_exists "$INSTALLED_FILE" ".content_version" "content_version field exists"
 
 scenario "Update when already up-to-date"
 
@@ -38,12 +41,12 @@ scenario "Update when version differs"
 # Manually set lower version to simulate outdated install
 jq '.content_version = 0' "$INSTALLED_FILE" > "$INSTALLED_FILE.tmp" && mv "$INSTALLED_FILE.tmp" "$INSTALLED_FILE"
 
-# Run update - should prompt
+# Run update - should prompt with version diff
 output=$(printf 'n\n' | "$PROJECT_DIR/install.sh" --update 2>&1)
-if echo "$output" | grep -q "v0 → v4"; then
-    pass "Update shows version diff"
+if echo "$output" | grep -q "v0 → v${EXPECTED_VERSION}"; then
+    pass "Update shows version diff (v0 → v${EXPECTED_VERSION})"
 else
-    fail "Update should show version diff (got: $output)"
+    fail "Update should show version diff v0 → v${EXPECTED_VERSION} (got: $output)"
 fi
 
 scenario "Update applies new version"
@@ -51,8 +54,8 @@ scenario "Update applies new version"
 # Accept update (decline new modules prompt)
 printf 'y\nn\n' | "$PROJECT_DIR/install.sh" --update > /dev/null
 
-# Verify version updated
-assert_json_eq "$INSTALLED_FILE" ".content_version" "4" "content_version updated to 4"
+# Verify version updated to current
+assert_json_eq "$INSTALLED_FILE" ".content_version" "$EXPECTED_VERSION" "content_version updated to v${EXPECTED_VERSION}"
 
 scenario "Update shows new modules available"
 
