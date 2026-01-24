@@ -17,10 +17,10 @@ trap cleanup_test_env EXIT
 
 scenario "Fresh install with pdf-reader and standards-python"
 
-# Run install: select pdf-reader (3) and standards-python (2)
+# Run install: select pdf-reader (3), standards-python (2), enable status line (Y)
 # MCP: 1=brave-search, 2=google-search, 3=pdf-reader
-# Skills: 1=create-slidev-presentation, 2=standards-python, 3=standards-typescript
-printf '3\n2\n' | "$PROJECT_DIR/install.sh" > /dev/null
+# Skills: 1=create-slidev-presentation, 2=standards-python, 3=standards-shell, 4=standards-typescript
+printf '3\n2\nY\n' | "$PROJECT_DIR/install.sh" > /dev/null
 
 # Verify core files
 assert_file_exists "$CLAUDE_DIR/CLAUDE.md" "CLAUDE.md created"

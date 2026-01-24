@@ -60,7 +60,7 @@ A modular, minimal setup for Claude Code with a clear workflow and persistent me
 - `docs/adr/` - Architecture Decision Records (persistent, versioned)
 - Git commits - Progress is saved, not lost
 
-> **Tip:** Enable the Claude Code status line (`/config` → set `ccstatusline` to `true`) to see context usage (e.g., `Ctx: 70.2%`) and know when to `/clear-session`.
+> **Tip:** The installer auto-configures [ccstatusline](https://github.com/sirmalloc/ccstatusline) to show context usage (e.g., `Ctx: 70.2%`) so you know when to `/clear-session`. Customize via `npx ccstatusline@latest`.
 
 ## Features
 
@@ -85,7 +85,8 @@ cd claude-setup
 
 The installer will guide you through selecting:
 - MCP servers (PDF Reader, Brave Search, Google Search)
-- Skills (Python Standards, TypeScript Standards, Slidev Presentations)
+- Skills (Python Standards, TypeScript Standards, Shell Standards, Slidev Presentations)
+- Status line (ccstatusline for context usage display)
 
 ## Installation Options
 
@@ -131,6 +132,7 @@ claude-setup/
 ```
 ~/.claude/
 ├── CLAUDE.md              # Generated from base + selected modules
+├── settings.json          # User settings (statusLine, etc.)
 ├── commands/              # Workflow commands
 ├── skills/                # Installed skills
 ├── installed.json         # Tracks installed modules
@@ -140,6 +142,7 @@ claude-setup/
     └── skills/
 
 ~/.claude.json             # MCP servers configuration
+~/.config/ccstatusline/    # Status line widget config (optional)
 ```
 
 ## Available Modules
