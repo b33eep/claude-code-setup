@@ -28,6 +28,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | README Overhaul | Done | Core Concept prominent, ccstatusline, Plugins, Solo/Team |
 | Upgrade Commands | Done | /upgrade-claude-setup, /upgrade-custom, /add-custom ([Record 011](docs/records/011-upgrade-command.md)) |
 | Records Rename | Done | ADR → Records, added guidance in global prompt |
+| --yes Flag Bug Fix | Done | Content v7: Non-interactive updates for /upgrade-claude-setup |
 
 ### Before v1.0.0
 
