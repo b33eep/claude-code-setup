@@ -34,6 +34,9 @@ trap 'echo ""; echo "Installation cancelled."; exit 130' INT TERM
 SELECTED_MCP=()
 SELECTED_SKILLS=()
 
+# Non-interactive mode (--yes flag)
+YES_MODE=false
+
 # ============================================
 # HELPER FUNCTIONS
 # ============================================
@@ -141,8 +144,12 @@ show_usage() {
     echo "  (none)      Initial installation with interactive wizard"
     echo "  --add       Add more modules to existing installation"
     echo "  --update    Update all installed modules"
+    echo "  --yes, -y   Skip confirmation prompts (for --update)"
     echo "  --list      Show installed and available modules"
     echo "  --help      Show this help message"
+    echo ""
+    echo "Examples:"
+    echo "  ./install.sh --update --yes   Non-interactive update"
     echo ""
     echo "Custom Modules:"
     echo "  Place custom modules in ~/.claude/custom/"
@@ -770,10 +777,13 @@ do_update() {
     echo "Content version: v$installed_v → v$available_v"
     echo "See CHANGELOG.md for details."
     echo ""
-    read -rp "Proceed? (y/N): " confirm
-    if [ "$confirm" != "y" ] && [ "$confirm" != "Y" ]; then
-        echo "Cancelled."
-        exit 0
+
+    if [ "$YES_MODE" = "false" ]; then
+        read -rp "Proceed? (y/N): " confirm
+        if [ "$confirm" != "y" ] && [ "$confirm" != "Y" ]; then
+            echo "Cancelled."
+            exit 0
+        fi
     fi
 
     # Update commands
@@ -836,52 +846,54 @@ do_update() {
     echo ""
     print_success "Update complete! (v$available_v)"
 
-    # Check for new modules
-    local new_mcp new_skills
-    new_mcp=$(get_new_mcp)
-    new_skills=$(get_new_skills)
+    # Check for new modules (skip in non-interactive mode)
+    if [ "$YES_MODE" = "false" ]; then
+        local new_mcp new_skills
+        new_mcp=$(get_new_mcp)
+        new_skills=$(get_new_skills)
 
-    if [ -n "$new_mcp" ] || [ -n "$new_skills" ]; then
-        echo ""
-        print_header "New Modules Available"
-
-        if [ -n "$new_mcp" ]; then
-            echo "  MCP: $new_mcp"
-        fi
-        if [ -n "$new_skills" ]; then
-            echo "  Skills: $new_skills"
-        fi
-
-        echo ""
-        read -rp "Install new modules? (y/N): " install_new
-        if [ "$install_new" = "y" ] || [ "$install_new" = "Y" ]; then
+        if [ -n "$new_mcp" ] || [ -n "$new_skills" ]; then
             echo ""
-            select_mcp "add"
-            select_skills "add"
+            print_header "New Modules Available"
 
-            # Install selected MCP servers
-            if [ ${#SELECTED_MCP[@]} -gt 0 ]; then
-                for mcp in "${SELECTED_MCP[@]}"; do
-                    print_header "Installing MCP: $mcp"
-                    if install_mcp "$mcp"; then
-                        add_to_installed "mcp" "$mcp"
-                        print_success "Installed $mcp"
-                    fi
-                done
+            if [ -n "$new_mcp" ]; then
+                echo "  MCP: $new_mcp"
+            fi
+            if [ -n "$new_skills" ]; then
+                echo "  Skills: $new_skills"
             fi
 
-            # Install selected skills
-            if [ ${#SELECTED_SKILLS[@]} -gt 0 ]; then
-                for skill in "${SELECTED_SKILLS[@]}"; do
-                    print_header "Installing Skill: $skill"
-                    if install_skill "$skill"; then
-                        add_to_installed "skills" "$skill"
-                        print_success "Installed $skill"
-                    fi
-                done
+            echo ""
+            read -rp "Install new modules? (y/N): " install_new
+            if [ "$install_new" = "y" ] || [ "$install_new" = "Y" ]; then
+                echo ""
+                select_mcp "add"
+                select_skills "add"
 
-                # Rebuild CLAUDE.md with new skills
-                build_claude_md
+                # Install selected MCP servers
+                if [ ${#SELECTED_MCP[@]} -gt 0 ]; then
+                    for mcp in "${SELECTED_MCP[@]}"; do
+                        print_header "Installing MCP: $mcp"
+                        if install_mcp "$mcp"; then
+                            add_to_installed "mcp" "$mcp"
+                            print_success "Installed $mcp"
+                        fi
+                    done
+                fi
+
+                # Install selected skills
+                if [ ${#SELECTED_SKILLS[@]} -gt 0 ]; then
+                    for skill in "${SELECTED_SKILLS[@]}"; do
+                        print_header "Installing Skill: $skill"
+                        if install_skill "$skill"; then
+                            add_to_installed "skills" "$skill"
+                            print_success "Installed $skill"
+                        fi
+                    done
+
+                    # Rebuild CLAUDE.md with new skills
+                    build_claude_md
+                fi
             fi
         fi
     fi
@@ -894,18 +906,46 @@ do_update() {
 # ============================================
 
 main() {
-    case "${1:-}" in
-        --help|-h)
-            show_usage
-            ;;
-        --list|-l)
+    local action=""
+
+    # Parse arguments
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --help|-h)
+                show_usage
+                return 0
+                ;;
+            --list|-l)
+                action="list"
+                ;;
+            --add|-a)
+                action="add"
+                ;;
+            --update|-u)
+                action="update"
+                ;;
+            --yes|-y)
+                YES_MODE=true
+                ;;
+            *)
+                echo "Unknown option: $1" >&2
+                show_usage
+                exit 1
+                ;;
+        esac
+        shift
+    done
+
+    # Execute action
+    case "$action" in
+        "list")
             init_installed_json
             list_modules
             ;;
-        --add|-a)
+        "add")
             do_install "add"
             ;;
-        --update|-u)
+        "update")
             do_update
             ;;
         "")
@@ -923,11 +963,6 @@ main() {
                 echo "{\"content_version\":$(get_content_version),\"mcp\":[],\"skills\":[]}" > "$INSTALLED_FILE"
             fi
             do_install "install"
-            ;;
-        *)
-            echo "Unknown option: $1" >&2
-            show_usage
-            exit 1
             ;;
     esac
 }

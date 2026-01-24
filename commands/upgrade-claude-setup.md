@@ -23,8 +23,8 @@ Update claude-code-setup to the latest version without leaving Claude Code.
    temp_dir=$(mktemp -d)
    git clone --depth 1 https://github.com/b33eep/claude-code-setup.git "$temp_dir"
 
-   # Run update
-   cd "$temp_dir" && ./install.sh --update
+   # Run update (--yes skips confirmation prompts)
+   cd "$temp_dir" && ./install.sh --update --yes
 
    # Cleanup
    rm -rf "$temp_dir"

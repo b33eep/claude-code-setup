@@ -113,12 +113,13 @@ Claude: Upgraded claude-code-setup: v4 → v5
 ```
 
 <details>
-<summary>Shell commands (for CI/CD or scripting)</summary>
+<summary>Shell commands</summary>
 
 ```bash
-./install.sh --add        # Add more modules
-./install.sh --update     # Update all modules
-./install.sh --list       # Show installed modules
+./install.sh --add           # Add more modules
+./install.sh --update        # Update all modules
+./install.sh --update --yes  # Non-interactive (used by /upgrade-claude-setup)
+./install.sh --list          # Show installed modules
 ```
 
 </details>

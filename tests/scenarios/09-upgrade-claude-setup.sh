@@ -37,5 +37,14 @@ scenario "Command has error handling"
 assert_file_contains "$PROJECT_DIR/commands/upgrade-claude-setup.md" "up-to-date" "Has up-to-date message"
 assert_file_contains "$PROJECT_DIR/commands/upgrade-claude-setup.md" "Manual upgrade" "Has manual fallback"
 
+scenario "Command uses --yes for non-interactive mode"
+
+# Use grep -F for fixed string match (avoids -- being interpreted as option)
+if grep -qF -- "--update --yes" "$PROJECT_DIR/commands/upgrade-claude-setup.md"; then
+    pass "Uses --yes flag for non-interactive update"
+else
+    fail "Should use --yes flag for non-interactive update"
+fi
+
 # Print summary
 print_summary

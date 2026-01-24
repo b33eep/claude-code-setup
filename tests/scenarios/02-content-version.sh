@@ -94,5 +94,52 @@ printf 'y\ny\nnone\n2\n' | "$PROJECT_DIR/install.sh" --update > /dev/null
 assert_dir_exists "$CLAUDE_DIR/skills/standards-python" "standards-python installed via update"
 assert_json_exists "$INSTALLED_FILE" '.skills[] | select(. == "standards-python")' "standards-python tracked"
 
+scenario "Update with --yes flag (non-interactive)"
+
+# Set lower version
+jq '.content_version = 0' "$INSTALLED_FILE" > "$INSTALLED_FILE.tmp" && mv "$INSTALLED_FILE.tmp" "$INSTALLED_FILE"
+
+# Run update with --yes - should not require any input
+output=$("$PROJECT_DIR/install.sh" --update --yes 2>&1)
+
+# Should complete without prompting
+if echo "$output" | grep -q "Update complete"; then
+    pass "--yes completes update without prompting"
+else
+    fail "--yes should complete update (got: $output)"
+fi
+
+# Version should be updated
+assert_json_eq "$INSTALLED_FILE" ".content_version" "$EXPECTED_VERSION" "--yes updates content_version"
+
+scenario "Update with --yes skips new modules prompt"
+
+# Set lower version
+jq '.content_version = 0' "$INSTALLED_FILE" > "$INSTALLED_FILE.tmp" && mv "$INSTALLED_FILE.tmp" "$INSTALLED_FILE"
+
+# Run update with --yes
+output=$("$PROJECT_DIR/install.sh" --update --yes 2>&1)
+
+# Should NOT show "New Modules Available" (skipped in non-interactive mode)
+if echo "$output" | grep -q "New Modules Available"; then
+    fail "--yes should skip 'New Modules Available' prompt"
+else
+    pass "--yes skips new modules prompt"
+fi
+
+scenario "Update with -y short flag"
+
+# Set lower version
+jq '.content_version = 0' "$INSTALLED_FILE" > "$INSTALLED_FILE.tmp" && mv "$INSTALLED_FILE.tmp" "$INSTALLED_FILE"
+
+# Run update with -y (short form)
+output=$("$PROJECT_DIR/install.sh" --update -y 2>&1)
+
+if echo "$output" | grep -q "Update complete"; then
+    pass "-y short flag works"
+else
+    fail "-y short flag should work (got: $output)"
+fi
+
 # Print summary
 print_summary
