@@ -27,6 +27,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Open Source Polish | Done | SECURITY.md, CONTRIBUTING.md, CHANGELOG.md, templates |
 | README Overhaul | Done | Core Concept prominent, ccstatusline, Plugins, Solo/Team |
 | Upgrade Commands | Done | /upgrade-claude-setup, /upgrade-custom, /add-custom ([Record 011](docs/records/011-upgrade-command.md)) |
+| Records Rename | Done | ADR → Records, added guidance in global prompt |
 
 ### Before v1.0.0
 
@@ -34,7 +35,6 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 |------|----------|---------|----------|
 | /todo command | Medium | Manually editing CLAUDE.md for todos is cumbersome | Create command that appends todos directly to CLAUDE.md |
 | /do-review command | Medium | Unclear when to trigger code review, easy to forget | Create command + refine global prompt guidance |
-| ~~Records guidance~~ | ~~Low~~ | ~~Unclear when Record is needed vs just a comment~~ | Done - guidance added to global prompt |
 
 **Next Step:** Decide which command to implement next, or proceed to v1.0.0 release.
 
