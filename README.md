@@ -88,6 +88,16 @@ The installer will guide you through selecting:
 - Skills (Python Standards, TypeScript Standards, Shell Standards, Slidev Presentations)
 - Status line (ccstatusline for context usage display)
 
+### Post-Install: Disable Auto-Compact
+
+> **Important:** Auto-compaction causes unpredictable context loss. Disable it:
+>
+> 1. Run `/settings` or press `Cmd+,`
+> 2. Go to **Config** tab
+> 3. Set **Auto-compact** to `false`
+>
+> This setup uses `/clear-session` + `/clear` instead for controlled context management.
+
 ## Installation Options
 
 ```bash
@@ -115,6 +125,7 @@ claude-setup/
 ├── skills/                       # Skills (coding standards + tools)
 │   ├── standards-python/         # Python standards (context skill)
 │   ├── standards-typescript/     # TypeScript standards (context skill)
+│   ├── standards-shell/          # Shell/Bash standards (context skill)
 │   └── create-slidev-presentation/
 ├── commands/                     # Workflow commands (always installed)
 │   ├── catchup.md
@@ -155,6 +166,7 @@ Coding standards are now **context skills** that auto-load based on your project
 |-------|-------------------------------------|
 | `standards-python` | python, fastapi, django, flask, pytest, pydantic, sqlalchemy, celery, poetry, asyncio, aiohttp, httpx |
 | `standards-typescript` | typescript, nodejs, react, nextjs, vue, angular, express, nestjs, deno, bun, zod |
+| `standards-shell` | bash, sh, shell, zsh, shellcheck, bats |
 
 **How it works:**
 1. Your project `CLAUDE.md` defines: `Tech Stack: Python, FastAPI`
@@ -171,11 +183,11 @@ Coding standards are now **context skills** that auto-load based on your project
 | `brave-search` | Web search (2000 free queries/month) | Yes |
 | `google-search` | Google Custom Search | Yes |
 
-### Skills
+### Command Skills
 
 | Skill | Description |
 |-------|-------------|
-| `create-slidev-presentation` | Create/edit Slidev presentations |
+| `create-slidev-presentation` | Create/edit Slidev presentations (invoke via `/create-slidev-presentation`) |
 
 ## Custom Modules
 
@@ -313,16 +325,6 @@ When running `/init-project`, you choose how CLAUDE.md is handled:
 
 `/clear-session` respects this: in Solo mode, only ADRs are committed.
 
-## Configuration
-
-### Disable Auto-Compact
-
-Auto-compaction can cause context loss. Disable it:
-
-1. Open Claude Code settings: `/settings` or `Cmd+,`
-2. Go to **Config** tab
-3. Set **Auto-compact** to `false`
-
 ## Plugins (Optional)
 
 Claude Code supports plugins via the built-in marketplace:
@@ -392,6 +394,11 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to:
 - Report bugs and suggest features
 - Submit pull requests
 - Add new modules
+
+## Acknowledgments
+
+- [ccstatusline](https://github.com/sirmalloc/ccstatusline) by sirmalloc - Context usage display
+- [moai-lang-shell](https://github.com/AJBcoding/claude-skill-eval/tree/main/skills/moai-lang-shell) by AJBcoding - Shell standards skill base
 
 ## License
 
