@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Content v2: Add Shell/Bash coding standards skill (standards-shell)
 - Content v1: Initial managed content (global prompt, commands, skills, MCP configs)
 
 ## [1.0.0] - 2026-01-23

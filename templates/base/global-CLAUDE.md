@@ -129,6 +129,7 @@ Available skills for specialized tasks (`~/.claude/skills/`):
 |-------|------|-------------|
 | `create-slidev-presentation` | command | Create/edit Slidev presentations |
 | `standards-python` | context | Python coding standards (auto-loaded) |
+| `standards-shell` | context | Shell/Bash coding standards (auto-loaded) |
 | `standards-typescript` | context | TypeScript coding standards (auto-loaded) |
 
 **Skill Types:**
