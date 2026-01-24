@@ -4,7 +4,7 @@
 # Modular installation with support for custom modules
 # MacOS focused - uses Homebrew for dependencies
 
-set -e
+set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -16,11 +16,22 @@ MCP_CONFIG_FILE="${MCP_CONFIG_FILE:-$HOME/.claude.json}"
 CONTENT_VERSION_FILE="${CONTENT_VERSION_FILE:-$SCRIPT_DIR/templates/VERSION}"
 
 # Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+readonly RED='\033[0;31m'
+readonly GREEN='\033[0;32m'
+readonly YELLOW='\033[1;33m'
+readonly BLUE='\033[0;34m'
+readonly NC='\033[0m' # No Color
+
+# Cleanup handler for temp files and interrupts
+cleanup() {
+    rm -f "$INSTALLED_FILE.tmp" "$MCP_CONFIG_FILE.tmp" 2>/dev/null || true
+}
+trap cleanup EXIT
+trap 'echo ""; echo "Installation cancelled."; exit 130' INT TERM
+
+# Global arrays for module selection (used across functions)
+SELECTED_MCP=()
+SELECTED_SKILLS=()
 
 # ============================================
 # HELPER FUNCTIONS
@@ -41,11 +52,11 @@ print_info() {
 }
 
 print_warning() {
-    echo -e "  ${YELLOW}!${NC} $1"
+    echo -e "  ${YELLOW}!${NC} $1" >&2
 }
 
 print_error() {
-    echo -e "  ${RED}✗${NC} $1"
+    echo -e "  ${RED}✗${NC} $1" >&2
 }
 
 # Initialize installed.json if it doesn't exist
@@ -60,6 +71,28 @@ init_installed_json() {
 is_installed() {
     local category=$1
     local module=$2
+    # Check installed.json first
+    if jq -e ".${category} | index(\"${module}\")" "$INSTALLED_FILE" > /dev/null 2>&1; then
+        return 0
+    fi
+    # For MCP, also check .claude.json (may have been installed before tracking)
+    if [ "$category" = "mcp" ] && [ -f "$MCP_CONFIG_FILE" ]; then
+        jq -e ".mcpServers[\"${module}\"]" "$MCP_CONFIG_FILE" > /dev/null 2>&1
+        return $?
+    fi
+    # For skills, also check filesystem (may have been installed before tracking)
+    if [ "$category" = "skills" ]; then
+        local skill_name="${module#custom:}"
+        [ -d "$CLAUDE_DIR/skills/$skill_name" ]
+        return $?
+    fi
+    return 1
+}
+
+# Check if module is tracked in installed.json (not filesystem)
+is_tracked() {
+    local category=$1
+    local module=$2
     jq -e ".${category} | index(\"${module}\")" "$INSTALLED_FILE" > /dev/null 2>&1
 }
 
@@ -67,7 +100,7 @@ is_installed() {
 add_to_installed() {
     local category=$1
     local module=$2
-    if ! is_installed "$category" "$module"; then
+    if ! is_tracked "$category" "$module"; then
         jq ".${category} += [\"${module}\"]" "$INSTALLED_FILE" > "$INSTALLED_FILE.tmp" && mv "$INSTALLED_FILE.tmp" "$INSTALLED_FILE"
     fi
 }
@@ -114,6 +147,52 @@ show_usage() {
     echo "  Place custom modules in ~/.claude/custom/"
     echo "  Structure: custom/{mcp,skills}/"
     echo ""
+}
+
+# Get new (not installed) modules
+# Returns space-separated list of module names
+get_new_mcp() {
+    local new_mcp=""
+    local name
+    for f in "$SCRIPT_DIR/mcp/"*.json; do
+        [ -f "$f" ] || continue
+        name=$(basename "$f" .json)
+        if ! is_installed "mcp" "$name"; then
+            new_mcp="$new_mcp $name"
+        fi
+    done
+    if [ -d "$CUSTOM_DIR/mcp" ]; then
+        for f in "$CUSTOM_DIR/mcp/"*.json; do
+            [ -f "$f" ] || continue
+            name=$(basename "$f" .json)
+            if ! is_installed "mcp" "custom:$name"; then
+                new_mcp="$new_mcp custom:$name"
+            fi
+        done
+    fi
+    echo "$new_mcp" | xargs
+}
+
+get_new_skills() {
+    local new_skills=""
+    local name
+    for d in "$SCRIPT_DIR/skills/"*/; do
+        [ -d "$d" ] || continue
+        name=$(basename "$d")
+        if ! is_installed "skills" "$name"; then
+            new_skills="$new_skills $name"
+        fi
+    done
+    if [ -d "$CUSTOM_DIR/skills" ]; then
+        for d in "$CUSTOM_DIR/skills/"*/; do
+            [ -d "$d" ] || continue
+            name=$(basename "$d")
+            if ! is_installed "skills" "custom:$name"; then
+                new_skills="$new_skills custom:$name"
+            fi
+        done
+    fi
+    echo "$new_skills" | xargs
 }
 
 # ============================================
@@ -233,12 +312,13 @@ select_mcp() {
         [ -f "$f" ] || continue
         name=$(basename "$f" .json)
         desc=$(jq -r '.description' "$f")
-        if [ "$mode" = "add" ] && is_installed "mcp" "$name"; then
-            continue
+        if is_installed "mcp" "$name"; then
+            echo "     $name [installed]"
+        else
+            mcps+=("$name")
+            echo "  $i) $name - $desc"
+            ((i++))
         fi
-        mcps+=("$name")
-        echo "  $i) $name - $desc"
-        ((i++))
     done
 
     # Custom MCP
@@ -247,16 +327,18 @@ select_mcp() {
             [ -f "$f" ] || continue
             name=$(basename "$f" .json)
             desc=$(jq -r '.description' "$f" 2>/dev/null || echo "Custom MCP server")
-            if [ "$mode" = "add" ] && is_installed "mcp" "custom:$name"; then
-                continue
+            if is_installed "mcp" "custom:$name"; then
+                echo "     $name (custom) [installed]"
+            else
+                mcps+=("custom:$name")
+                echo "  $i) $name (custom) - $desc"
+                ((i++))
             fi
-            mcps+=("custom:$name")
-            echo "  $i) $name (custom) - $desc"
-            ((i++))
         done
     fi
 
     if [ ${#mcps[@]} -eq 0 ]; then
+        echo ""
         echo "  (all MCP servers already installed)"
         return
     fi
@@ -288,12 +370,13 @@ select_skills() {
     for d in "$SCRIPT_DIR/skills/"*/; do
         [ -d "$d" ] || continue
         name=$(basename "$d")
-        if [ "$mode" = "add" ] && is_installed "skills" "$name"; then
-            continue
+        if is_installed "skills" "$name"; then
+            echo "     $name [installed]"
+        else
+            skills+=("$name")
+            echo "  $i) $name"
+            ((i++))
         fi
-        skills+=("$name")
-        echo "  $i) $name"
-        ((i++))
     done
 
     # Custom skills
@@ -301,22 +384,24 @@ select_skills() {
         for d in "$CUSTOM_DIR/skills/"*/; do
             [ -d "$d" ] || continue
             name=$(basename "$d")
-            if [ "$mode" = "add" ] && is_installed "skills" "custom:$name"; then
-                continue
+            if is_installed "skills" "custom:$name"; then
+                echo "     $name (custom) [installed]"
+            else
+                skills+=("custom:$name")
+                echo "  $i) $name (custom)"
+                ((i++))
             fi
-            skills+=("custom:$name")
-            echo "  $i) $name (custom)"
-            ((i++))
         done
     fi
 
     if [ ${#skills[@]} -eq 0 ]; then
+        echo ""
         echo "  (all skills already installed)"
         return
     fi
 
     echo ""
-    read -rp "Select (e.g., '1' or 'none'): " selection
+    read -rp "Select (e.g., '1 2' or 'none'): " selection
 
     if [ "$selection" != "none" ] && [ -n "$selection" ]; then
         for num in $selection; do
@@ -374,6 +459,7 @@ install_mcp() {
     local key_count
     local key_name
     local key_prompt
+    local key_value
     if [ "$requires_key" = "true" ]; then
         # Show instructions
         instructions=$(jq -r '.apiKeyInstructions[]' "$config_file" 2>/dev/null)
@@ -620,13 +706,13 @@ do_update() {
     # Update skills
     print_header "Updating Skills"
 
-    local installed_skills
-    installed_skills=$(get_installed "skills")
     local source_dir
     local display_name
     local name
     local target_dir
-    for skill in $installed_skills; do
+    local skill
+    while IFS= read -r skill; do
+        [ -n "$skill" ] || continue
         source_dir=""
         display_name=""
 
@@ -647,13 +733,64 @@ do_update() {
         else
             print_warning "$display_name (source not found, skipped)"
         fi
-    done
+    done < <(get_installed "skills")
 
     # Update content version
     set_installed_content_version "$available_v"
 
     echo ""
     print_success "Update complete! (v$available_v)"
+
+    # Check for new modules
+    local new_mcp new_skills
+    new_mcp=$(get_new_mcp)
+    new_skills=$(get_new_skills)
+
+    if [ -n "$new_mcp" ] || [ -n "$new_skills" ]; then
+        echo ""
+        print_header "New Modules Available"
+
+        if [ -n "$new_mcp" ]; then
+            echo "  MCP: $new_mcp"
+        fi
+        if [ -n "$new_skills" ]; then
+            echo "  Skills: $new_skills"
+        fi
+
+        echo ""
+        read -rp "Install new modules? (y/N): " install_new
+        if [ "$install_new" = "y" ] || [ "$install_new" = "Y" ]; then
+            echo ""
+            select_mcp "add"
+            select_skills "add"
+
+            # Install selected MCP servers
+            if [ ${#SELECTED_MCP[@]} -gt 0 ]; then
+                for mcp in "${SELECTED_MCP[@]}"; do
+                    print_header "Installing MCP: $mcp"
+                    if install_mcp "$mcp"; then
+                        add_to_installed "mcp" "$mcp"
+                        print_success "Installed $mcp"
+                    fi
+                done
+            fi
+
+            # Install selected skills
+            if [ ${#SELECTED_SKILLS[@]} -gt 0 ]; then
+                for skill in "${SELECTED_SKILLS[@]}"; do
+                    print_header "Installing Skill: $skill"
+                    if install_skill "$skill"; then
+                        add_to_installed "skills" "$skill"
+                        print_success "Installed $skill"
+                    fi
+                done
+
+                # Rebuild CLAUDE.md with new skills
+                build_claude_md
+            fi
+        fi
+    fi
+
     echo ""
 }
 
@@ -661,39 +798,43 @@ do_update() {
 # MAIN
 # ============================================
 
-case "${1:-}" in
-    --help|-h)
-        show_usage
-        ;;
-    --list|-l)
-        init_installed_json
-        list_modules
-        ;;
-    --add|-a)
-        do_install "add"
-        ;;
-    --update|-u)
-        do_update
-        ;;
-    "")
-        if [ -f "$INSTALLED_FILE" ]; then
-            echo ""
-            echo "Existing installation detected."
-            echo "Use --add to add modules or --update to update."
-            echo ""
-            read -rp "Continue with fresh install? (y/N): " confirm
-            if [ "$confirm" != "y" ] && [ "$confirm" != "Y" ]; then
-                echo "Cancelled."
-                exit 0
+main() {
+    case "${1:-}" in
+        --help|-h)
+            show_usage
+            ;;
+        --list|-l)
+            init_installed_json
+            list_modules
+            ;;
+        --add|-a)
+            do_install "add"
+            ;;
+        --update|-u)
+            do_update
+            ;;
+        "")
+            if [ -f "$INSTALLED_FILE" ]; then
+                echo ""
+                echo "Existing installation detected."
+                echo "Use --add to add modules or --update to update."
+                echo ""
+                read -rp "Continue with fresh install? (y/N): " confirm
+                if [ "$confirm" != "y" ] && [ "$confirm" != "Y" ]; then
+                    echo "Cancelled."
+                    exit 0
+                fi
+                # Reset installed.json for fresh install
+                echo "{\"content_version\":$(get_content_version),\"mcp\":[],\"skills\":[]}" > "$INSTALLED_FILE"
             fi
-            # Reset installed.json for fresh install
-            echo "{\"content_version\":$(get_content_version),\"mcp\":[],\"skills\":[]}" > "$INSTALLED_FILE"
-        fi
-        do_install "install"
-        ;;
-    *)
-        echo "Unknown option: $1"
-        show_usage
-        exit 1
-        ;;
-esac
+            do_install "install"
+            ;;
+        *)
+            echo "Unknown option: $1" >&2
+            show_usage
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"

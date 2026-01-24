@@ -38,7 +38,7 @@ fi
 
 # Verify installed.json
 assert_json_exists "$INSTALLED_FILE" ".content_version" "content_version field exists"
-assert_json_eq "$INSTALLED_FILE" ".content_version" "1" "content_version is 1"
+assert_json_eq "$INSTALLED_FILE" ".content_version" "2" "content_version is 2"
 
 # Verify MCP config
 assert_file_exists "$MCP_CONFIG_FILE" ".claude.json created"
