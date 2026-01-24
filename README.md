@@ -39,6 +39,8 @@ Sound familiar?
 curl -fsSL https://raw.githubusercontent.com/b33eep/claude-code-setup/main/quick-install.sh | bash
 ```
 
+![Install Demo](docs/assets/install.gif)
+
 Or clone manually:
 
 ```bash
