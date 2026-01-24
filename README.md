@@ -90,6 +90,8 @@ Both CLAUDE.md files load automatically. ADRs are referenced when relevant (e.g.
 └─────────────────────────────────────────────────────────┘
 ```
 
+https://github.com/user-attachments/assets/VIDEO_ID_HERE
+
 **First time on a project?** Run `/init-project` once to generate the project CLAUDE.md.
 
 > **Tip:** The installer sets up [ccstatusline](https://github.com/sirmalloc/ccstatusline) to show context usage in your terminal. When it hits ~80%, time for `/clear-session`.
