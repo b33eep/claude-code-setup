@@ -90,7 +90,7 @@ Both CLAUDE.md files load automatically. ADRs are referenced when relevant (e.g.
 └─────────────────────────────────────────────────────────┘
 ```
 
-https://github.com/user-attachments/assets/VIDEO_ID_HERE
+https://github.com/user-attachments/assets/e385aa9e-7480-441c-8a30-e196992de9f9
 
 **First time on a project?** Run `/init-project` once to generate the project CLAUDE.md.
 
