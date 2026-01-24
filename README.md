@@ -130,8 +130,9 @@ Claude: Upgraded claude-code-setup: v4 → v5
 
 | Skill | Loads when Tech Stack contains |
 |-------|--------------------------------|
+| JavaScript | javascript, nodejs, express, fastify, npm... |
 | Python | python, fastapi, django, flask, pytest... |
-| TypeScript | typescript, react, nextjs, vue, express... |
+| TypeScript | typescript, react, nextjs, vue, angular... |
 | Shell | bash, sh, shell, zsh, shellcheck... |
 
 Standards load based on your project's `Tech Stack:` in CLAUDE.md. Writing a shell script in a Python project? Shell standards load for that file.

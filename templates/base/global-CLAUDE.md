@@ -164,6 +164,7 @@ Available skills for specialized tasks (`~/.claude/skills/`):
 | Skill | Type | Description |
 |-------|------|-------------|
 | `create-slidev-presentation` | command | Create/edit Slidev presentations |
+| `standards-javascript` | context | JavaScript/Node.js coding standards |
 | `standards-python` | context | Python coding standards |
 | `standards-shell` | context | Shell/Bash coding standards |
 | `standards-typescript` | context | TypeScript coding standards |
@@ -203,7 +204,8 @@ After reading project CLAUDE.md, load skills matching the `Tech Stack:` field:
 | File Extension | Skill to Load |
 |----------------|---------------|
 | `.py` | `~/.claude/skills/standards-python/SKILL.md` |
-| `.ts`, `.tsx`, `.js`, `.jsx` | `~/.claude/skills/standards-typescript/SKILL.md` |
+| `.js`, `.mjs`, `.cjs` | `~/.claude/skills/standards-javascript/SKILL.md` |
+| `.ts`, `.tsx`, `.jsx` | `~/.claude/skills/standards-typescript/SKILL.md` |
 | `.sh`, `.bash`, or Bash scripts | `~/.claude/skills/standards-shell/SKILL.md` |
 
 **Example:** Project has `Tech Stack: Python` but user asks for a shell script test.
