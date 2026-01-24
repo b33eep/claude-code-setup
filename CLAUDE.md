@@ -21,7 +21,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Custom Modules | Done | ~/.claude/custom/ for user modules |
 | Solo/Team Mode | Done | /init-project asks for .gitignore preference |
 | Install Script | Done | --add, --update, --list flags, ShellCheck compliant |
-| ADRs | Done | 11 ADRs (000-010) |
+| ADRs | Done | 12 ADRs (000-011) |
 | Open Source Release | Done | Published to b33eep/claude-code-setup |
 | GitHub Actions E2E | Done | Full test coverage |
 | Open Source Polish | Done | SECURITY.md, CONTRIBUTING.md, CHANGELOG.md, templates |
@@ -32,6 +32,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Todo | Priority | Problem | Solution |
 |------|----------|---------|----------|
 | ~~Skill auto-loading~~ | ~~High~~ | ~~Done~~ | Prompt improvement in global-CLAUDE.md. [ADR-010](docs/adr/010-improved-skill-autoloading.md) |
+| /upgrade-claude-setup | High | Updates require leaving Claude Code | Command created. [ADR-011](docs/adr/011-upgrade-command.md). In `feature/upgrade-command` |
 | /todo command | High | Manually editing CLAUDE.md for todos is cumbersome | Create command that appends todos directly to CLAUDE.md |
 | /do-review command | High | Unclear when to trigger code review, easy to forget | Create command + refine global prompt guidance |
 | ~~Slidev skill attribution~~ | ~~High~~ | ~~Done~~ | Added source + author to SKILL.md (AJBcoding) |
@@ -44,11 +45,11 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | ~~Auto-compact prompt~~ | ~~Low~~ | ~~Skipped~~ | Not configurable via settings.json (hardcoded). Documented in README instead. |
 
 **What was done in this session:**
-- Added "Web Search Preference" section to global-CLAUDE.md (Content v4)
-- MCP search tools (google-search, brave-search) now preferred over built-in Anthropic WebSearch
-- Refactored tests: removed hardcoded version numbers, now dynamic from templates/VERSION
+- Renamed repo: `claude-setup` → `claude-code-setup`
+- Created `/upgrade-claude-setup` command + ADR-011
+- Branch `feature/upgrade-command` ready for review
 
-**Next Step:** Continue with /todo and /do-review commands
+**Next Step:** Merge PR, then continue with /todo and /do-review commands
 
 ---
 
@@ -67,6 +68,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Content Versioning | Incrementing number + CHANGELOG.md | [ADR-008](docs/adr/008-content-versioning.md) |
 | ccstatusline | Context visibility in status bar | [ADR-009](docs/adr/009-ccstatusline-integration.md) |
 | Skill Auto-Loading | Task-based + review agent integration | [ADR-010](docs/adr/010-improved-skill-autoloading.md) |
+| Upgrade Command | Claude command for in-session updates | [ADR-011](docs/adr/011-upgrade-command.md) |
 
 ---
 
@@ -88,7 +90,7 @@ claude-code-setup/
 ├── mcp/
 ├── commands/
 ├── skills/
-└── docs/adr/000-010-*.md
+└── docs/adr/000-011-*.md
 ```
 
 ---
