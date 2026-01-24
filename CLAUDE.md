@@ -46,7 +46,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 **What was done in this session:**
 - Added "Web Search Preference" section to global-CLAUDE.md (Content v4)
 - MCP search tools (google-search, brave-search) now preferred over built-in Anthropic WebSearch
-- Researched differences: MCP offers more control, advanced filters, global availability, research_topic for synthesis
+- Refactored tests: removed hardcoded version numbers, now dynamic from templates/VERSION
 
 **Next Step:** Continue with /todo and /do-review commands
 
