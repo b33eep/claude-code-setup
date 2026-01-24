@@ -178,7 +178,7 @@ After implementing, verify with these scenarios:
 
 | Alternative | Why Not |
 |-------------|---------|
-| Automated loading via hooks | claude-setup is config-only, no runtime code |
+| Automated loading via hooks | claude-code-setup is config-only, no runtime code |
 | Always load all skills | Context bloat, irrelevant noise |
 | Keep current vague instruction | Doesn't work - proven by real usage |
 

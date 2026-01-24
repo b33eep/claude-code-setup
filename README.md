@@ -1,6 +1,6 @@
 # Claude Code Setup
 
-[![CI](https://github.com/b33eep/claude-setup/actions/workflows/test.yml/badge.svg)](https://github.com/b33eep/claude-setup/actions/workflows/test.yml)
+[![CI](https://github.com/b33eep/claude-code-setup/actions/workflows/test.yml/badge.svg)](https://github.com/b33eep/claude-code-setup/actions/workflows/test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A modular, minimal setup for Claude Code with a clear workflow and persistent memory via Markdown files.
@@ -78,8 +78,8 @@ A modular, minimal setup for Claude Code with a clear workflow and persistent me
 ## Quick Start
 
 ```bash
-git clone https://github.com/b33eep/claude-setup.git
-cd claude-setup
+git clone https://github.com/b33eep/claude-code-setup.git
+cd claude-code-setup
 ./install.sh
 ```
 
@@ -113,7 +113,7 @@ The installer will guide you through selecting:
 ### Repository Structure
 
 ```
-claude-setup/
+claude-code-setup/
 ├── templates/
 │   ├── VERSION                   # Content version number
 │   └── base/

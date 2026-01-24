@@ -45,7 +45,7 @@ Example:
 
 **Override:** Custom skills in `~/.claude/custom/skills/` take priority over installed skills.
 
-- `~/.claude/skills/standards-python/` ← from claude-setup
+- `~/.claude/skills/standards-python/` ← from claude-code-setup
 - `~/.claude/custom/skills/standards-python/` ← user's version (wins)
 
 Users who customize accept responsibility for merging upstream updates.

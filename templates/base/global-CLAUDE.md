@@ -205,7 +205,7 @@ Review these changes. Apply these coding standards:
 [paste relevant sections from standards-python/SKILL.md]
 ```
 
-> See [ADR-007](https://github.com/b33eep/claude-setup/blob/main/docs/adr/007-coding-standards-as-skills.md) and [ADR-010](https://github.com/b33eep/claude-setup/blob/main/docs/adr/010-improved-skill-autoloading.md) for details.
+> See [ADR-007](https://github.com/b33eep/claude-code-setup/blob/main/docs/adr/007-coding-standards-as-skills.md) and [ADR-010](https://github.com/b33eep/claude-code-setup/blob/main/docs/adr/010-improved-skill-autoloading.md) for details.
 
 ---
 

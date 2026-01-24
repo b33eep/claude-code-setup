@@ -22,7 +22,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Solo/Team Mode | Done | /init-project asks for .gitignore preference |
 | Install Script | Done | --add, --update, --list flags, ShellCheck compliant |
 | ADRs | Done | 11 ADRs (000-010) |
-| Open Source Release | Done | Published to b33eep/claude-setup |
+| Open Source Release | Done | Published to b33eep/claude-code-setup |
 | GitHub Actions E2E | Done | Full test coverage |
 | Open Source Polish | Done | SECURITY.md, CONTRIBUTING.md, CHANGELOG.md, templates |
 | README Overhaul | Done | Core Concept prominent, ccstatusline, Plugins, Solo/Team |
@@ -73,7 +73,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 ## Files
 
 ```
-claude-setup/
+claude-code-setup/
 ├── .github/
 │   ├── workflows/test.yml
 │   ├── ISSUE_TEMPLATE/{bug_report,feature_request}.md
@@ -130,4 +130,4 @@ git push origin v1.0.0
 
 ## Repository
 
-https://github.com/b33eep/claude-setup
+https://github.com/b33eep/claude-code-setup

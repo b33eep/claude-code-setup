@@ -1,4 +1,4 @@
-# Contributing to claude-setup
+# Contributing to claude-code-setup
 
 Thank you for your interest in contributing!
 
@@ -6,7 +6,7 @@ Thank you for your interest in contributing!
 
 ### Reporting Bugs
 
-1. Check [existing issues](https://github.com/b33eep/claude-setup/issues) first
+1. Check [existing issues](https://github.com/b33eep/claude-code-setup/issues) first
 2. Create a new issue with:
    - Your macOS version
    - Your Homebrew version (`brew --version`)
@@ -39,7 +39,7 @@ Open an issue with the `enhancement` label describing:
 ```bash
 # Clone your fork
 git clone https://github.com/YOUR_USERNAME/claude-setup.git
-cd claude-setup
+cd claude-code-setup
 
 # Install shellcheck for linting
 brew install shellcheck

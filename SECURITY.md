@@ -5,7 +5,7 @@
 If you discover a security vulnerability, please report it responsibly:
 
 1. **Do NOT** create a public GitHub issue
-2. Email the maintainer or use [GitHub's private vulnerability reporting](https://github.com/b33eep/claude-setup/security/advisories/new)
+2. Email the maintainer or use [GitHub's private vulnerability reporting](https://github.com/b33eep/claude-code-setup/security/advisories/new)
 3. Include details about the vulnerability and steps to reproduce
 
 You can expect a response within 48 hours.

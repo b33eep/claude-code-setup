@@ -25,5 +25,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GitHub Actions CI for automated testing
 - Documentation: README, CONTRIBUTING, SECURITY, ADRs
 
-[Unreleased]: https://github.com/b33eep/claude-setup/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/b33eep/claude-setup/releases/tag/v1.0.0
+[Unreleased]: https://github.com/b33eep/claude-code-setup/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/b33eep/claude-code-setup/releases/tag/v1.0.0
