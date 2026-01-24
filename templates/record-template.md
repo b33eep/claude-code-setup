@@ -1,4 +1,4 @@
-# ADR-{NNN}: {Title}
+# Record {NNN}: {Title}
 
 **Status:** Accepted | Proposed | Deprecated | Superseded
 **Date:** {YYYY-MM-DD}

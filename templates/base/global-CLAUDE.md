@@ -29,7 +29,7 @@
 |------|-------------|
 | **No /compact** | Never use. Auto-compaction is error-prone. |
 | **Document & Clear** | At context limit: Run `/clear-session`, then `/clear` |
-| **External Memory** | CLAUDE.md + ADR are the "memory" - versioned, readable, persistent |
+| **External Memory** | CLAUDE.md + Records are the "memory" - versioned, readable, persistent |
 
 ### End Session
 
@@ -95,15 +95,34 @@
 - Tech stack
 - **Current status** (status table)
 - User stories with status
-- Architecture decisions (brief, with ADR link)
+- Decisions (brief, link to Record for details)
 - Development commands
 - Next step
 
-### ADR (docs/adr/)
+### Records (docs/records/)
 
-- One file per decision
-- Format: `{NNN}-{short-title}.md`
-- Context, decision, consequences
+Records document decisions, designs, features, and implementation plans. They keep CLAUDE.md clean while preserving context for future sessions.
+
+**Format:** `{NNN}-{short-title}.md`
+
+**When to create a Record:**
+
+| Situation | Record? | Why |
+|-----------|---------|-----|
+| Feature spanning multiple sessions | Yes | Details don't belong in CLAUDE.md |
+| Architecture/design decision | Yes | "Why X instead of Y" for future reference |
+| Complex implementation plan | Yes | Steps + acceptance criteria |
+| Bug fix | No | Code comment or commit message suffices |
+| Small change | No | Commit message suffices |
+
+**Faustregel:** If you'd write more than 5 lines in CLAUDE.md → create a Record instead.
+
+**Record types** (determined by content, not formal categories):
+- Architecture decisions
+- Feature specs
+- Design documents
+- Implementation plans
+- Or combinations of the above
 
 ---
 
@@ -205,7 +224,7 @@ Review these changes. Apply these coding standards:
 [paste relevant sections from standards-python/SKILL.md]
 ```
 
-> See [ADR-007](https://github.com/b33eep/claude-code-setup/blob/main/docs/adr/007-coding-standards-as-skills.md) and [ADR-010](https://github.com/b33eep/claude-code-setup/blob/main/docs/adr/010-improved-skill-autoloading.md) for details.
+> See [Record 007](https://github.com/b33eep/claude-code-setup/blob/main/docs/records/007-coding-standards-as-skills.md) and [Record 010](https://github.com/b33eep/claude-code-setup/blob/main/docs/records/010-improved-skill-autoloading.md) for details.
 
 ---
 

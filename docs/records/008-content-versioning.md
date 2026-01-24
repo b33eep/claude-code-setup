@@ -1,4 +1,4 @@
-# ADR-008: Content Versioning
+# Record 008: Content Versioning
 
 **Status:** Accepted
 **Date:** 2025-01-23
@@ -11,7 +11,7 @@ When users run `./install.sh --update`, managed content (global prompt, commands
 2. What specifically changed
 3. Which version they currently have
 
-The existing `CURRENT_VERSION` mechanism was designed for schema migrations (v1 → v2 for ADR-007), not for tracking content changes. Since the repo is fresh with no external v1 users, this migration code is unnecessary.
+The existing `CURRENT_VERSION` mechanism was designed for schema migrations (v1 → v2 for Record 007), not for tracking content changes. Since the repo is fresh with no external v1 users, this migration code is unnecessary.
 
 ## Decision
 
@@ -172,4 +172,4 @@ Add corresponding entry to CHANGELOG.md:
 
 ## References
 
-- [ADR-007: Coding Standards as Skills](007-coding-standards-as-skills.md) - Previous migration this replaces
+- [Record 007: Coding Standards as Skills](007-coding-standards-as-skills.md) - Previous migration this replaces

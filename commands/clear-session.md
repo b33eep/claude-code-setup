@@ -9,9 +9,9 @@ Before `/clear`, document the current status for the next session.
    - Update "What was done in this session" section
    - Update "Next Step" with clear next action
 
-2. **Create ADR (if needed)**
+2. **Create Record (if needed)**
    - Was an architecture decision made?
-   - If yes: Create ADR in `docs/adr/`
+   - If yes: Create Record in `docs/records/`
    - Add link to CLAUDE.md architecture table
 
 3. **Git commit (if applicable)**
@@ -22,10 +22,10 @@ Before `/clear`, document the current status for the next session.
    ```
 
    - **If NOT tracked (Solo mode)**: Skip Git steps for CLAUDE.md
-     - Only commit ADRs and code changes if any
+     - Only commit Records and code changes if any
 
    - **If tracked (Team mode)**: Commit CLAUDE.md updates
-     - Stage: CLAUDE.md, docs/adr/
+     - Stage: CLAUDE.md, docs/records/
      - Commit: `docs: update project status`
 
 4. **Output summary**
@@ -40,9 +40,9 @@ Check: Is this a Git repo?
   └─ No  → Skip Git steps
   └─ Yes →
        Check: Is CLAUDE.md tracked?
-       └─ No (Solo)  → Only commit ADRs/code if changed
+       └─ No (Solo)  → Only commit Records/code if changed
        └─ Yes (Team) →
-            Check for changes in CLAUDE.md, docs/adr/
+            Check for changes in CLAUDE.md, docs/records/
             └─ No changes → Skip commit
             └─ Changes found → Commit with "docs: update project status"
 ```

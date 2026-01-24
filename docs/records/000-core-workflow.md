@@ -1,4 +1,4 @@
-# ADR-000: Core Workflow with Commands
+# Record 000: Core Workflow with Commands
 
 **Status:** Accepted
 **Date:** 2026-01-23
@@ -31,7 +31,7 @@ Implement a three-command workflow with CLAUDE.md as persistent memory:
 ┌─────────────────────────────────────────────────────────┐
 │  NEW PROJECT                                            │
 │  → /init-project                                        │
-│  → Creates CLAUDE.md, docs/adr/                         │
+│  → Creates CLAUDE.md, docs/records/                         │
 └─────────────────────────────────────────────────────────┘
                           │
                           ▼
@@ -39,7 +39,7 @@ Implement a three-command workflow with CLAUDE.md as persistent memory:
 │  DEVELOPMENT SESSION                                    │
 │  → Work on tasks                                        │
 │  → Update CLAUDE.md status                              │
-│  → Create ADRs for decisions                            │
+│  → Create Records for decisions                         │
 └─────────────────────────────────────────────────────────┘
                           │
                           ▼
@@ -65,7 +65,7 @@ The project CLAUDE.md contains:
 - Current status table (stories, progress)
 - "What was done" in last session
 - "Next Step" - clear action to resume
-- Architecture decisions (links to ADRs)
+- Decisions (links to Records)
 
 ## Alternatives
 

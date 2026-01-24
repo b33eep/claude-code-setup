@@ -1,4 +1,4 @@
-# ADR-002: Custom Modules Directory
+# Record 002: Custom Modules Directory
 
 **Status:** Accepted
 **Date:** 2026-01-23

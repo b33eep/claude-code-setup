@@ -28,14 +28,14 @@ Initialize a new project with CLAUDE.md and folder structure.
    - Add common development commands
 
 4. **Create folder structure**
-   - Create `docs/adr/` if it doesn't exist
+   - Create `docs/records/` if it doesn't exist
 
 5. **Update .gitignore (if Solo mode)**
    - Add `CLAUDE.md` to `.gitignore`
    - Create `.gitignore` if it doesn't exist
 
 6. **Git commit (if Git repo)**
-   - Stage CLAUDE.md (if Team mode), .gitignore, and docs/adr/
+   - Stage CLAUDE.md (if Team mode), .gitignore, and docs/records/
    - Commit: `chore: add CLAUDE.md project setup`
 
 ## Output

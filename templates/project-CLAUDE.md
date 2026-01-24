@@ -22,11 +22,11 @@
 
 ---
 
-## Architecture Decisions
+## Records
 
-| Decision | Choice | ADR |
-|----------|--------|-----|
-| {What} | {Decision} | [ADR-001](docs/adr/001-xxx.md) |
+| Decision | Choice | Record |
+|----------|--------|--------|
+| {What} | {Decision} | [001](docs/records/001-xxx.md) |
 
 ---
 

@@ -1,4 +1,4 @@
-# ADR-006: Shell Script Architecture
+# Record 006: Shell Script Architecture
 
 **Status:** Accepted
 **Date:** 2026-01-23

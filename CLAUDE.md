@@ -21,12 +21,12 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Custom Modules | Done | ~/.claude/custom/ for user modules |
 | Solo/Team Mode | Done | /init-project asks for .gitignore preference |
 | Install Script | Done | --add, --update, --list flags, ShellCheck compliant |
-| ADRs | Done | 12 ADRs (000-011) |
+| Records | Done | 12 Records (000-011) |
 | Open Source Release | Done | Published to b33eep/claude-code-setup |
 | GitHub Actions E2E | Done | Full test coverage |
 | Open Source Polish | Done | SECURITY.md, CONTRIBUTING.md, CHANGELOG.md, templates |
 | README Overhaul | Done | Core Concept prominent, ccstatusline, Plugins, Solo/Team |
-| Upgrade Commands | Done | /upgrade-claude-setup, /upgrade-custom, /add-custom ([ADR-011](docs/adr/011-upgrade-command.md)) |
+| Upgrade Commands | Done | /upgrade-claude-setup, /upgrade-custom, /add-custom ([Record 011](docs/records/011-upgrade-command.md)) |
 
 ### Before v1.0.0
 
@@ -34,28 +34,28 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 |------|----------|---------|----------|
 | /todo command | Medium | Manually editing CLAUDE.md for todos is cumbersome | Create command that appends todos directly to CLAUDE.md |
 | /do-review command | Medium | Unclear when to trigger code review, easy to forget | Create command + refine global prompt guidance |
-| ADR guidance | Low | Unclear when ADR is needed vs just a comment | Refine global prompt or create /adr command |
+| ~~Records guidance~~ | ~~Low~~ | ~~Unclear when Record is needed vs just a comment~~ | Done - guidance added to global prompt |
 
 **Next Step:** Decide which command to implement next, or proceed to v1.0.0 release.
 
 ---
 
-## Architecture Decisions
+## Records
 
-| Decision | Choice | ADR |
-|----------|--------|-----|
-| Core Workflow | /init-project, /clear-session, /catchup | [ADR-000](docs/adr/000-core-workflow.md) |
-| Modular Architecture | Base + optional modules | [ADR-001](docs/adr/001-modular-architecture.md) |
-| Custom Modules | ~/.claude/custom/ directory | [ADR-002](docs/adr/002-custom-modules-directory.md) |
-| Solo vs Team | User choice at /init-project | [ADR-003](docs/adr/003-solo-vs-team-mode.md) |
-| Document & Clear | No /compact, use CLAUDE.md | [ADR-004](docs/adr/004-document-and-clear-workflow.md) |
-| E2E Tests | GitHub Actions, full validation | [ADR-005](docs/adr/005-e2e-tests-github-actions.md) |
-| Shell Architecture | Single-file bash, review at 1000 lines | [ADR-006](docs/adr/006-shell-script-architecture.md) |
-| Coding Standards as Skills | Context skills, partial match, override | [ADR-007](docs/adr/007-coding-standards-as-skills.md) |
-| Content Versioning | Incrementing number + CHANGELOG.md | [ADR-008](docs/adr/008-content-versioning.md) |
-| ccstatusline | Context visibility in status bar | [ADR-009](docs/adr/009-ccstatusline-integration.md) |
-| Skill Auto-Loading | Task-based + review agent integration | [ADR-010](docs/adr/010-improved-skill-autoloading.md) |
-| Upgrade Command | Claude command for in-session updates | [ADR-011](docs/adr/011-upgrade-command.md) |
+| Decision | Choice | Record |
+|----------|--------|--------|
+| Core Workflow | /init-project, /clear-session, /catchup | [000](docs/records/000-core-workflow.md) |
+| Modular Architecture | Base + optional modules | [001](docs/records/001-modular-architecture.md) |
+| Custom Modules | ~/.claude/custom/ directory | [002](docs/records/002-custom-modules-directory.md) |
+| Solo vs Team | User choice at /init-project | [003](docs/records/003-solo-vs-team-mode.md) |
+| Document & Clear | No /compact, use CLAUDE.md | [004](docs/records/004-document-and-clear-workflow.md) |
+| E2E Tests | GitHub Actions, full validation | [005](docs/records/005-e2e-tests-github-actions.md) |
+| Shell Architecture | Single-file bash, review at 1000 lines | [006](docs/records/006-shell-script-architecture.md) |
+| Coding Standards as Skills | Context skills, partial match, override | [007](docs/records/007-coding-standards-as-skills.md) |
+| Content Versioning | Incrementing number + CHANGELOG.md | [008](docs/records/008-content-versioning.md) |
+| ccstatusline | Context visibility in status bar | [009](docs/records/009-ccstatusline-integration.md) |
+| Skill Auto-Loading | Task-based + review agent integration | [010](docs/records/010-improved-skill-autoloading.md) |
+| Upgrade Command | Claude command for in-session updates | [011](docs/records/011-upgrade-command.md) |
 
 ---
 
@@ -77,7 +77,7 @@ claude-code-setup/
 ├── mcp/
 ├── commands/
 ├── skills/
-└── docs/adr/000-011-*.md
+└── docs/records/000-011-*.md
 ```
 
 ---

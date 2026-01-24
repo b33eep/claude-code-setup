@@ -28,7 +28,7 @@ Sound familiar?
 | "What goes in CLAUDE.md?" | `/init-project` generates it for your project |
 | Inconsistent code | Coding standards load automatically per tech stack |
 | "Which MCP servers?" | Curated selection, one-click install |
-| "How to document decisions?" | ADRs for design + planning → becomes documentation |
+| "How to document decisions?" | Records for design + planning → becomes documentation |
 | "When is context full?" | ccstatusline shows live usage (e.g., `Ctx: 70%`) |
 
 **Smart skill loading:** Working on a Python project? Python standards load automatically. Writing a shell script? Shell standards appear. No manual setup, no commands to remember.
@@ -55,17 +55,17 @@ The installer guides you through selecting MCP servers, coding standards, and to
 
 ## How It Works
 
-**Two files + ADRs = persistent memory:**
+**Two files + Records = persistent memory:**
 
 | File | Location | Purpose |
 |------|----------|---------|
 | Global | `~/.claude/CLAUDE.md` | Your workflow, standards, conventions |
 | Project | `your-project/CLAUDE.md` | Current status, tasks, decisions |
-| ADRs | `your-project/docs/adr/` | Design docs, implementation plans |
+| Records | `your-project/docs/records/` | Design docs, implementation plans |
 
-Both CLAUDE.md files load automatically. ADRs are referenced when relevant (e.g., "Why did we choose X?").
+Both CLAUDE.md files load automatically. Records are referenced when relevant (e.g., "Why did we choose X?").
 
-**ADRs (Architecture Decision Records):** Start as solution design or implementation plan, become permanent documentation. One file per decision, versioned in Git.
+**Records:** Start as solution design or implementation plan, become permanent documentation. One file per decision, versioned in Git.
 
 ## Daily Workflow
 

@@ -1,4 +1,4 @@
-# ADR-005: E2E Tests in GitHub Actions
+# Record 005: E2E Tests in GitHub Actions
 
 **Status:** Accepted
 **Date:** 2026-01-23

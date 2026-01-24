@@ -1,4 +1,4 @@
-# ADR-009: ccstatusline Integration
+# Record 009: ccstatusline Integration
 
 **Status:** Accepted
 **Date:** 2025-01-24
@@ -120,4 +120,4 @@ To disable the status line:
 ## References
 
 - [ccstatusline](https://github.com/sirmalloc/ccstatusline) by sirmalloc
-- [ADR-004: Document & Clear Workflow](004-document-and-clear-workflow.md)
+- [Record 004: Document & Clear Workflow](004-document-and-clear-workflow.md)

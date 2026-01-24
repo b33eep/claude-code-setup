@@ -1,4 +1,4 @@
-# ADR-011: Installation & Upgrade
+# Record 011: Installation & Upgrade
 
 **Status:** Accepted
 **Date:** 2025-01-24
@@ -336,5 +336,5 @@ cd ~/.claude/custom && git pull
 
 ## References
 
-- [ADR-002: Custom Modules Directory](002-custom-modules-directory.md)
-- [ADR-008: Content Versioning](008-content-versioning.md)
+- [Record 002: Custom Modules Directory](002-custom-modules-directory.md)
+- [Record 008: Content Versioning](008-content-versioning.md)

@@ -1,4 +1,4 @@
-# ADR-004: Document & Clear Workflow
+# Record 004: Document & Clear Workflow
 
 **Status:** Accepted
 **Date:** 2026-01-23

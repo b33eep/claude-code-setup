@@ -1,4 +1,4 @@
-# ADR-001: Modular Architecture
+# Record 001: Modular Architecture
 
 **Status:** Accepted
 **Date:** 2026-01-23

@@ -1,11 +1,11 @@
-# ADR-010: Improved Skill Auto-Loading
+# Record 010: Improved Skill Auto-Loading
 
 **Status:** Accepted
 **Date:** 2026-01-24
 
 ## Context
 
-ADR-007 introduced context skills with `type: context` and `applies_to` metadata. The global prompt says "skills are automatically loaded at session start based on Tech Stack."
+Record 007 introduced context skills with `type: context` and `applies_to` metadata. The global prompt says "skills are automatically loaded at session start based on Tech Stack."
 
 ### Problem
 
@@ -202,4 +202,4 @@ After implementing, verify with these scenarios:
 
 ## References
 
-- [ADR-007: Coding Standards as Context Skills](007-coding-standards-as-skills.md)
+- [Record 007: Coding Standards as Context Skills](007-coding-standards-as-skills.md)

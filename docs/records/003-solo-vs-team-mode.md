@@ -1,4 +1,4 @@
-# ADR-003: Solo vs Team Mode
+# Record 003: Solo vs Team Mode
 
 **Status:** Accepted
 **Date:** 2026-01-23
@@ -30,7 +30,7 @@ How will you use CLAUDE.md in this project?
 - **Team mode**: Keep `CLAUDE.md` tracked in Git
 
 The `/clear-session` command respects this choice:
-- Solo: Only commits ADRs and code changes
+- Solo: Only commits Records and code changes
 - Team: Commits CLAUDE.md updates
 
 ## Alternatives

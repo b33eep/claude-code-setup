@@ -1,4 +1,4 @@
-# ADR-007: Coding Standards as Context Skills
+# Record 007: Coding Standards as Context Skills
 
 **Status:** Accepted
 **Date:** 2026-01-23
@@ -92,7 +92,7 @@ The installer detects old setup by checking for:
 ```bash
 ./install.sh --update
 
-⚠️  Coding Standards have moved to Skills (ADR-007).
+⚠️  Coding Standards have moved to Skills (Record 007).
 
 Your current setup has inline standards in ~/.claude/CLAUDE.md.
 The new approach uses context-aware skills per language.
@@ -172,5 +172,5 @@ Future: Java, Go, Rust (when standards are defined)
 
 ## References
 
-- [ADR-001: Modular Architecture](001-modular-architecture.md)
+- [Record 001: Modular Architecture](001-modular-architecture.md)
 - [Skill Creator by AJBcoding](https://github.com/AJBcoding/claude-skill-eval/tree/main/skills/skill-creator)
