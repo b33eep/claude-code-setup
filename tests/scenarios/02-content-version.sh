@@ -21,7 +21,7 @@ scenario "Content version is tracked correctly"
 printf 'none\nnone\nn\n' | "$PROJECT_DIR/install.sh" > /dev/null
 
 # Verify initial content version
-assert_json_eq "$INSTALLED_FILE" ".content_version" "3" "Initial content_version is 3"
+assert_json_eq "$INSTALLED_FILE" ".content_version" "4" "Initial content_version is 4"
 
 scenario "Update when already up-to-date"
 
@@ -40,7 +40,7 @@ jq '.content_version = 0' "$INSTALLED_FILE" > "$INSTALLED_FILE.tmp" && mv "$INST
 
 # Run update - should prompt
 output=$(printf 'n\n' | "$PROJECT_DIR/install.sh" --update 2>&1)
-if echo "$output" | grep -q "v0 → v3"; then
+if echo "$output" | grep -q "v0 → v4"; then
     pass "Update shows version diff"
 else
     fail "Update should show version diff (got: $output)"
@@ -52,7 +52,7 @@ scenario "Update applies new version"
 printf 'y\nn\n' | "$PROJECT_DIR/install.sh" --update > /dev/null
 
 # Verify version updated
-assert_json_eq "$INSTALLED_FILE" ".content_version" "3" "content_version updated to 3"
+assert_json_eq "$INSTALLED_FILE" ".content_version" "4" "content_version updated to 4"
 
 scenario "Update shows new modules available"
 

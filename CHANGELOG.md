@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Content v4: Add MCP web search preference - prefer google-search/brave-search over built-in WebSearch when installed
 - Content v3: Improved skill auto-loading (ADR-010) - concrete instructions for session-start, task-based, and review-agent loading
 - Content v2: Add Shell/Bash coding standards skill (standards-shell)
 - Content v1: Initial managed content (global prompt, commands, skills, MCP configs)

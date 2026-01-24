@@ -119,6 +119,23 @@ Available MCP servers for extended functionality (configured during install):
 
 > **Note:** Run `./install.sh --list` to see installed servers.
 
+### Web Search Preference
+
+When MCP search tools (`google-search` or `brave-search`) are installed, **prefer them over the built-in Anthropic WebSearch**.
+
+| Reason | MCP Advantage |
+|--------|---------------|
+| **Availability** | Works globally (Anthropic WebSearch: USA only) |
+| **Control** | User decides when to search (not Claude) |
+| **Advanced filters** | Date, language, site restrictions |
+| **Deep research** | `research_topic` tool for AI-synthesized analysis |
+| **Content extraction** | `extract_webpage_content` integrated |
+
+**Usage:**
+- Simple search → `mcp__google-search__google_search` or `mcp__brave-search__*`
+- Deep research → `mcp__google-search__research_topic`
+- Fallback → Built-in `WebSearch` if no MCP installed
+
 ---
 
 ## Skills

@@ -39,18 +39,14 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | ADR guidance | Medium | Unclear when ADR is needed vs just a comment | Refine global prompt or create /adr command |
 | ~~Security hint~~ | ~~Medium~~ | ~~Done~~ | Added warning in global prompt: use .env for secrets |
 | ~~Content versioning~~ | ~~Medium~~ | ~~Done~~ | [ADR-008](docs/adr/008-content-versioning.md). Hash-based test validation |
-| MCP web search | Medium | Claude doesn't automatically use installed MCP search tools | Instruct in global prompt to prefer google/brave MCP |
+| ~~MCP web search~~ | ~~Medium~~ | ~~Done~~ | Added "Web Search Preference" section in global-CLAUDE.md |
 | ~~ccstatusline in install.sh~~ | ~~Low~~ | ~~Done~~ | [ADR-009](docs/adr/009-ccstatusline-integration.md). Auto-configured during install |
 | ~~Auto-compact prompt~~ | ~~Low~~ | ~~Skipped~~ | Not configurable via settings.json (hardcoded). Documented in README instead. |
 
 **What was done in this session:**
-- Investigated auto-compact configuration for install.sh
-- Found: Auto-compact is NOT configurable via settings.json (hardcoded in Claude Code)
-- Open feature requests: GitHub #10691, #15719
-- Improved README instead: prominent Post-Install section with disable instructions
-- Added standards-shell to README tables and file structure
-- Added Acknowledgments section (ccstatusline, AJBcoding)
-- Renamed "Skills" to "Command Skills" for clarity
+- Added "Web Search Preference" section to global-CLAUDE.md (Content v4)
+- MCP search tools (google-search, brave-search) now preferred over built-in Anthropic WebSearch
+- Researched differences: MCP offers more control, advanced filters, global availability, research_topic for synthesis
 
 **Next Step:** Continue with /todo and /do-review commands
 
