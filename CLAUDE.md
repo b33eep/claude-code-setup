@@ -43,15 +43,14 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Auto-compact prompt | Low | Users must remember to disable auto-compact manually | Ask during install if they want to disable (skip if complex) |
 
 **What was done in this session:**
-- Fixed `--add`: shows all modules with `[installed]` marker, only non-installed get numbers
-- Fixed `--update`: detects and offers to install new modules after update
-- `is_installed()` now checks .claude.json (MCP) and filesystem (skills) for legacy installs
-- Added `is_tracked()`, `get_new_mcp()`, `get_new_skills()` helper functions
-- Fixed skills prompt to show multi-select example (`'1 2'` instead of `'1'`)
-- 38 tests (added 7 for new install UX behavior)
-- PR [#4](https://github.com/b33eep/claude-setup/pull/4) ready for merge (feat/shell-skill branch)
+- Implemented ccstatusline auto-configuration in install.sh
+- Added `configure_statusline()` with error handling and corrupted JSON recovery
+- Created ADR-009 with rollback instructions and prompt behavior docs
+- Added 19 new tests in `05-statusline.sh` (57 total tests)
+- Updated README.md with new documentation
+- PR [#5](https://github.com/b33eep/claude-setup/pull/5) merged
 
-**Next Step:** Merge PR #4, then implement /todo and /do-review commands (High priority)
+**Next Step:** Implement /todo and /do-review commands (High priority)
 
 ---
 
