@@ -123,6 +123,8 @@ Claude: ✓ Upgraded v9 → v10
         ✓ standards-javascript installed
 ```
 
+https://github.com/user-attachments/assets/f3e9e14c-5d9c-4a49-adf6-417c0e8f2fd6
+
 <details>
 <summary>Shell commands</summary>
 
