@@ -2,7 +2,7 @@
 
 # Claude Code Setup Installer
 # Modular installation with support for custom modules
-# MacOS focused - uses Homebrew for dependencies
+# Supports macOS and Linux (Ubuntu/Debian, Arch, Fedora)
 
 set -euo pipefail
 
@@ -16,12 +16,24 @@ MCP_CONFIG_FILE="${MCP_CONFIG_FILE:-$HOME/.claude.json}"
 CONTENT_VERSION_FILE="${CONTENT_VERSION_FILE:-$SCRIPT_DIR/templates/VERSION}"
 CCSTATUS_CONFIG_DIR="${CCSTATUS_CONFIG_DIR:-$HOME/.config/ccstatusline}"
 
-# Colors for output
-readonly RED='\033[0;31m'
-readonly GREEN='\033[0;32m'
-readonly YELLOW='\033[1;33m'
-readonly BLUE='\033[0;34m'
-readonly NC='\033[0m' # No Color
+# Non-interactive mode (--yes flag)
+YES_MODE=false
+
+# Source library modules
+# shellcheck source=lib/platform.sh
+source "$SCRIPT_DIR/lib/platform.sh"
+# shellcheck source=lib/helpers.sh
+source "$SCRIPT_DIR/lib/helpers.sh"
+# shellcheck source=lib/modules.sh
+source "$SCRIPT_DIR/lib/modules.sh"
+# shellcheck source=lib/mcp.sh
+source "$SCRIPT_DIR/lib/mcp.sh"
+# shellcheck source=lib/skills.sh
+source "$SCRIPT_DIR/lib/skills.sh"
+# shellcheck source=lib/statusline.sh
+source "$SCRIPT_DIR/lib/statusline.sh"
+# shellcheck source=lib/update.sh
+source "$SCRIPT_DIR/lib/update.sh"
 
 # Cleanup handler for temp files and interrupts
 cleanup() {
@@ -29,107 +41,6 @@ cleanup() {
 }
 trap cleanup EXIT
 trap 'echo ""; echo "Installation cancelled."; exit 130' INT TERM
-
-# Global arrays for module selection (used across functions)
-SELECTED_MCP=()
-SELECTED_SKILLS=()
-
-# Non-interactive mode (--yes flag)
-YES_MODE=false
-
-# ============================================
-# HELPER FUNCTIONS
-# ============================================
-
-print_header() {
-    echo ""
-    echo -e "${BLUE}$1${NC}"
-    printf '%*s\n' "${#1}" '' | tr ' ' '-'
-}
-
-print_success() {
-    echo -e "  ${GREEN}✓${NC} $1"
-}
-
-print_info() {
-    echo -e "  ${BLUE}-${NC} $1"
-}
-
-print_warning() {
-    echo -e "  ${YELLOW}!${NC} $1" >&2
-}
-
-print_error() {
-    echo -e "  ${RED}✗${NC} $1" >&2
-}
-
-# Initialize installed.json if it doesn't exist
-init_installed_json() {
-    mkdir -p "$CLAUDE_DIR"
-    if [ ! -f "$INSTALLED_FILE" ]; then
-        echo "{\"content_version\":$(get_content_version),\"mcp\":[],\"skills\":[]}" > "$INSTALLED_FILE"
-    fi
-}
-
-# Check if a module is installed
-is_installed() {
-    local category=$1
-    local module=$2
-    # Check installed.json first
-    if jq -e ".${category} | index(\"${module}\")" "$INSTALLED_FILE" > /dev/null 2>&1; then
-        return 0
-    fi
-    # For MCP, also check .claude.json (may have been installed before tracking)
-    if [ "$category" = "mcp" ] && [ -f "$MCP_CONFIG_FILE" ]; then
-        jq -e ".mcpServers[\"${module}\"]" "$MCP_CONFIG_FILE" > /dev/null 2>&1
-        return $?
-    fi
-    # For skills, also check filesystem (may have been installed before tracking)
-    if [ "$category" = "skills" ]; then
-        local skill_name="${module#custom:}"
-        [ -d "$CLAUDE_DIR/skills/$skill_name" ]
-        return $?
-    fi
-    return 1
-}
-
-# Check if module is tracked in installed.json (not filesystem)
-is_tracked() {
-    local category=$1
-    local module=$2
-    jq -e ".${category} | index(\"${module}\")" "$INSTALLED_FILE" > /dev/null 2>&1
-}
-
-# Add module to installed list
-add_to_installed() {
-    local category=$1
-    local module=$2
-    if ! is_tracked "$category" "$module"; then
-        jq ".${category} += [\"${module}\"]" "$INSTALLED_FILE" > "$INSTALLED_FILE.tmp" && mv "$INSTALLED_FILE.tmp" "$INSTALLED_FILE"
-    fi
-}
-
-# Get installed modules
-get_installed() {
-    local category=$1
-    jq -r ".${category}[]" "$INSTALLED_FILE" 2>/dev/null || echo ""
-}
-
-# Get available content version from templates/VERSION
-get_content_version() {
-    cat "$CONTENT_VERSION_FILE" 2>/dev/null || echo "1"
-}
-
-# Get installed content version from .installed.json
-get_installed_content_version() {
-    jq -r '.content_version // 0' "$INSTALLED_FILE" 2>/dev/null || echo "0"
-}
-
-# Set installed content version
-set_installed_content_version() {
-    local version=$1
-    jq ".content_version = $version" "$INSTALLED_FILE" > "$INSTALLED_FILE.tmp" && mv "$INSTALLED_FILE.tmp" "$INSTALLED_FILE"
-}
 
 # ============================================
 # USAGE
@@ -156,6 +67,12 @@ show_usage() {
     echo "  Place custom modules in ~/.claude/custom/"
     echo "  Structure: custom/{mcp,skills}/"
     echo ""
+    echo "Supported Platforms:"
+    echo "  - macOS (Homebrew)"
+    echo "  - Ubuntu/Debian (apt)"
+    echo "  - Arch/Manjaro (pacman)"
+    echo "  - Fedora/RHEL (dnf)"
+    echo ""
 }
 
 show_version() {
@@ -167,9 +84,9 @@ show_version() {
     echo ""
     echo "Content version: v$available_v"
 
-    if [ -f "$INSTALLED_FILE" ]; then
+    if [[ -f "$INSTALLED_FILE" ]]; then
         installed_v=$(get_installed_content_version)
-        if [ "$installed_v" -eq "$available_v" ]; then
+        if [[ "$installed_v" -eq "$available_v" ]]; then
             echo "Installed: v$installed_v (up to date)"
         else
             echo "Installed: v$installed_v (update available)"
@@ -180,472 +97,6 @@ show_version() {
     echo ""
 }
 
-# Get new (not installed) modules
-# Returns space-separated list of module names
-get_new_mcp() {
-    local new_mcp=""
-    local name
-    for f in "$SCRIPT_DIR/mcp/"*.json; do
-        [ -f "$f" ] || continue
-        name=$(basename "$f" .json)
-        if ! is_installed "mcp" "$name"; then
-            new_mcp="$new_mcp $name"
-        fi
-    done
-    if [ -d "$CUSTOM_DIR/mcp" ]; then
-        for f in "$CUSTOM_DIR/mcp/"*.json; do
-            [ -f "$f" ] || continue
-            name=$(basename "$f" .json)
-            if ! is_installed "mcp" "custom:$name"; then
-                new_mcp="$new_mcp custom:$name"
-            fi
-        done
-    fi
-    echo "$new_mcp" | xargs
-}
-
-get_new_skills() {
-    local new_skills=""
-    local name
-    for d in "$SCRIPT_DIR/skills/"*/; do
-        [ -d "$d" ] || continue
-        name=$(basename "$d")
-        if ! is_installed "skills" "$name"; then
-            new_skills="$new_skills $name"
-        fi
-    done
-    if [ -d "$CUSTOM_DIR/skills" ]; then
-        for d in "$CUSTOM_DIR/skills/"*/; do
-            [ -d "$d" ] || continue
-            name=$(basename "$d")
-            if ! is_installed "skills" "custom:$name"; then
-                new_skills="$new_skills custom:$name"
-            fi
-        done
-    fi
-    echo "$new_skills" | xargs
-}
-
-# ============================================
-# LIST MODULES
-# ============================================
-
-list_modules() {
-    print_header "Installed Modules"
-
-    echo ""
-    echo "MCP Servers:"
-    local installed_mcp
-    installed_mcp=$(get_installed "mcp")
-    if [ -z "$installed_mcp" ]; then
-        print_info "(none)"
-    else
-        for m in $installed_mcp; do
-            print_success "$m"
-        done
-    fi
-
-    echo ""
-    echo "Skills:"
-    local installed_skills
-    installed_skills=$(get_installed "skills")
-    if [ -z "$installed_skills" ]; then
-        print_info "(none)"
-    else
-        for s in $installed_skills; do
-            print_success "$s"
-        done
-    fi
-
-    print_header "Available Modules"
-
-    echo ""
-    local name
-    echo "MCP Servers:"
-    local desc
-    for f in "$SCRIPT_DIR/mcp/"*.json; do
-        [ -f "$f" ] || continue
-        name=$(basename "$f" .json)
-        desc=$(jq -r '.description' "$f")
-        if is_installed "mcp" "$name"; then
-            print_info "$name (installed)"
-        else
-            echo "  [ ] $name - $desc"
-        fi
-    done
-
-    echo ""
-    echo "Skills:"
-    for d in "$SCRIPT_DIR/skills/"*/; do
-        [ -d "$d" ] || continue
-        name=$(basename "$d")
-        if is_installed "skills" "$name"; then
-            print_info "$name (installed)"
-        else
-            echo "  [ ] $name"
-        fi
-    done
-
-    # Check for custom modules
-    if [ -d "$CUSTOM_DIR" ]; then
-        print_header "Custom Modules"
-
-        if [ -d "$CUSTOM_DIR/mcp" ] && [ "$(ls -A "$CUSTOM_DIR/mcp" 2>/dev/null)" ]; then
-            echo ""
-            echo "Custom MCP Servers:"
-            for f in "$CUSTOM_DIR/mcp/"*.json; do
-                [ -f "$f" ] || continue
-                name=$(basename "$f" .json)
-                if is_installed "mcp" "custom:$name"; then
-                    print_success "$name (installed)"
-                else
-                    echo "  [ ] $name"
-                fi
-            done
-        fi
-
-        if [ -d "$CUSTOM_DIR/skills" ] && [ "$(ls -A "$CUSTOM_DIR/skills" 2>/dev/null)" ]; then
-            echo ""
-            echo "Custom Skills:"
-            for d in "$CUSTOM_DIR/skills/"*/; do
-                [ -d "$d" ] || continue
-                name=$(basename "$d")
-                if is_installed "skills" "custom:$name"; then
-                    print_success "$name (installed)"
-                else
-                    echo "  [ ] $name"
-                fi
-            done
-        fi
-    fi
-
-    echo ""
-}
-
-# ============================================
-# SELECT MODULES (Interactive)
-# ============================================
-
-select_mcp() {
-    local mode=$1
-    SELECTED_MCP=()
-
-    echo ""
-    echo "MCP Servers (enter numbers separated by space, or 'none'):"
-    echo ""
-
-    local i=1
-    local mcps=()
-    local name
-    local desc
-
-    for f in "$SCRIPT_DIR/mcp/"*.json; do
-        [ -f "$f" ] || continue
-        name=$(basename "$f" .json)
-        desc=$(jq -r '.description' "$f")
-        if is_installed "mcp" "$name"; then
-            echo "     $name [installed]"
-        else
-            mcps+=("$name")
-            echo "  $i) $name - $desc"
-            ((i++))
-        fi
-    done
-
-    # Custom MCP
-    if [ -d "$CUSTOM_DIR/mcp" ]; then
-        for f in "$CUSTOM_DIR/mcp/"*.json; do
-            [ -f "$f" ] || continue
-            name=$(basename "$f" .json)
-            desc=$(jq -r '.description' "$f" 2>/dev/null || echo "Custom MCP server")
-            if is_installed "mcp" "custom:$name"; then
-                echo "     $name (custom) [installed]"
-            else
-                mcps+=("custom:$name")
-                echo "  $i) $name (custom) - $desc"
-                ((i++))
-            fi
-        done
-    fi
-
-    if [ ${#mcps[@]} -eq 0 ]; then
-        echo ""
-        echo "  (all MCP servers already installed)"
-        return
-    fi
-
-    echo ""
-    read -rp "Select (e.g., '1 2' or 'none'): " selection
-
-    if [ "$selection" != "none" ] && [ -n "$selection" ]; then
-        for num in $selection; do
-            if [ "$num" -ge 1 ] && [ "$num" -le ${#mcps[@]} ] 2>/dev/null; then
-                SELECTED_MCP+=("${mcps[$((num-1))]}")
-            fi
-        done
-    fi
-}
-
-select_skills() {
-    local mode=$1
-    SELECTED_SKILLS=()
-
-    echo ""
-    echo "Skills (enter numbers separated by space, or 'none'):"
-    echo ""
-
-    local i=1
-    local skills=()
-    local name
-
-    for d in "$SCRIPT_DIR/skills/"*/; do
-        [ -d "$d" ] || continue
-        name=$(basename "$d")
-        if is_installed "skills" "$name"; then
-            echo "     $name [installed]"
-        else
-            skills+=("$name")
-            echo "  $i) $name"
-            ((i++))
-        fi
-    done
-
-    # Custom skills
-    if [ -d "$CUSTOM_DIR/skills" ]; then
-        for d in "$CUSTOM_DIR/skills/"*/; do
-            [ -d "$d" ] || continue
-            name=$(basename "$d")
-            if is_installed "skills" "custom:$name"; then
-                echo "     $name (custom) [installed]"
-            else
-                skills+=("custom:$name")
-                echo "  $i) $name (custom)"
-                ((i++))
-            fi
-        done
-    fi
-
-    if [ ${#skills[@]} -eq 0 ]; then
-        echo ""
-        echo "  (all skills already installed)"
-        return
-    fi
-
-    echo ""
-    read -rp "Select (e.g., '1 2' or 'none'): " selection
-
-    if [ "$selection" != "none" ] && [ -n "$selection" ]; then
-        for num in $selection; do
-            if [ "$num" -ge 1 ] && [ "$num" -le ${#skills[@]} ] 2>/dev/null; then
-                SELECTED_SKILLS+=("${skills[$((num-1))]}")
-            fi
-        done
-    fi
-}
-
-# ============================================
-# BUILD CLAUDE.MD
-# ============================================
-
-build_claude_md() {
-    # Copy base template (coding standards are now in skills)
-    cp "$SCRIPT_DIR/templates/base/global-CLAUDE.md" "$CLAUDE_DIR/CLAUDE.md"
-}
-
-# ============================================
-# INSTALL MCP SERVER
-# ============================================
-
-install_mcp() {
-    local mcp_name=$1
-    local config_file=""
-    local name
-    local requires_key
-    local config
-
-    if [[ "$mcp_name" == custom:* ]]; then
-        name="${mcp_name#custom:}"
-        config_file="$CUSTOM_DIR/mcp/${name}.json"
-    else
-        config_file="$SCRIPT_DIR/mcp/${mcp_name}.json"
-    fi
-
-    if [ ! -f "$config_file" ]; then
-        print_error "MCP config not found: $config_file"
-        return 1
-    fi
-
-    name=$(jq -r '.name' "$config_file")
-    requires_key=$(jq -r '.requiresApiKey' "$config_file")
-    config=$(jq -r '.config' "$config_file")
-
-    # Initialize .claude.json if needed
-    if [ ! -f "$MCP_CONFIG_FILE" ]; then
-        echo '{"mcpServers":{}}' > "$MCP_CONFIG_FILE"
-    fi
-
-    # Handle API keys if required
-    local instructions
-    local api_keys
-    local key_count
-    local key_name
-    local key_prompt
-    local key_value
-    if [ "$requires_key" = "true" ]; then
-        # Show instructions
-        instructions=$(jq -r '.apiKeyInstructions[]' "$config_file" 2>/dev/null)
-        if [ -n "$instructions" ]; then
-            echo ""
-            echo "  Setup instructions:"
-            jq -r '.apiKeyInstructions[]' "$config_file" | while read -r line; do
-                echo "    $line"
-            done
-            echo ""
-        fi
-
-        # Check if single key or multiple
-        api_keys=$(jq -r '.apiKeys' "$config_file" 2>/dev/null)
-
-        if [ "$api_keys" != "null" ]; then
-            # Multiple API keys
-            key_count=$(jq -r '.apiKeys | length' "$config_file")
-            for ((i=0; i<key_count; i++)); do
-                key_name=$(jq -r ".apiKeys[$i].name" "$config_file")
-                key_prompt=$(jq -r ".apiKeys[$i].prompt" "$config_file")
-                read -rp "  $key_prompt: " key_value
-                if [ -z "$key_value" ]; then
-                    print_warning "Skipping $name (no API key provided)"
-                    return 1
-                fi
-                config=${config//\{\{${key_name}\}\}/${key_value}}
-            done
-        else
-            # Single API key
-            key_name=$(jq -r '.apiKeyName' "$config_file")
-            key_prompt=$(jq -r '.apiKeyPrompt' "$config_file")
-            read -rp "  $key_prompt: " key_value
-            if [ -z "$key_value" ]; then
-                print_warning "Skipping $name (no API key provided)"
-                return 1
-            fi
-            config=${config//\{\{${key_name}\}\}/${key_value}}
-        fi
-    fi
-
-    # Add to .claude.json
-    jq --argjson config "$config" ".mcpServers[\"$name\"] = \$config" "$MCP_CONFIG_FILE" > "$MCP_CONFIG_FILE.tmp" && mv "$MCP_CONFIG_FILE.tmp" "$MCP_CONFIG_FILE"
-
-    return 0
-}
-
-# ============================================
-# INSTALL SKILL
-# ============================================
-
-install_skill() {
-    local skill_name=$1
-    local source_dir=""
-    local name
-    local target_dir
-
-    if [[ "$skill_name" == custom:* ]]; then
-        name="${skill_name#custom:}"
-        source_dir="$CUSTOM_DIR/skills/$name"
-    else
-        source_dir="$SCRIPT_DIR/skills/$skill_name"
-    fi
-
-    if [ ! -d "$source_dir" ]; then
-        print_error "Skill not found: $source_dir"
-        return 1
-    fi
-
-    target_dir="$CLAUDE_DIR/skills/$(basename "$source_dir")"
-    mkdir -p "$CLAUDE_DIR/skills"
-    cp -r "$source_dir" "$target_dir"
-
-    return 0
-}
-
-# ============================================
-# CONFIGURE STATUS LINE
-# ============================================
-
-configure_statusline() {
-    local claude_settings="$CLAUDE_DIR/settings.json"
-    local ccstatus_settings="$CCSTATUS_CONFIG_DIR/settings.json"
-
-    # Check if already configured
-    if [ -f "$claude_settings" ] && jq -e '.statusLine' "$claude_settings" > /dev/null 2>&1; then
-        print_info "statusLine already configured"
-        return 0
-    fi
-
-    echo ""
-    echo "ccstatusline shows context usage in the status bar (e.g., Ctx: 21.9%)"
-    echo "Useful to know when to run /clear-session"
-    echo ""
-    read -rp "Enable context status line? (Y/n): " enable_statusline
-
-    if [ "$enable_statusline" = "n" ] || [ "$enable_statusline" = "N" ]; then
-        print_info "Status line skipped"
-        return 0
-    fi
-
-    # 1. Configure Claude settings
-    # Validate existing settings.json if present
-    if [ -f "$claude_settings" ]; then
-        if ! jq -e '.' "$claude_settings" > /dev/null 2>&1; then
-            print_warning "settings.json appears corrupted, recreating..."
-            echo '{}' > "$claude_settings"
-        fi
-    else
-        echo '{}' > "$claude_settings"
-    fi
-
-    # Update settings.json with error handling
-    if ! jq '.statusLine = "npx -y ccstatusline@latest"' "$claude_settings" > "$claude_settings.tmp" 2>/dev/null; then
-        print_error "Failed to update settings.json"
-        rm -f "$claude_settings.tmp"
-        return 1
-    fi
-    mv "$claude_settings.tmp" "$claude_settings"
-
-    # 2. Create default ccstatusline config if not exists
-    mkdir -p "$CCSTATUS_CONFIG_DIR"
-    if [ ! -f "$ccstatus_settings" ]; then
-        cat > "$ccstatus_settings" << 'CCEOF'
-{
-  "version": 3,
-  "lines": [
-    [
-      {"id": "1", "type": "model"},
-      {"id": "2", "type": "separator"},
-      {"id": "3", "type": "tokens-total"},
-      {"id": "4", "type": "separator"},
-      {"id": "5", "type": "context-length", "color": "brightBlack"},
-      {"id": "6", "type": "separator"},
-      {"id": "7", "type": "context-percentage"},
-      {"id": "8", "type": "separator"},
-      {"id": "9", "type": "git-branch", "color": "magenta"},
-      {"id": "10", "type": "separator"},
-      {"id": "11", "type": "git-changes", "color": "yellow"}
-    ],
-    [],
-    []
-  ],
-  "flexMode": "full-minus-40",
-  "compactThreshold": 60,
-  "colorLevel": 2
-}
-CCEOF
-        print_success "Status line enabled with default config"
-        echo "  Customize: npx ccstatusline@latest"
-    else
-        print_success "Status line enabled (using existing config)"
-    fi
-}
-
 # ============================================
 # MAIN INSTALLATION
 # ============================================
@@ -653,7 +104,7 @@ CCEOF
 do_install() {
     local mode=$1  # "install" or "add"
 
-    if [ "$mode" = "install" ]; then
+    if [[ "$mode" = "install" ]]; then
         echo ""
         echo "Claude Code Setup Installer"
         echo "============================"
@@ -663,21 +114,15 @@ do_install() {
         echo "================================"
     fi
 
-    # Check dependencies
+    # Detect OS and check dependencies
     print_header "Dependencies"
 
-    if ! command -v brew &> /dev/null; then
-        print_error "Homebrew not found. Please install from https://brew.sh"
-        exit 1
-    fi
-    print_info "brew (found)"
+    detect_os
+    print_info "OS: $(get_os_display_name)"
 
-    if ! command -v jq &> /dev/null; then
-        echo "  + jq (installing via brew...)"
-        brew install jq --quiet
-    else
-        print_info "jq (found)"
-    fi
+    check_package_manager
+
+    install_jq
 
     # Create directories
     mkdir -p "$CLAUDE_DIR"
@@ -700,7 +145,7 @@ do_install() {
 
     local filename
     for cmd in "$SCRIPT_DIR/commands/"*.md; do
-        [ -f "$cmd" ] || continue
+        [[ -f "$cmd" ]] || continue
         filename=$(basename "$cmd")
         cp "$cmd" "$CLAUDE_DIR/commands/"
         print_success "$filename"
@@ -718,7 +163,7 @@ do_install() {
 
     # Install MCP servers
     local display_name
-    if [ ${#SELECTED_MCP[@]} -gt 0 ]; then
+    if [[ ${#SELECTED_MCP[@]} -gt 0 ]]; then
         print_header "Installing MCP Servers"
 
         for mcp in "${SELECTED_MCP[@]}"; do
@@ -733,7 +178,7 @@ do_install() {
     fi
 
     # Install skills
-    if [ ${#SELECTED_SKILLS[@]} -gt 0 ]; then
+    if [[ ${#SELECTED_SKILLS[@]} -gt 0 ]]; then
         print_header "Installing Skills"
 
         for skill in "${SELECTED_SKILLS[@]}"; do
@@ -768,159 +213,6 @@ do_install() {
     echo "  ./install.sh --add     Add more modules"
     echo "  ./install.sh --update  Update installed modules"
     echo "  ./install.sh --list    Show all modules"
-    echo ""
-}
-
-# ============================================
-# UPDATE INSTALLATION
-# ============================================
-
-do_update() {
-    echo ""
-    echo "Claude Code Setup - Update"
-    echo "=========================="
-
-    init_installed_json
-
-    # Check content version
-    local installed_v
-    local available_v
-    installed_v=$(get_installed_content_version)
-    available_v=$(get_content_version)
-
-    if [ "$installed_v" -eq "$available_v" ]; then
-        echo ""
-        echo "Content version: v$available_v (up to date)"
-        echo "Nothing to update."
-        echo ""
-        exit 0
-    fi
-
-    echo ""
-    echo "Content version: v$installed_v → v$available_v"
-    echo "See CHANGELOG.md for details."
-    echo ""
-
-    if [ "$YES_MODE" = "false" ]; then
-        read -rp "Proceed? (y/N): " confirm
-        if [ "$confirm" != "y" ] && [ "$confirm" != "Y" ]; then
-            echo "Cancelled."
-            exit 0
-        fi
-    fi
-
-    # Update commands
-    print_header "Updating Commands"
-
-    local filename
-    for cmd in "$SCRIPT_DIR/commands/"*.md; do
-        [ -f "$cmd" ] || continue
-        filename=$(basename "$cmd")
-        cp "$cmd" "$CLAUDE_DIR/commands/"
-        print_success "$filename"
-    done
-
-    # Rebuild CLAUDE.md
-    print_header "Rebuilding CLAUDE.md"
-
-    build_claude_md
-    print_success "CLAUDE.md rebuilt"
-
-    # Update project template
-    mkdir -p "$CLAUDE_DIR/templates"
-    cp "$SCRIPT_DIR/templates/project-CLAUDE.md" "$CLAUDE_DIR/templates/CLAUDE.template.md"
-    print_success "Project template updated"
-
-    # Update skills
-    print_header "Updating Skills"
-
-    local source_dir
-    local display_name
-    local name
-    local target_dir
-    local skill
-    while IFS= read -r skill; do
-        [ -n "$skill" ] || continue
-        source_dir=""
-        display_name=""
-
-        if [[ "$skill" == custom:* ]]; then
-            name="${skill#custom:}"
-            source_dir="$CUSTOM_DIR/skills/$name"
-            display_name="$name (custom)"
-        else
-            source_dir="$SCRIPT_DIR/skills/$skill"
-            display_name="$skill"
-        fi
-
-        if [ -d "$source_dir" ]; then
-            target_dir="$CLAUDE_DIR/skills/$(basename "$source_dir")"
-            rm -rf "$target_dir"
-            cp -r "$source_dir" "$target_dir"
-            print_success "$display_name"
-        else
-            print_warning "$display_name (source not found, skipped)"
-        fi
-    done < <(get_installed "skills")
-
-    # Update content version
-    set_installed_content_version "$available_v"
-
-    echo ""
-    print_success "Update complete! (v$available_v)"
-
-    # Check for new modules (skip in non-interactive mode)
-    if [ "$YES_MODE" = "false" ]; then
-        local new_mcp new_skills
-        new_mcp=$(get_new_mcp)
-        new_skills=$(get_new_skills)
-
-        if [ -n "$new_mcp" ] || [ -n "$new_skills" ]; then
-            echo ""
-            print_header "New Modules Available"
-
-            if [ -n "$new_mcp" ]; then
-                echo "  MCP: $new_mcp"
-            fi
-            if [ -n "$new_skills" ]; then
-                echo "  Skills: $new_skills"
-            fi
-
-            echo ""
-            read -rp "Install new modules? (y/N): " install_new
-            if [ "$install_new" = "y" ] || [ "$install_new" = "Y" ]; then
-                echo ""
-                select_mcp "add"
-                select_skills "add"
-
-                # Install selected MCP servers
-                if [ ${#SELECTED_MCP[@]} -gt 0 ]; then
-                    for mcp in "${SELECTED_MCP[@]}"; do
-                        print_header "Installing MCP: $mcp"
-                        if install_mcp "$mcp"; then
-                            add_to_installed "mcp" "$mcp"
-                            print_success "Installed $mcp"
-                        fi
-                    done
-                fi
-
-                # Install selected skills
-                if [ ${#SELECTED_SKILLS[@]} -gt 0 ]; then
-                    for skill in "${SELECTED_SKILLS[@]}"; do
-                        print_header "Installing Skill: $skill"
-                        if install_skill "$skill"; then
-                            add_to_installed "skills" "$skill"
-                            print_success "Installed $skill"
-                        fi
-                    done
-
-                    # Rebuild CLAUDE.md with new skills
-                    build_claude_md
-                fi
-            fi
-        fi
-    fi
-
     echo ""
 }
 
@@ -976,13 +268,13 @@ main() {
             do_update
             ;;
         "")
-            if [ -f "$INSTALLED_FILE" ]; then
+            if [[ -f "$INSTALLED_FILE" ]]; then
                 echo ""
                 echo "Existing installation detected."
                 echo "Use --add to add modules or --update to update."
                 echo ""
                 read -rp "Continue with fresh install? (y/N): " confirm
-                if [ "$confirm" != "y" ] && [ "$confirm" != "Y" ]; then
+                if [[ "$confirm" != "y" ]] && [[ "$confirm" != "Y" ]]; then
                     echo "Cancelled."
                     exit 0
                 fi

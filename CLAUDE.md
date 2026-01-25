@@ -21,7 +21,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Custom Modules | Done | ~/.claude/custom/ for user modules |
 | Solo/Team Mode | Done | /init-project asks for .gitignore preference |
 | Install Script | Done | --add, --update, --list, --yes flags, ShellCheck compliant |
-| Records | Done | 14 Records (000-013) |
+| Records | Done | 16 Records (000-015) |
 | Open Source Release | Done | Published to b33eep/claude-code-setup |
 | GitHub Actions E2E | Done | Full test coverage |
 | Open Source Polish | Done | SECURITY.md, CONTRIBUTING.md, CHANGELOG.md, templates |
@@ -32,16 +32,18 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | JavaScript Skill | Done | Content v8: standards-javascript for Node.js/JS projects |
 | Skill Creator | Done | Content v9: /skill-creator for custom skill creation ([Record 013](docs/records/013-skill-creator.md)) |
 | /claude-code-setup | Done | Content v10: Renamed from /upgrade-claude-setup, shows delta, asks before actions |
+| Linux Support | Done | Content v13: OS detection, package manager abstraction ([Record 014](docs/records/014-linux-support.md)) |
+| Install Script Refactoring | Done | Content v13: Split into lib/ modules ([Record 015](docs/records/015-install-script-refactoring.md)) |
 
 ### Before v1.0.0
 
 | Todo | Priority | Problem | Solution |
 |------|----------|---------|----------|
-| Linux Support | High | Only macOS supported, excludes Linux/WSL users | Add OS detection, abstract package manager ([Record 014](docs/records/014-linux-support.md)) |
-| Install Script Refactoring | High | install.sh approaching 1000 lines, hard to maintain | Split into lib/ modules ([Record 015](docs/records/015-install-script-refactoring.md)) |
 | Optional Hooks | Medium | User must remember 3 manual steps (/clear-session, /clear, /catchup) | Hooks automate 2 of 3 steps, user only types /clear ([Record 012](docs/records/012-optional-hooks-automation.md)) |
 
-**Next Step:** Start with Linux Support + Refactoring (do together).
+**Current:** PR #9 (fb/linux-support) - CI running on macOS + Ubuntu. Awaiting merge.
+
+**Next Step:** Merge PR #9, then Optional Hooks.
 
 ### Future (Post v1.0.0)
 
@@ -89,11 +91,12 @@ claude-code-setup/
 ├── CONTRIBUTING.md
 ├── SECURITY.md
 ├── install.sh
+├── lib/                       # Modular install script components
 ├── templates/
 ├── mcp/
 ├── commands/
 ├── skills/
-└── docs/records/000-013-*.md
+└── docs/records/000-015-*.md
 ```
 
 ---

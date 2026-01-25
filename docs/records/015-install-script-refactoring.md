@@ -98,15 +98,25 @@ Rationale:
 - Linux support will add ~100-200 lines
 - Combined changes justify refactoring
 
-## Implementation Plan
-
-1. Create `lib/` directory
-2. Extract helpers first (lowest risk)
-3. Extract module logic
-4. Extract platform-specific code (prep for Linux)
-5. Update tests to source individual files
-6. Update ShellCheck CI to use `-x`
-
 ## Decision
 
-Deferred to post v1.0.0. Trigger: 1000 lines or Linux support work.
+**Accepted.** Implemented as part of Linux support work (Record 014).
+
+## Implementation
+
+Created `lib/` directory with the following modules:
+
+```
+lib/
+├── helpers.sh      # Colors, printing, JSON utilities
+├── modules.sh      # Module discovery, selection
+├── mcp.sh          # MCP server installation
+├── skills.sh       # Skill installation
+├── statusline.sh   # ccstatusline configuration
+├── update.sh       # Update logic
+└── platform.sh     # OS detection, package manager abstraction
+```
+
+Main `install.sh` reduced from ~1000 lines to ~300 lines by sourcing these modules.
+
+CI updated with `shellcheck -x` to follow sources.
