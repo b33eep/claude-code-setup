@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/b33eep/claude-code-setup/actions/workflows/test.yml/badge.svg)](https://github.com/b33eep/claude-code-setup/actions/workflows/test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![macOS](https://img.shields.io/badge/platform-macOS-blue.svg)](https://www.apple.com/macos/)
 
 A modular setup for Claude Code that solves context loss and keeps your workflow consistent.
 
@@ -34,6 +35,8 @@ Sound familiar?
 **Smart skill loading:** Working on a Python project? Python standards load automatically. Writing a shell script? Shell standards appear. No manual setup, no commands to remember.
 
 ## Quick Start
+
+> **Requirements:** macOS with [Homebrew](https://brew.sh). Linux/WSL not yet supported.
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/b33eep/claude-code-setup/main/quick-install.sh | bash
