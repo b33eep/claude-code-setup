@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Content v11: Clarify code-review-ai plugin is optional in global prompt
 - Content v10: Rename `/upgrade-claude-setup` → `/claude-code-setup`, show delta, ask user before actions
 - Content v9: Add `/skill-creator` command skill for creating custom skills (Record-013)
 - Content v8: Add JavaScript/Node.js coding standards skill (standards-javascript)

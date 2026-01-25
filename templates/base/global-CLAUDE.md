@@ -66,7 +66,7 @@
                           │
                           ▼
 ┌─────────────────────────────────────────────────────────┐
-│  3. CODE REVIEW                                         │
+│  3. CODE REVIEW (if plugin installed)                   │
 │     - Agent: code-review-ai:architect-review            │
 │     - Incorporate feedback                              │
 └─────────────────────────────────────────────────────────┘
@@ -211,7 +211,7 @@ After reading project CLAUDE.md, load skills matching the `Tech Stack:` field:
 **Example:** Project has `Tech Stack: Python` but user asks for a shell script test.
 → Load `standards-shell` BEFORE writing the `.sh` file.
 
-### 3. Code Review Agent
+### 3. Code Review Agent (if installed)
 
 When spawning `code-review-ai:architect-review`, include relevant skills:
 

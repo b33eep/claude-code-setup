@@ -240,6 +240,8 @@ Claude Code has a built-in plugin marketplace:
 /install code-review-ai@claude-code-workflows
 ```
 
+After installing, the `code-review-ai:architect-review` agent is available for code reviews.
+
 ## File Structure
 
 <details>
