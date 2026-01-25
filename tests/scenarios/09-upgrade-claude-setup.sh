@@ -46,5 +46,11 @@ else
     fail "Should use --yes flag for non-interactive update"
 fi
 
+scenario "Command checks for new modules"
+
+assert_file_contains "$PROJECT_DIR/commands/upgrade-claude-setup.md" "Check for new modules" "Has new modules check step"
+assert_file_contains "$PROJECT_DIR/commands/upgrade-claude-setup.md" "install.sh --add" "Can install new modules"
+assert_file_contains "$PROJECT_DIR/commands/upgrade-claude-setup.md" "New modules available" "Shows available modules output"
+
 # Print summary
 print_summary

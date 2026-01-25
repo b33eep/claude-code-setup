@@ -102,14 +102,20 @@ Stay in Claude Code - no terminal needed:
 
 | Command | What it does |
 |---------|--------------|
-| `/upgrade-claude-setup` | Update to latest version |
+| `/upgrade-claude-setup` | Update + discover new modules |
 | `/add-custom <url>` | Add custom modules (company/personal) |
 | `/upgrade-custom` | Pull latest from custom repo |
 
 ```
 You: /upgrade-claude-setup
 Claude: Upgraded claude-code-setup: v4 → v5
-        Run /catchup to reload context.
+
+        New modules available:
+        - standards-javascript (JS/Node.js standards)
+
+        Install any of these?
+You: yes, standards-javascript
+Claude: ✓ standards-javascript installed
 ```
 
 <details>
