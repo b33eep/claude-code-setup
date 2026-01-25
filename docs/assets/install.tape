@@ -13,7 +13,7 @@ Set TypingSpeed 20ms
 Hide
 Type "export HOME=$(mktemp -d)"
 Enter
-Type "cd /Users/grazi/Coding/claude-setup"
+Type "cd ~/claude-code-setup"
 Enter
 Type "alias curl='./install.sh #'"
 Enter
