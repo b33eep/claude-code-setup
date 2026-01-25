@@ -115,12 +115,13 @@ Tests run in isolation (`/tmp/claude-test-*`), real `~/.claude` stays untouched.
 When changing managed content (templates, commands, skills, mcp):
 
 1. Increment `templates/VERSION`
-2. Add CHANGELOG.md entry:
+2. Update badge in `README.md` (search for `content-v`)
+3. Add CHANGELOG.md entry:
    ```markdown
    ## [Unreleased]
    - Content vX: Description of change
    ```
-3. Run tests: `./tests/test.sh`
+4. Run tests: `./tests/test.sh`
 
 ### Git
 
