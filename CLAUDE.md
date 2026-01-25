@@ -31,6 +31,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | --yes Flag Bug Fix | Done | Content v7: Non-interactive updates for /claude-code-setup |
 | JavaScript Skill | Done | Content v8: standards-javascript for Node.js/JS projects |
 | Skill Creator | Done | Content v9: /skill-creator for custom skill creation ([Record 013](docs/records/013-skill-creator.md)) |
+| /claude-code-setup | Done | Content v10: Renamed from /upgrade-claude-setup, shows delta, asks before actions |
 
 ### Before v1.0.0
 
