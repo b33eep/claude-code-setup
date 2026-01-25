@@ -146,6 +146,7 @@ show_usage() {
     echo "  --update    Update all installed modules"
     echo "  --yes, -y   Skip confirmation prompts (for --update)"
     echo "  --list      Show installed and available modules"
+    echo "  --version   Show content version"
     echo "  --help      Show this help message"
     echo ""
     echo "Examples:"
@@ -154,6 +155,28 @@ show_usage() {
     echo "Custom Modules:"
     echo "  Place custom modules in ~/.claude/custom/"
     echo "  Structure: custom/{mcp,skills}/"
+    echo ""
+}
+
+show_version() {
+    local available_v
+    local installed_v
+    available_v=$(get_content_version)
+
+    echo "Claude Code Setup"
+    echo ""
+    echo "Content version: v$available_v"
+
+    if [ -f "$INSTALLED_FILE" ]; then
+        installed_v=$(get_installed_content_version)
+        if [ "$installed_v" -eq "$available_v" ]; then
+            echo "Installed: v$installed_v (up to date)"
+        else
+            echo "Installed: v$installed_v (update available)"
+        fi
+    else
+        echo "Installed: (not installed)"
+    fi
     echo ""
 }
 
@@ -913,6 +936,10 @@ main() {
         case "$1" in
             --help|-h)
                 show_usage
+                return 0
+                ;;
+            --version|-v)
+                show_version
                 return 0
                 ;;
             --list|-l)

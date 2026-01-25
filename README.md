@@ -3,6 +3,7 @@
 [![CI](https://github.com/b33eep/claude-code-setup/actions/workflows/test.yml/badge.svg)](https://github.com/b33eep/claude-code-setup/actions/workflows/test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![macOS](https://img.shields.io/badge/platform-macOS-blue.svg)](https://www.apple.com/macos/)
+[![Content v11](https://img.shields.io/badge/content-v11-blue.svg)](CHANGELOG.md)
 
 A modular setup for Claude Code that solves context loss and keeps your workflow consistent.
 
