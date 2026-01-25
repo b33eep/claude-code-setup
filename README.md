@@ -163,6 +163,20 @@ Standards load based on your project's `Tech Stack:` in CLAUDE.md. Writing a she
 | Skill | Description |
 |-------|-------------|
 | `create-slidev-presentation` | Create Slidev slide decks |
+| `skill-creator` | Create your own custom skills |
+
+## Custom Skills
+
+Create your own skills with `/skill-creator`:
+
+```
+You: /skill-creator
+Claude: What type of skill do you want to create?
+        1. Command skill - Invoked with /skill-name
+        2. Context skill - Auto-loads based on tech stack
+```
+
+Skills are saved to `~/.claude/custom/skills/` and available immediately.
 
 ## For Teams
 
