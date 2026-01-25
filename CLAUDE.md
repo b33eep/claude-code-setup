@@ -41,9 +41,9 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 |------|----------|---------|----------|
 | Optional Hooks | Medium | User must remember 3 manual steps (/clear-session, /clear, /catchup) | Hooks automate 2 of 3 steps, user only types /clear ([Record 012](docs/records/012-optional-hooks-automation.md)) |
 
-**Current:** PR #9 (fb/linux-support) - CI running on macOS + Ubuntu. Awaiting merge.
+**Current:** PR #9 merged. Linux/WSL support + naked install tests live.
 
-**Next Step:** Merge PR #9, then Optional Hooks.
+**Next Step:** Optional Hooks ([Record 012](docs/records/012-optional-hooks-automation.md)).
 
 ### Future (Post v1.0.0)
 
