@@ -28,8 +28,8 @@ assert_file_exists "$INSTALLED_FILE" "installed.json created"
 assert_dir_exists "$CLAUDE_DIR/commands" "commands directory created"
 
 # Verify CLAUDE.md content matches template exactly
-expected_hash=$(shasum -a 256 "$PROJECT_DIR/templates/base/global-CLAUDE.md" | cut -d' ' -f1)
-actual_hash=$(shasum -a 256 "$CLAUDE_DIR/CLAUDE.md" | cut -d' ' -f1)
+expected_hash=$(sha256_file "$PROJECT_DIR/templates/base/global-CLAUDE.md")
+actual_hash=$(sha256_file "$CLAUDE_DIR/CLAUDE.md")
 if [ "$expected_hash" = "$actual_hash" ]; then
     pass "CLAUDE.md matches template (hash: ${expected_hash:0:12}...)"
 else
@@ -45,8 +45,8 @@ assert_json_exists "$MCP_CONFIG_FILE" '.mcpServers["pdf-reader"]' "pdf-reader co
 
 # Verify skills match source
 assert_dir_exists "$CLAUDE_DIR/skills/standards-python" "standards-python skill installed"
-expected=$(shasum -a 256 "$PROJECT_DIR/skills/standards-python/SKILL.md" | cut -d' ' -f1)
-actual=$(shasum -a 256 "$CLAUDE_DIR/skills/standards-python/SKILL.md" | cut -d' ' -f1)
+expected=$(sha256_file "$PROJECT_DIR/skills/standards-python/SKILL.md")
+actual=$(sha256_file "$CLAUDE_DIR/skills/standards-python/SKILL.md")
 if [ "$expected" = "$actual" ]; then
     pass "standards-python/SKILL.md matches source"
 else
@@ -55,8 +55,8 @@ fi
 
 # Verify commands match source
 for cmd in catchup.md clear-session.md init-project.md; do
-    expected=$(shasum -a 256 "$PROJECT_DIR/commands/$cmd" | cut -d' ' -f1)
-    actual=$(shasum -a 256 "$CLAUDE_DIR/commands/$cmd" | cut -d' ' -f1)
+    expected=$(sha256_file "$PROJECT_DIR/commands/$cmd")
+    actual=$(sha256_file "$CLAUDE_DIR/commands/$cmd")
     if [ "$expected" = "$actual" ]; then
         pass "$cmd matches source"
     else
@@ -66,8 +66,8 @@ done
 
 # Verify project template installed
 assert_file_exists "$CLAUDE_DIR/templates/CLAUDE.template.md" "Project template installed"
-expected=$(shasum -a 256 "$PROJECT_DIR/templates/project-CLAUDE.md" | cut -d' ' -f1)
-actual=$(shasum -a 256 "$CLAUDE_DIR/templates/CLAUDE.template.md" | cut -d' ' -f1)
+expected=$(sha256_file "$PROJECT_DIR/templates/project-CLAUDE.md")
+actual=$(sha256_file "$CLAUDE_DIR/templates/CLAUDE.template.md")
 if [ "$expected" = "$actual" ]; then
     pass "CLAUDE.template.md matches source"
 else

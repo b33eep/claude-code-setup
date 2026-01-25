@@ -62,9 +62,9 @@ for scenario in "${SCENARIOS[@]}"; do
 
     # Run scenario as standalone script, capture exit code
     if bash "$scenario" "$PROJECT_DIR"; then
-        ((TOTAL_PASSED++))
+        ((TOTAL_PASSED++)) || true
     else
-        ((TOTAL_FAILED++))
+        ((TOTAL_FAILED++)) || true
     fi
 done
 

@@ -2,6 +2,23 @@
 
 # Test helper functions
 
+# Cross-platform SHA256 function
+# Usage: sha256_file <file>
+# Returns: hash (first field only)
+sha256_file() {
+    local file=$1
+    if command -v shasum &>/dev/null; then
+        # macOS
+        shasum -a 256 "$file" | cut -d' ' -f1
+    elif command -v sha256sum &>/dev/null; then
+        # Linux
+        sha256sum "$file" | cut -d' ' -f1
+    else
+        echo "ERROR: No sha256 tool found" >&2
+        return 1
+    fi
+}
+
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'

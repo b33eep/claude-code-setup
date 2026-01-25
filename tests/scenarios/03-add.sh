@@ -46,8 +46,8 @@ assert_dir_exists "$CLAUDE_DIR/skills/standards-shell" "standards-shell installe
 assert_json_exists "$INSTALLED_FILE" '.skills[] | select(. == "standards-shell")' "standards-shell tracked in installed.json"
 
 # Verify content matches source
-expected=$(shasum -a 256 "$PROJECT_DIR/skills/standards-shell/SKILL.md" | cut -d' ' -f1)
-actual=$(shasum -a 256 "$CLAUDE_DIR/skills/standards-shell/SKILL.md" | cut -d' ' -f1)
+expected=$(sha256_file "$PROJECT_DIR/skills/standards-shell/SKILL.md")
+actual=$(sha256_file "$CLAUDE_DIR/skills/standards-shell/SKILL.md")
 if [ "$expected" = "$actual" ]; then
     pass "standards-shell/SKILL.md matches source"
 else

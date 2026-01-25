@@ -13,7 +13,9 @@
 [![CI](https://github.com/b33eep/claude-code-setup/actions/workflows/test.yml/badge.svg)](https://github.com/b33eep/claude-code-setup/actions/workflows/test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![macOS](https://img.shields.io/badge/platform-macOS-blue.svg)](https://www.apple.com/macos/)
-[![Content v12](https://img.shields.io/badge/content-v12-blue.svg)](CHANGELOG.md)
+[![Linux](https://img.shields.io/badge/platform-Linux-blue.svg)](https://www.linux.org/)
+[![WSL](https://img.shields.io/badge/platform-WSL-blue.svg)](https://docs.microsoft.com/en-us/windows/wsl/)
+[![Content v13](https://img.shields.io/badge/content-v13-blue.svg)](CHANGELOG.md)
 
 A modular setup for Claude Code that solves context loss and keeps your workflow consistent.
 
@@ -47,7 +49,17 @@ Sound familiar?
 
 ## Quick Start
 
-> **Requirements:** macOS with [Homebrew](https://brew.sh). Linux/WSL not yet supported.
+### Prerequisites
+
+| Platform | Required | Optional |
+|----------|----------|----------|
+| All | [Claude Code](https://claude.ai/download) | [Node.js](https://nodejs.org/) *(for status line)* |
+| macOS | - | [Homebrew](https://brew.sh) |
+| Linux/WSL | `sudo` access | - |
+
+> `git` and `curl` are needed but usually pre-installed. `jq` is installed automatically (via Homebrew if available, otherwise as binary).
+
+### Install
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/b33eep/claude-code-setup/main/quick-install.sh | bash
@@ -276,8 +288,6 @@ Before v1.0.0:
 
 | Feature | Record |
 |---------|--------|
-| Linux/WSL support | [014](docs/records/014-linux-support.md) |
-| Install script modularization | [015](docs/records/015-install-script-refactoring.md) |
 | Optional hooks for workflow automation | [012](docs/records/012-optional-hooks-automation.md) |
 
 Have ideas? Open a [Discussion](https://github.com/b33eep/claude-code-setup/discussions).
@@ -293,6 +303,7 @@ claude-code-setup/
 │   ├── VERSION
 │   ├── project-CLAUDE.md
 │   └── base/global-CLAUDE.md
+├── lib/              # Modular install script components
 ├── mcp/
 ├── skills/
 ├── commands/

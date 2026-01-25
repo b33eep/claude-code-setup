@@ -1,0 +1,108 @@
+#!/bin/bash
+
+# Helper functions: colors, printing, JSON utilities
+
+# Colors for output
+readonly RED='\033[0;31m'
+readonly GREEN='\033[0;32m'
+readonly YELLOW='\033[1;33m'
+readonly BLUE='\033[0;34m'
+readonly NC='\033[0m' # No Color
+
+# Print functions
+print_header() {
+    echo ""
+    echo -e "${BLUE}$1${NC}"
+    printf '%*s\n' "${#1}" '' | tr ' ' '-'
+}
+
+print_success() {
+    echo -e "  ${GREEN}+${NC} $1"
+}
+
+print_info() {
+    echo -e "  ${BLUE}-${NC} $1"
+}
+
+print_warning() {
+    echo -e "  ${YELLOW}!${NC} $1" >&2
+}
+
+print_error() {
+    echo -e "  ${RED}x${NC} $1" >&2
+}
+
+# JSON utilities
+
+# Initialize installed.json if it doesn't exist
+init_installed_json() {
+    mkdir -p "$CLAUDE_DIR"
+    if [[ ! -f "$INSTALLED_FILE" ]]; then
+        echo "{\"content_version\":$(get_content_version),\"mcp\":[],\"skills\":[]}" > "$INSTALLED_FILE"
+    fi
+}
+
+# Check if a module is installed
+is_installed() {
+    local category=$1
+    local module=$2
+
+    # Check installed.json first
+    if jq -e ".${category} | index(\"${module}\")" "$INSTALLED_FILE" > /dev/null 2>&1; then
+        return 0
+    fi
+
+    # For MCP, also check .claude.json (may have been installed before tracking)
+    if [[ "$category" = "mcp" ]] && [[ -f "$MCP_CONFIG_FILE" ]]; then
+        jq -e ".mcpServers[\"${module}\"]" "$MCP_CONFIG_FILE" > /dev/null 2>&1
+        return $?
+    fi
+
+    # For skills, also check filesystem (may have been installed before tracking)
+    if [[ "$category" = "skills" ]]; then
+        local skill_name="${module#custom:}"
+        [[ -d "$CLAUDE_DIR/skills/$skill_name" ]]
+        return $?
+    fi
+
+    return 1
+}
+
+# Check if module is tracked in installed.json (not filesystem)
+is_tracked() {
+    local category=$1
+    local module=$2
+    jq -e ".${category} | index(\"${module}\")" "$INSTALLED_FILE" > /dev/null 2>&1
+}
+
+# Add module to installed list
+add_to_installed() {
+    local category=$1
+    local module=$2
+
+    if ! is_tracked "$category" "$module"; then
+        jq ".${category} += [\"${module}\"]" "$INSTALLED_FILE" > "$INSTALLED_FILE.tmp" && mv "$INSTALLED_FILE.tmp" "$INSTALLED_FILE"
+    fi
+}
+
+# Get installed modules
+get_installed() {
+    local category=$1
+    jq -r ".${category}[]" "$INSTALLED_FILE" 2>/dev/null || echo ""
+}
+
+# Get available content version from templates/VERSION
+get_content_version() {
+    cat "$CONTENT_VERSION_FILE" 2>/dev/null || echo "1"
+}
+
+# Get installed content version from .installed.json
+get_installed_content_version() {
+    jq -r '.content_version // 0' "$INSTALLED_FILE" 2>/dev/null || echo "0"
+}
+
+# Set installed content version
+set_installed_content_version() {
+    local version=$1
+    jq ".content_version = $version" "$INSTALLED_FILE" > "$INSTALLED_FILE.tmp" && mv "$INSTALLED_FILE.tmp" "$INSTALLED_FILE"
+}

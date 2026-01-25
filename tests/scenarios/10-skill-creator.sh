@@ -86,8 +86,8 @@ assert_file_exists "$CLAUDE_DIR/skills/skill-creator/SKILL.md" "SKILL.md install
 assert_json_exists "$INSTALLED_FILE" '.skills[] | select(. == "skill-creator")' "skill-creator tracked in installed.json"
 
 # Verify content matches source
-expected=$(shasum -a 256 "$PROJECT_DIR/skills/skill-creator/SKILL.md" | cut -d' ' -f1)
-actual=$(shasum -a 256 "$CLAUDE_DIR/skills/skill-creator/SKILL.md" | cut -d' ' -f1)
+expected=$(sha256_file "$PROJECT_DIR/skills/skill-creator/SKILL.md")
+actual=$(sha256_file "$CLAUDE_DIR/skills/skill-creator/SKILL.md")
 if [ "$expected" = "$actual" ]; then
     pass "SKILL.md matches source"
 else
