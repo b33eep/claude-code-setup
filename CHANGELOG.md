@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Content v9: Add `/skill-creator` command skill for creating custom skills (Record-013)
 - Content v8: Add JavaScript/Node.js coding standards skill (standards-javascript)
 - Content v7: Add `--yes`/`-y` flag to install.sh for non-interactive updates (fixes /upgrade-claude-setup hanging)
 - Content v6: Rename ADR to Records - broader scope for design docs, feature specs, and implementation plans

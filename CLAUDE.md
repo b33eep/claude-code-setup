@@ -21,7 +21,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Custom Modules | Done | ~/.claude/custom/ for user modules |
 | Solo/Team Mode | Done | /init-project asks for .gitignore preference |
 | Install Script | Done | --add, --update, --list, --yes flags, ShellCheck compliant |
-| Records | Done | 13 Records (000-012) |
+| Records | Done | 14 Records (000-013) |
 | Open Source Release | Done | Published to b33eep/claude-code-setup |
 | GitHub Actions E2E | Done | Full test coverage |
 | Open Source Polish | Done | SECURITY.md, CONTRIBUTING.md, CHANGELOG.md, templates |
@@ -30,6 +30,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Records Rename | Done | ADR → Records, added guidance in global prompt |
 | --yes Flag Bug Fix | Done | Content v7: Non-interactive updates for /upgrade-claude-setup |
 | JavaScript Skill | Done | Content v8: standards-javascript for Node.js/JS projects |
+| Skill Creator | Done | Content v9: /skill-creator for custom skill creation ([Record 013](docs/records/013-skill-creator.md)) |
 
 ### Before v1.0.0
 
@@ -65,6 +66,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Skill Auto-Loading | Task-based + review agent integration | [010](docs/records/010-improved-skill-autoloading.md) |
 | Upgrade Command | Claude command for in-session updates | [011](docs/records/011-upgrade-command.md) |
 | Optional Hooks | Assisted mode for workflow automation | [012](docs/records/012-optional-hooks-automation.md) |
+| Skill Creator | Command skill for creating custom skills | [013](docs/records/013-skill-creator.md) |
 
 ---
 
@@ -86,7 +88,7 @@ claude-code-setup/
 ├── mcp/
 ├── commands/
 ├── skills/
-└── docs/records/000-012-*.md
+└── docs/records/000-013-*.md
 ```
 
 ---

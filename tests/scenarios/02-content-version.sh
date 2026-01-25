@@ -87,8 +87,8 @@ scenario "Update can install new modules"
 jq '.content_version = 0' "$INSTALLED_FILE" > "$INSTALLED_FILE.tmp" && mv "$INSTALLED_FILE.tmp" "$INSTALLED_FILE"
 
 # Accept update and install standards-python
-# After fresh install: none installed, so 1=create-slidev, 2=standards-javascript, 3=standards-python...
-printf 'y\ny\nnone\n3\n' | "$PROJECT_DIR/install.sh" --update > /dev/null
+# After fresh install: none installed, so 1=create-slidev, 2=skill-creator, 3=standards-javascript, 4=standards-python...
+printf 'y\ny\nnone\n4\n' | "$PROJECT_DIR/install.sh" --update > /dev/null
 
 # Verify skill was installed
 assert_dir_exists "$CLAUDE_DIR/skills/standards-python" "standards-python installed via update"

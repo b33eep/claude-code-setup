@@ -26,9 +26,9 @@ scenario "Add skill via --add"
 
 # Add standards-typescript
 # After fresh install, all skills show with numbers (none installed yet):
-# 1=create-slidev, 2=standards-javascript, 3=standards-python, 4=standards-shell, 5=standards-typescript
+# 1=create-slidev, 2=skill-creator, 3=standards-javascript, 4=standards-python, 5=standards-shell, 6=standards-typescript
 # Status line prompt: decline again
-printf 'none\n5\nn\n' | "$PROJECT_DIR/install.sh" --add > /dev/null
+printf 'none\n6\nn\n' | "$PROJECT_DIR/install.sh" --add > /dev/null
 
 assert_dir_exists "$CLAUDE_DIR/skills/standards-typescript" "standards-typescript installed"
 assert_json_exists "$INSTALLED_FILE" '.skills[] | select(. == "standards-typescript")' "skill tracked in installed.json"
@@ -37,10 +37,10 @@ scenario "Add standards-shell skill"
 
 # Add standards-shell
 # Now standards-typescript shows as [installed] without number:
-# 1=create-slidev, 2=standards-javascript, 3=standards-python, 4=standards-shell
+# 1=create-slidev, 2=skill-creator, 3=standards-javascript, 4=standards-python, 5=standards-shell
 # standards-typescript [installed]
 # Status line prompt: decline again
-printf 'none\n4\nn\n' | "$PROJECT_DIR/install.sh" --add > /dev/null
+printf 'none\n5\nn\n' | "$PROJECT_DIR/install.sh" --add > /dev/null
 
 assert_dir_exists "$CLAUDE_DIR/skills/standards-shell" "standards-shell installed"
 assert_json_exists "$INSTALLED_FILE" '.skills[] | select(. == "standards-shell")' "standards-shell tracked in installed.json"
