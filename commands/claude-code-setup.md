@@ -123,7 +123,7 @@ Modules available to install:
 Upgraded claude-code-setup: v8 → v9
 
 Changes:
-- Content v9: Add /skill-creator command
+- v9: Add /skill-creator command skill
 
 Run /catchup to reload context.
 ```
