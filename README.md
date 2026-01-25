@@ -1,5 +1,15 @@
 # Claude Code Setup
 
+```
+   _____ _                 _        _____          _
+  / ____| |               | |      / ____|        | |
+ | |    | | __ _ _   _  __| | ___ | |     ___   __| | ___
+ | |    | |/ _` | | | |/ _` |/ _ \| |    / _ \ / _` |/ _ \
+ | |____| | (_| | |_| | (_| |  __/| |___| (_) | (_| |  __/
+  \_____|_|\__,_|\__,_|\__,_|\___| \_____\___/ \__,_|\___|
+                                                   Setup
+```
+
 [![CI](https://github.com/b33eep/claude-code-setup/actions/workflows/test.yml/badge.svg)](https://github.com/b33eep/claude-code-setup/actions/workflows/test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![macOS](https://img.shields.io/badge/platform-macOS-blue.svg)](https://www.apple.com/macos/)
