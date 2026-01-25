@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v12**: Fix changelog format in `/claude-code-setup` output example
 - **v11**: Clarify code-review-ai plugin is optional in global prompt
 - **v10**: Rename `/upgrade-claude-setup` → `/claude-code-setup`, show delta, ask user before actions
 - **v9**: Add `/skill-creator` command skill for creating custom skills
