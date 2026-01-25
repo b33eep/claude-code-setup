@@ -37,16 +37,18 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 
 | Todo | Priority | Problem | Solution |
 |------|----------|---------|----------|
-| /todo command | Medium | Manually editing CLAUDE.md for todos is cumbersome | Create command that appends todos directly to CLAUDE.md |
-| /do-review command | Medium | Unclear when to trigger code review, easy to forget | Create command + refine global prompt guidance |
+| Linux Support | High | Only macOS supported, excludes Linux/WSL users | Add OS detection, abstract package manager ([Record 014](docs/records/014-linux-support.md)) |
+| Install Script Refactoring | High | install.sh approaching 1000 lines, hard to maintain | Split into lib/ modules ([Record 015](docs/records/015-install-script-refactoring.md)) |
+| Optional Hooks | Medium | User must remember 3 manual steps (/clear-session, /clear, /catchup) | Hooks automate 2 of 3 steps, user only types /clear ([Record 012](docs/records/012-optional-hooks-automation.md)) |
 
-**Next Step:** Decide which command to implement next, or proceed to v1.0.0 release.
+**Next Step:** Start with Linux Support + Refactoring (do together).
 
 ### Future (Post v1.0.0)
 
 | Todo | Priority | Problem | Solution |
 |------|----------|---------|----------|
-| Optional Hooks | Medium | User must remember 3 manual steps (/clear-session, /clear, /catchup) | Hooks automate 2 of 3 steps, user only types /clear ([Record 012](docs/records/012-optional-hooks-automation.md)) |
+| /todo command | Low | Manually editing CLAUDE.md for todos is cumbersome | Create command that appends todos directly to CLAUDE.md |
+| /do-review command | Low | Unclear when to trigger code review, easy to forget | Create command + refine global prompt guidance |
 
 ---
 
@@ -68,6 +70,8 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Upgrade Command | Claude command for in-session updates | [011](docs/records/011-upgrade-command.md) |
 | Optional Hooks | Assisted mode for workflow automation | [012](docs/records/012-optional-hooks-automation.md) |
 | Skill Creator | Command skill for creating custom skills | [013](docs/records/013-skill-creator.md) |
+| Linux Support | OS detection, package manager abstraction | [014](docs/records/014-linux-support.md) |
+| Install Script Refactoring | Split into lib/ modules at 1000 lines | [015](docs/records/015-install-script-refactoring.md) |
 
 ---
 

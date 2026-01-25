@@ -259,6 +259,18 @@ Claude Code has a built-in plugin marketplace:
 
 After installing, the `code-review-ai:architect-review` agent is available for code reviews.
 
+## Roadmap
+
+Before v1.0.0:
+
+| Feature | Record |
+|---------|--------|
+| Linux/WSL support | [014](docs/records/014-linux-support.md) |
+| Install script modularization | [015](docs/records/015-install-script-refactoring.md) |
+| Optional hooks for workflow automation | [012](docs/records/012-optional-hooks-automation.md) |
+
+Have ideas? Open a [Discussion](https://github.com/b33eep/claude-code-setup/discussions).
+
 ## File Structure
 
 <details>
