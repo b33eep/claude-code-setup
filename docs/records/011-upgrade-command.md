@@ -26,7 +26,7 @@ Four Claude commands covering all scenarios:
 | Action | Method | Git Required? |
 |--------|--------|---------------|
 | **Install Base** | `curl ... \| bash` | No |
-| **Upgrade Base** | `/upgrade-claude-setup` | No (hidden) |
+| **Upgrade Base** | `/claude-code-setup` | No (hidden) |
 | **Add Custom** | `/add-custom <url>` | No (hidden) |
 | **Upgrade Custom** | `/upgrade-custom` | No (hidden) |
 
@@ -60,15 +60,23 @@ echo "Done! Start Claude Code and run /init-project"
 
 **Shell compatibility:** Uses `bash` explicitly in shebang and curl pipe. Works regardless of user's default shell (zsh, fish, etc.) as long as bash is installed (standard on macOS/Linux).
 
-### 2. Upgrade Base: `/upgrade-claude-setup`
+### 2. Upgrade Base: `/claude-code-setup`
 
-`commands/upgrade-claude-setup.md` - Claude executes:
+`commands/claude-code-setup.md` - Claude executes in 3 phases:
 
-1. Read current version from `~/.claude/installed.json` (`content_version` field)
+**Phase 1: Check Status**
+1. Read current version from `~/.claude/installed.json`
 2. Fetch latest version from GitHub (`templates/VERSION`)
-3. Compare versions
-4. If newer: temp clone → `install.sh --update` → cleanup
-5. Show changes from CHANGELOG.md
+3. Clone repo to temp (needed for module discovery)
+4. Calculate delta: available modules vs installed modules
+
+**Phase 2: Show Status & Ask User**
+5. Present findings (version diff, new modules)
+6. Ask user what to do (upgrade, install modules, both, nothing)
+
+**Phase 3: Execute**
+7. Perform upgrade and/or install modules based on user choice
+8. Cleanup temp directory
 
 ### 3. Add Custom: `/add-custom <url>` (NEW)
 
@@ -148,7 +156,7 @@ No separate `.custom-source` file needed - Git already stores the remote URL.
 │   ├── init-project.md
 │   ├── catchup.md
 │   ├── clear-session.md
-│   ├── upgrade-claude-setup.md
+│   ├── claude-code-setup.md
 │   ├── add-custom.md              # NEW
 │   └── upgrade-custom.md          # NEW
 ├── templates/
@@ -167,7 +175,7 @@ No separate `.custom-source` file needed - Git already stores the remote URL.
 ```
 Terminal:  curl ... | bash
 Claude:    /init-project  →  Start working
-Later:     /upgrade-claude-setup  →  Updated
+Later:     /claude-code-setup  →  Updated
 ```
 
 ### Company User (with custom)
@@ -177,7 +185,7 @@ Claude:    /add-custom git@company.com:claude-custom.git
            → "Found 3 skills. Run install.sh --add to install."
 Terminal:  install.sh --add  →  Select company modules
 Claude:    /init-project  →  Start working
-Later:     /upgrade-claude-setup  →  Base updated
+Later:     /claude-code-setup  →  Base updated
            /upgrade-custom  →  Company modules updated
 ```
 
@@ -200,7 +208,7 @@ Companies can document for their devs:
 | Test | Challenge | Approach |
 |------|-----------|----------|
 | curl one-liner | Needs published script | Test after merge to main; or local HTTP server |
-| /upgrade-claude-setup | Needs version difference | Create mock with two versions in temp dirs |
+| /claude-code-setup | Needs version difference | Create mock with two versions in temp dirs |
 | /add-custom | Needs Git repo | Create local bare repo in test |
 | /upgrade-custom | Needs repo with new commits | Local repo, add commit, test pull |
 
@@ -241,13 +249,13 @@ Companies can document for their devs:
 
 ---
 
-### Iteration 3: /upgrade-claude-setup Refinement
+### Iteration 3: /claude-code-setup Refinement
 
 **Goal:** Finalize and test the upgrade command
 
 | Task | File | Action |
 |------|------|--------|
-| 3.1 | `commands/upgrade-claude-setup.md` | Review, ensure CHANGELOG.md integration |
+| 3.1 | `commands/claude-code-setup.md` | Review, ensure CHANGELOG.md integration |
 | 3.2 | Test | Manual test: version comparison, upgrade flow, rollback |
 
 **Acceptance:** Command detects version difference, upgrades, shows changelog
@@ -301,7 +309,7 @@ Companies can document for their devs:
 |---|------|--------|--------------|
 | 1 | Template Separation | Done | - |
 | 2 | quick-install.sh | Done | - |
-| 3 | /upgrade-claude-setup | Done | 1 |
+| 3 | /claude-code-setup | Done | 1 |
 | 4 | /add-custom | Done | - |
 | 5 | /upgrade-custom | Done | 4 |
 | 6 | Documentation & Release | Done | 1-5 |

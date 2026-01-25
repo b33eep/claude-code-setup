@@ -7,13 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Content v10: Rename `/upgrade-claude-setup` → `/claude-code-setup`, show delta, ask user before actions
 - Content v9: Add `/skill-creator` command skill for creating custom skills (Record-013)
 - Content v8: Add JavaScript/Node.js coding standards skill (standards-javascript)
-- Content v7: Add `--yes`/`-y` flag to install.sh for non-interactive updates (fixes /upgrade-claude-setup hanging)
+- Content v7: Add `--yes`/`-y` flag to install.sh for non-interactive updates (fixes /claude-code-setup hanging)
 - Content v6: Rename ADR to Records - broader scope for design docs, feature specs, and implementation plans
 - Content v5: Installation & upgrade improvements (Record-011)
   - Add `quick-install.sh` for curl one-liner installation
-  - Add `/upgrade-claude-setup` command for in-session updates
+  - Add `/claude-code-setup` command for in-session updates
   - Add `/add-custom` command for custom module repositories
   - Add `/upgrade-custom` command for updating custom repos
   - Separate project template to `templates/project-CLAUDE.md`

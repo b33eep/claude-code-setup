@@ -102,20 +102,25 @@ Stay in Claude Code - no terminal needed:
 
 | Command | What it does |
 |---------|--------------|
-| `/upgrade-claude-setup` | Update + discover new modules |
+| `/claude-code-setup` | Status, upgrade, install modules |
 | `/add-custom <url>` | Add custom modules (company/personal) |
 | `/upgrade-custom` | Pull latest from custom repo |
 
 ```
-You: /upgrade-claude-setup
-Claude: Upgraded claude-code-setup: v4 → v5
+You: /claude-code-setup
+Claude: claude-code-setup status:
+        - Installed: v9
+        - Available: v10
 
-        New modules available:
+        Modules available to install:
         - standards-javascript (JS/Node.js standards)
 
-        Install any of these?
-You: yes, standards-javascript
-Claude: ✓ standards-javascript installed
+        What would you like to do?
+You: Upgrade + install modules
+Claude: Which modules? (standards-javascript)
+You: standards-javascript
+Claude: ✓ Upgraded v9 → v10
+        ✓ standards-javascript installed
 ```
 
 <details>
@@ -124,7 +129,7 @@ Claude: ✓ standards-javascript installed
 ```bash
 ./install.sh --add           # Add more modules
 ./install.sh --update        # Update all modules
-./install.sh --update --yes  # Non-interactive (used by /upgrade-claude-setup)
+./install.sh --update --yes  # Non-interactive (used by /claude-code-setup)
 ./install.sh --list          # Show installed modules
 ```
 

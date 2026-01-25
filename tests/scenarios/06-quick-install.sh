@@ -32,7 +32,7 @@ mkdir -p "$fake_bin"
 # Run quick-install.sh with PATH that excludes git
 output=$(PATH="$fake_bin" "$PROJECT_DIR/quick-install.sh" 2>&1) && status=0 || status=$?
 
-if [ $status -ne 0 ] && echo "$output" | grep -q "git is required"; then
+if [ "$status" -ne 0 ] && echo "$output" | grep -q "git is required"; then
     pass "Git check fails correctly when git is missing"
 else
     fail "Git check should fail when git is missing (status: $status, output: $output)"
