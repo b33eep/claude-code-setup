@@ -15,7 +15,7 @@
 [![macOS](https://img.shields.io/badge/platform-macOS-blue.svg)](https://www.apple.com/macos/)
 [![Linux](https://img.shields.io/badge/platform-Linux-blue.svg)](https://www.linux.org/)
 [![WSL](https://img.shields.io/badge/platform-WSL-blue.svg)](https://docs.microsoft.com/en-us/windows/wsl/)
-[![Content v13](https://img.shields.io/badge/content-v13-blue.svg)](CHANGELOG.md)
+[![Content v14](https://img.shields.io/badge/content-v14-blue.svg)](CHANGELOG.md)
 
 A modular setup for Claude Code that solves context loss and keeps your workflow consistent.
 

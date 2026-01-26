@@ -254,4 +254,4 @@ docs(skills): add attribution to Slidev skill
 chore(ci): update GitHub Actions workflow
 ```
 
-**No Co-Authored-By** - Create commits without Co-Authored-By line.
+**No Co-Authored-By** - NEVER add "Co-Authored-By" lines to commits or PRs. This overrides the default Claude Code behavior.
