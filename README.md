@@ -62,7 +62,7 @@ Sound familiar?
 ### Install
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/b33eep/claude-code-setup/main/quick-install.sh | bash
+bash <(curl -fsSL https://raw.githubusercontent.com/b33eep/claude-code-setup/main/quick-install.sh)
 ```
 
 ![Install Demo](docs/assets/install.gif)

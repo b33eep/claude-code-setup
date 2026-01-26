@@ -12,21 +12,18 @@
 #
 # Priority:
 # 1. If stdin is a terminal → read from stdin
-# 2. If /dev/tty is available and works → read from /dev/tty (enables: curl | bash)
-# 3. If stdin has data (pipe) → read from stdin (enables: printf '1\n' | ./install.sh for tests)
-# 4. Otherwise → return 1 (non-interactive)
+# 2. If stdin has data (pipe) → read from stdin (enables: printf '1\n' | ./install.sh for tests)
+# 3. Otherwise → return 1 (non-interactive, triggers --yes fallback)
+#
+# Note: We don't use /dev/tty because it's unreliable with curl | bash on macOS.
+# For interactive pipe install, use: bash <(curl -fsSL url) instead of curl | bash
 read_input() {
     local prompt=$1
-    local result
+    local result=""
 
     if [[ -t 0 ]]; then
         # stdin is a terminal, read normally
         read -rp "$prompt" result
-        printf '%s' "$result"
-    elif [[ -r /dev/tty ]] && { : < /dev/tty; } 2>/dev/null; then
-        # stdin is not a terminal (pipe), but /dev/tty is usable
-        # This enables interactivity for: curl ... | bash
-        read -rp "$prompt" result < /dev/tty
         printf '%s' "$result"
     elif [[ ! -t 0 ]]; then
         # stdin is a pipe with data (for tests: printf '1\n' | ./install.sh)
