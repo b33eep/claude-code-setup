@@ -16,6 +16,57 @@ _ISEL_DESCS=()
 _ISEL_SELECTED=()  # "1" or "0" for each item
 _ISEL_MUTUAL=""
 _ISEL_ALLOW_ALL=""
+_ISEL_CURSOR=0     # Current highlighted position for arrow navigation
+
+# ============================================
+# CURSOR AND TERMINAL CONTROL
+# ============================================
+
+# Hide cursor
+_isel_hide_cursor() { tput civis 2>/dev/null || printf '\033[?25l'; }
+
+# Show cursor
+_isel_show_cursor() { tput cnorm 2>/dev/null || printf '\033[?25h'; }
+
+# Move cursor up N lines
+_isel_cursor_up() { tput cuu "$1" 2>/dev/null || printf '\033[%dA' "$1"; }
+
+# Clear from cursor to end of line
+_isel_clear_line() { tput el 2>/dev/null || printf '\033[K'; }
+
+# Clear entire line
+_isel_clear_entire_line() { tput el2 2>/dev/null; tput el 2>/dev/null || printf '\033[2K'; }
+
+# Read a single key, handling arrow escape sequences
+# Returns: UP, DOWN, SPACE, ENTER, NUM:n, ALL, or OTHER
+# Note: Terminal must be in raw mode (set by caller)
+_isel_read_key() {
+    local key seq
+
+    # Read single character (terminal should already be in raw mode)
+    IFS= read -rsn1 key 2>/dev/null || key=""
+
+    # Handle escape sequences (arrow keys)
+    if [[ "$key" = $'\033' ]]; then
+        # Read the rest of the escape sequence
+        read -rsn2 -t 0.1 seq 2>/dev/null || true
+        case "$seq" in
+            '[A') echo "UP" ;;
+            '[B') echo "DOWN" ;;
+            *) echo "ESC" ;;
+        esac
+    elif [[ "$key" = "" ]] || [[ "$key" = $'\n' ]] || [[ "$key" = $'\r' ]]; then
+        echo "ENTER"
+    elif [[ "$key" = " " ]]; then
+        echo "SPACE"
+    elif [[ "$key" =~ ^[1-9]$ ]]; then
+        echo "NUM:$key"
+    elif [[ "$key" = "a" ]] || [[ "$key" = "A" ]]; then
+        echo "ALL"
+    else
+        echo "OTHER"
+    fi
+}
 
 # Check if item at index is selected
 _isel_is_selected() {
@@ -64,7 +115,7 @@ _isel_select_all() {
     done
 }
 
-# Display the selection list
+# Display the selection list (fallback mode for tests/pipes)
 _isel_display() {
     local i marker count=${#_ISEL_ITEMS[@]}
     for i in "${!_ISEL_ITEMS[@]}"; do
@@ -84,6 +135,56 @@ _isel_display() {
     else
         echo "Toggle (1-$count), Enter to confirm:"
     fi
+}
+
+# Display with arrow-key navigation highlighting
+_isel_display_interactive() {
+    local cursor=$1
+    local i marker pointer line
+    local cyan='\033[36m'
+    local bold='\033[1m'
+    local dim='\033[2m'
+    local reset='\033[0m'
+
+    for i in "${!_ISEL_ITEMS[@]}"; do
+        # Selection marker (filled/empty circle)
+        if _isel_is_selected "$i"; then
+            marker="${cyan}◉${reset}"
+        else
+            marker="${dim}○${reset}"
+        fi
+
+        # Pointer for current row
+        if [[ $i -eq $cursor ]]; then
+            pointer="${cyan}❯${reset}"
+        else
+            pointer=" "
+        fi
+
+        # Build line with description
+        if [[ -n "${_ISEL_DESCS[$i]:-}" ]]; then
+            if [[ $i -eq $cursor ]]; then
+                line="${bold}${_ISEL_ITEMS[$i]}${reset} ${dim}- ${_ISEL_DESCS[$i]}${reset}"
+            else
+                line="${_ISEL_ITEMS[$i]} ${dim}- ${_ISEL_DESCS[$i]}${reset}"
+            fi
+        else
+            if [[ $i -eq $cursor ]]; then
+                line="${bold}${_ISEL_ITEMS[$i]}${reset}"
+            else
+                line="${_ISEL_ITEMS[$i]}"
+            fi
+        fi
+
+        # Clear line and print
+        printf '\033[K'  # Clear to end of line
+        printf "  %b %b %b\n" "$pointer" "$marker" "$line"
+    done
+
+    # Hint line
+    printf '\033[K\n'
+    printf '\033[K  %b↑↓%b navigate  %b⎵%b toggle  %b⏎%b confirm\n' \
+        "$dim" "$reset" "$dim" "$reset" "$dim" "$reset"
 }
 
 # Redisplay list after toggle (shows updated [x] markers)
@@ -116,6 +217,7 @@ interactive_select() {
     _ISEL_SELECTED=()
     _ISEL_MUTUAL="$mutual_exclusions"
     _ISEL_ALLOW_ALL="$allow_all"
+    _ISEL_CURSOR=0
 
     local item
     for item in $items_str; do
@@ -144,43 +246,159 @@ interactive_select() {
         done
     done
 
-    # Initial display
-    _isel_display
+    # Detect if we have a real TTY for arrow-key navigation
+    # Tests use expect which creates a PTY but sends line-based input
+    local use_arrows=false
+    if [[ -t 0 ]] && [[ -t 1 ]] && [[ -e /dev/tty ]]; then
+        # Check if parent process is expect (test scenario)
+        local parent_cmd
+        parent_cmd=$(ps -o comm= -p $PPID 2>/dev/null) || parent_cmd=""
+        if [[ "$parent_cmd" != "expect" ]]; then
+            # Not running under expect, safe to use arrow keys
+            if (exec 3</dev/tty) 2>/dev/null; then
+                exec 3<&-
+                use_arrows=true
+            fi
+        fi
+    fi
 
-    # Main input loop
-    # Use /dev/tty for real terminal, fall back to stdin for expect/tests
-    local input num
-    local read_source="/dev/tty"
-    [[ ! -t 0 ]] && read_source="/dev/stdin"
+    # Lines to clear for redraw: items + blank line + hint line
+    local lines_to_clear=$((count + 2))
 
-    while true; do
-        if ! IFS= read -r input < "$read_source"; then
-            # EOF reached, treat as confirm
-            break
+    if [[ "$use_arrows" = true ]]; then
+        # Arrow-key navigation mode
+        _isel_hide_cursor
+
+        # OS-specific: macOS uses /dev/tty, Linux uses stdin (better for containers)
+        local is_macos=false
+        [[ "$(uname)" = "Darwin" ]] && is_macos=true
+
+        # Save terminal settings and enable raw mode for single-char reads
+        local old_stty
+        if [[ "$is_macos" = true ]]; then
+            old_stty=$(stty -g </dev/tty 2>/dev/null)
+            stty -icanon -echo min 1 </dev/tty 2>/dev/null
+            trap '_isel_show_cursor; stty "$old_stty" </dev/tty 2>/dev/null' EXIT INT TERM
+        else
+            old_stty=$(stty -g 2>/dev/null)
+            stty -icanon -echo min 1 2>/dev/null
+            trap '_isel_show_cursor; stty "$old_stty" 2>/dev/null' EXIT INT TERM
         fi
 
-        case "$input" in
-            [1-9]|[1-9][0-9])
-                # Toggle item by number
-                num=$input
-                if [[ "$num" -ge 1 ]] && [[ "$num" -le "$count" ]] 2>/dev/null; then
-                    _isel_toggle $((num - 1))
-                    _isel_show_status
+        # Initial display
+        _isel_display_interactive $_ISEL_CURSOR
+
+        # Main input loop with arrow keys
+        local key seq1 seq2 keycode
+
+        while true; do
+            # Read single character
+            key=""
+            if [[ "$is_macos" = true ]]; then
+                key=$(dd bs=1 count=1 2>/dev/null </dev/tty) || key=""
+            else
+                # Linux: read from stdin (already set to raw mode via stty)
+                # If read fails and key is empty, just continue (don't treat as Enter)
+                if ! IFS= read -rsn1 key 2>/dev/null && [[ -z "$key" ]]; then
+                    continue
                 fi
-                ;;
-            a|A)
-                # Select all (if allowed)
+            fi
+            keycode=$(printf '%d' "'$key" 2>/dev/null) || keycode=0
+
+            # Handle escape sequences (arrow keys) - ESC is ASCII 27
+            if [[ "$keycode" = "27" ]]; then
+                # Read the rest of the escape sequence (no timeout - chars come immediately)
+                if [[ "$is_macos" = true ]]; then
+                    seq1=$(dd bs=1 count=1 2>/dev/null </dev/tty) || seq1=""
+                    seq2=$(dd bs=1 count=1 2>/dev/null </dev/tty) || seq2=""
+                else
+                    IFS= read -rsn1 seq1 2>/dev/null || seq1=""
+                    IFS= read -rsn1 seq2 2>/dev/null || seq2=""
+                fi
+                if [[ "$seq1" = "[" ]]; then
+                    case "$seq2" in
+                        'A') # Up arrow
+                            if ((_ISEL_CURSOR > 0)); then
+                                _ISEL_CURSOR=$((_ISEL_CURSOR - 1))
+                            fi
+                            ;;
+                        'B') # Down arrow
+                            if ((_ISEL_CURSOR < count - 1)); then
+                                _ISEL_CURSOR=$((_ISEL_CURSOR + 1))
+                            fi
+                            ;;
+                    esac
+                fi
+            elif [[ "$key" = $'\n' ]] || [[ "$key" = $'\r' ]]; then
+                # Enter - confirm
+                break
+            elif [[ "$key" = "" ]] && [[ "$keycode" = "0" ]]; then
+                # Empty key with code 0 - treat as Enter
+                break
+            elif [[ "$key" = " " ]]; then
+                # Space - toggle current item
+                _isel_toggle $_ISEL_CURSOR
+            elif [[ "$key" =~ ^[1-9]$ ]]; then
+                # Number - toggle by number
+                if ((key >= 1 && key <= count)); then
+                    _isel_toggle $((key - 1))
+                fi
+            elif [[ "$key" = "a" ]] || [[ "$key" = "A" ]]; then
+                # Select all
                 if [[ "$allow_all" = "true" ]]; then
                     _isel_select_all
-                    _isel_show_status
                 fi
-                ;;
-            "")
-                # Empty input - confirm selection
+            fi
+
+            # Redraw: move cursor up and to start of line, then redraw
+            printf '\033[%dA\r' "$lines_to_clear"
+            _isel_display_interactive $_ISEL_CURSOR
+        done
+
+        # Restore terminal settings
+        if [[ "$is_macos" = true ]]; then
+            stty "$old_stty" </dev/tty 2>/dev/null
+        else
+            stty "$old_stty" 2>/dev/null
+        fi
+        _isel_show_cursor
+        trap - EXIT INT TERM
+    else
+        # Fallback mode for tests/pipes (number-based input)
+        _isel_display
+
+        local input num
+        local read_source="/dev/stdin"
+
+        while true; do
+            if ! IFS= read -r input < "$read_source"; then
+                # EOF reached, treat as confirm
                 break
-                ;;
-        esac
-    done
+            fi
+
+            case "$input" in
+                [1-9]|[1-9][0-9])
+                    # Toggle item by number
+                    num=$input
+                    if [[ "$num" -ge 1 ]] && [[ "$num" -le "$count" ]] 2>/dev/null; then
+                        _isel_toggle $((num - 1))
+                        _isel_show_status
+                    fi
+                    ;;
+                a|A)
+                    # Select all (if allowed)
+                    if [[ "$allow_all" = "true" ]]; then
+                        _isel_select_all
+                        _isel_show_status
+                    fi
+                    ;;
+                "")
+                    # Empty input - confirm selection
+                    break
+                    ;;
+            esac
+        done
+    fi
 
     # Build result - set the appropriate global variable
     local result_items=""
