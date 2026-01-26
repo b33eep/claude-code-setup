@@ -41,16 +41,9 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Arrow-Key Navigation | Done | ↑↓ navigation, space toggle, enter confirm (macOS + Linux) |
 | Preserve User Instructions | Done | Content v15: [Record 016](docs/records/016-preserve-user-instructions.md) - Section markers in global CLAUDE.md |
 | README Restructure | Done | Problem→Solution flow, Installation steps, all features documented |
+| Optional Hooks | Rejected | Hooks cannot invoke Claude commands ([Record 012](docs/records/012-optional-hooks-automation.md)) |
 
-### Before v1.0.0
-
-| Todo | Priority | Problem | Solution |
-|------|----------|---------|----------|
-| Optional Hooks | Medium | User must remember 3 manual steps (/clear-session, /clear, /catchup) | Hooks automate 2 of 3 steps, user only types /clear ([Record 012](docs/records/012-optional-hooks-automation.md)) |
-
-**Next:** Optional Hooks implementieren ([Record 012](docs/records/012-optional-hooks-automation.md)).
-
-### Future (Post v1.0.0)
+### Future
 
 | Todo | Priority | Problem | Solution |
 |------|----------|---------|----------|
@@ -75,7 +68,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | ccstatusline | Context visibility in status bar | [009](docs/records/009-ccstatusline-integration.md) |
 | Skill Auto-Loading | Task-based + review agent integration | [010](docs/records/010-improved-skill-autoloading.md) |
 | Upgrade Command | Claude command for in-session updates | [011](docs/records/011-upgrade-command.md) |
-| Optional Hooks | Assisted mode for workflow automation | [012](docs/records/012-optional-hooks-automation.md) |
+| Optional Hooks | **Rejected** - Hooks cannot invoke commands | [012](docs/records/012-optional-hooks-automation.md) |
 | Skill Creator | Command skill for creating custom skills | [013](docs/records/013-skill-creator.md) |
 | Linux Support | OS detection, package manager abstraction | [014](docs/records/014-linux-support.md) |
 | Install Script Refactoring | Split into lib/ modules at 1000 lines | [015](docs/records/015-install-script-refactoring.md) |
