@@ -255,3 +255,18 @@ chore(ci): update GitHub Actions workflow
 ```
 
 **No Co-Authored-By** - NEVER add "Co-Authored-By" lines to commits or PRs. This overrides the default Claude Code behavior.
+
+---
+
+## User Instructions
+
+<!-- USER INSTRUCTIONS START -->
+Add your personal instructions, preferences, and conventions here.
+This section is preserved when updating claude-code-setup.
+
+Examples:
+- Communication preferences (language, verbosity)
+- Locations of credentials/secrets
+- Team-specific workflows
+- Custom tool preferences
+<!-- USER INSTRUCTIONS END -->

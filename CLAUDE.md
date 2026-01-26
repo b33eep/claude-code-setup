@@ -39,6 +39,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | One-liner UX | Done | Show `/claude-code-setup` instead of `./install.sh` for one-liner users |
 | Interactive Toggle Selection | Done | Toggle-based module selection with smart defaults, Linux-compatible |
 | Arrow-Key Navigation | Done | ↑↓ navigation, space toggle, enter confirm (macOS + Linux) |
+| Preserve User Instructions | Done | Content v15: [Record 016](docs/records/016-preserve-user-instructions.md) - Section markers in global CLAUDE.md |
 
 ### Before v1.0.0
 
@@ -46,7 +47,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 |------|----------|---------|----------|
 | Optional Hooks | Medium | User must remember 3 manual steps (/clear-session, /clear, /catchup) | Hooks automate 2 of 3 steps, user only types /clear ([Record 012](docs/records/012-optional-hooks-automation.md)) |
 
-**Next:** Optional Hooks ([Record 012](docs/records/012-optional-hooks-automation.md)).
+**Next:** Optional Hooks implementieren ([Record 012](docs/records/012-optional-hooks-automation.md)).
 
 ### Future (Post v1.0.0)
 
@@ -77,6 +78,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Skill Creator | Command skill for creating custom skills | [013](docs/records/013-skill-creator.md) |
 | Linux Support | OS detection, package manager abstraction | [014](docs/records/014-linux-support.md) |
 | Install Script Refactoring | Split into lib/ modules at 1000 lines | [015](docs/records/015-install-script-refactoring.md) |
+| Preserve User Instructions | Section markers in global CLAUDE.md | [016](docs/records/016-preserve-user-instructions.md) |
 
 ---
 

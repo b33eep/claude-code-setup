@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v15**: Preserve user instructions in global CLAUDE.md during updates (section markers)
 - **v14**: Strengthen "No Co-Authored-By" rule to override Claude Code default behavior
 - **v13**: Add Linux support (Ubuntu/Debian, Arch, Fedora, openSUSE) and refactor install.sh into lib/ modules
 - **v12**: Fix changelog format in `/claude-code-setup` output example
