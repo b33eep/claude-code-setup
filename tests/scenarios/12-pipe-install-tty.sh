@@ -26,6 +26,7 @@ else
 fi
 
 # Test 2: read_input function exists (for simple prompts like API key, status line)
+# shellcheck source=../../lib/helpers.sh
 source "$PROJECT_DIR/lib/helpers.sh"
 if declare -f read_input > /dev/null 2>&1; then
     pass "read_input function exists"

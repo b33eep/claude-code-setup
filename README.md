@@ -15,7 +15,7 @@
 [![macOS](https://img.shields.io/badge/platform-macOS-blue.svg)](https://www.apple.com/macos/)
 [![Linux](https://img.shields.io/badge/platform-Linux-blue.svg)](https://www.linux.org/)
 [![WSL](https://img.shields.io/badge/platform-WSL-blue.svg)](https://docs.microsoft.com/en-us/windows/wsl/)
-[![Content v14](https://img.shields.io/badge/content-v14-blue.svg)](CHANGELOG.md)
+[![Content v15](https://img.shields.io/badge/content-v15-blue.svg)](CHANGELOG.md)
 
 A modular setup for Claude Code that solves context loss and keeps your workflow consistent.
 
@@ -90,6 +90,8 @@ The installer guides you through selecting MCP servers, coding standards, and to
 | Records | `your-project/docs/records/` | Design docs, implementation plans |
 
 Both CLAUDE.md files load automatically. Records are referenced when relevant (e.g., "Why did we choose X?").
+
+> **Your customizations are safe:** The global CLAUDE.md has a "User Instructions" section at the bottom. Add your personal preferences there - they survive updates via `/claude-code-setup`.
 
 **Records:** Start as solution design or implementation plan, become permanent documentation. One file per decision, versioned in Git.
 
