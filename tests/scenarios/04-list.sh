@@ -5,7 +5,7 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_DIR="${1:-$(cd "$SCRIPT_DIR/../.." && pwd)}"
+export PROJECT_DIR="${1:-$(cd "$SCRIPT_DIR/../.." && pwd)}"
 
 # Source helpers
 # shellcheck source=../helpers.sh
@@ -33,8 +33,19 @@ fi
 
 scenario "List after installation"
 
-# Install some modules
-printf '3\n2\n' | "$PROJECT_DIR/install.sh" > /dev/null
+# Install pdf-reader and standards-python only
+# Skill order (alphabetical): 1=create-slidev, 2=skill-creator, 3=standards-javascript,
+#                             4=standards-python, 5=standards-shell, 6=standards-typescript
+run_install_expect '
+    # MCP: pdf-reader is pre-selected, confirm
+    confirm_mcp
+
+    # Skills: keep only standards-python (#4)
+    select_only_skill 4
+
+    # Decline status line
+    decline_statusline
+' > /dev/null
 
 output=$("$PROJECT_DIR/install.sh" --list 2>&1)
 

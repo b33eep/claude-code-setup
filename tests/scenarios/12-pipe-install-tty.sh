@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Scenario: Pipe installation with TTY support
-# Tests that read_input function works correctly for pipe-based installation
+# Scenario: Interactive installation with TTY support
+# Tests that interactive_select and read_input functions work correctly
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_DIR="${1:-$(cd "$SCRIPT_DIR/../.." && pwd)}"
+export PROJECT_DIR="${1:-$(cd "$SCRIPT_DIR/../.." && pwd)}"
 
 # Source helpers
 # shellcheck source=../helpers.sh
@@ -16,40 +16,38 @@ source "$SCRIPT_DIR/../helpers.sh"
 setup_test_env
 trap cleanup_test_env EXIT
 
-scenario "read_input function exists and is used"
+scenario "Interactive selection functions exist"
 
-# Source the helpers module to test functions
+# Test 1: interactive_select function exists
+if grep -q 'interactive_select()' "$PROJECT_DIR/lib/modules.sh"; then
+    pass "interactive_select function exists"
+else
+    fail "interactive_select function not found"
+fi
+
+# Test 2: read_input function exists (for simple prompts like API key, status line)
 source "$PROJECT_DIR/lib/helpers.sh"
-
-# Test 1: read_input function exists
 if declare -f read_input > /dev/null 2>&1; then
     pass "read_input function exists"
 else
     fail "read_input function not found"
 fi
 
-# Test 2: quick-install.sh has correct TTY check logic (simple stdin check)
+# Test 3: quick-install.sh has correct TTY check logic
 if grep -q '\[\[ -t 0 \]\]' "$PROJECT_DIR/quick-install.sh"; then
     pass "quick-install.sh checks if stdin is a terminal"
 else
     fail "quick-install.sh missing stdin tty check"
 fi
 
-# Test 3: quick-install.sh uses --yes as fallback
+# Test 4: quick-install.sh uses --yes as fallback for non-interactive
 if grep -q './install.sh --yes' "$PROJECT_DIR/quick-install.sh"; then
     pass "quick-install.sh uses --yes for non-interactive"
 else
     fail "quick-install.sh missing --yes fallback"
 fi
 
-# Test 4: modules.sh uses read_input
-if grep -q 'read_input' "$PROJECT_DIR/lib/modules.sh"; then
-    pass "modules.sh uses read_input for prompts"
-else
-    fail "modules.sh not using read_input"
-fi
-
-# Test 5: statusline.sh uses read_input
+# Test 5: statusline.sh uses read_input for Y/n prompt
 if grep -q 'read_input' "$PROJECT_DIR/lib/statusline.sh"; then
     pass "statusline.sh uses read_input for prompts"
 else
@@ -57,7 +55,7 @@ else
 fi
 
 # ============================================
-# Functional tests for read_input
+# Functional tests for read_input (used for simple prompts)
 # ============================================
 
 scenario "read_input functional tests (pipe input)"
@@ -70,47 +68,7 @@ else
     fail "read_input pipe handling broken (got: '$result')"
 fi
 
-# Test 7: read_input reads numeric value
-result=$(echo "42" | read_input "Enter number: ") || true
-if [[ "$result" == "42" ]]; then
-    pass "read_input reads numeric value"
-else
-    fail "read_input numeric handling broken (got: '$result')"
-fi
-
-# Test 8: read_input reads empty input (just Enter)
-result=$(echo "" | read_input "Press enter: ") || true
-if [[ "$result" == "" ]]; then
-    pass "read_input handles empty input"
-else
-    fail "read_input empty input broken (got: '$result')"
-fi
-
-# Test 9: read_input reads value with spaces
-result=$(echo "hello world" | read_input "Enter text: ") || true
-if [[ "$result" == "hello world" ]]; then
-    pass "read_input handles spaces in input"
-else
-    fail "read_input space handling broken (got: '$result')"
-fi
-
-# Test 10: read_input reads selection numbers (like MCP/skills selection)
-result=$(echo "1 2 3" | read_input "Select: ") || true
-if [[ "$result" == "1 2 3" ]]; then
-    pass "read_input handles selection numbers"
-else
-    fail "read_input selection handling broken (got: '$result')"
-fi
-
-# Test 11: read_input handles 'none' keyword
-result=$(echo "none" | read_input "Select: ") || true
-if [[ "$result" == "none" ]]; then
-    pass "read_input handles 'none' keyword"
-else
-    fail "read_input 'none' handling broken (got: '$result')"
-fi
-
-# Test 12: read_input handles Y/n response
+# Test 7: read_input reads Y/n response
 result=$(echo "Y" | read_input "Continue? (Y/n): ") || true
 if [[ "$result" == "Y" ]]; then
     pass "read_input handles Y/n response"
@@ -118,7 +76,7 @@ else
     fail "read_input Y/n handling broken (got: '$result')"
 fi
 
-# Test 13: read_input handles lowercase response
+# Test 8: read_input reads lowercase response
 result=$(echo "n" | read_input "Continue? (Y/n): ") || true
 if [[ "$result" == "n" ]]; then
     pass "read_input handles lowercase response"
@@ -126,21 +84,45 @@ else
     fail "read_input lowercase handling broken (got: '$result')"
 fi
 
+# Test 9: read_input reads empty input (just Enter)
+result=$(echo "" | read_input "Press enter: ") || true
+if [[ "$result" == "" ]]; then
+    pass "read_input handles empty input"
+else
+    fail "read_input empty input broken (got: '$result')"
+fi
+
+# Test 10: read_input reads API key with special chars
+result=$(echo "sk-abc123_XYZ" | read_input "Enter API key: ") || true
+if [[ "$result" == "sk-abc123_XYZ" ]]; then
+    pass "read_input handles API key format"
+else
+    fail "read_input API key handling broken (got: '$result')"
+fi
+
 # ============================================
-# Integration test: Full install simulation
+# Integration test: Full install with expect (interactive mode)
 # ============================================
 
-scenario "Full install with piped input"
+scenario "Full install with interactive toggle selection"
 
 # Reset test env for clean install
 rm -rf "$CLAUDE_DIR"
 mkdir -p "$CLAUDE_DIR"
 
-# Simulate interactive install via pipe:
-# - MCP selection: "3" (pdf-reader)
-# - Skills selection: "4" (standards-python)
-# - Statusline: "Y"
-printf '3\n4\nY\n' | "$PROJECT_DIR/install.sh" > /dev/null 2>&1
+# Use expect for interactive toggle selection
+# Skill order (alphabetical): 1=create-slidev, 2=skill-creator, 3=standards-javascript,
+#                             4=standards-python, 5=standards-shell, 6=standards-typescript
+run_install_expect '
+    # MCP: confirm defaults (only pdf-reader pre-selected)
+    confirm_mcp
+
+    # Skills: keep only standards-python (#4)
+    select_only_skill 4
+
+    # Accept statusline
+    accept_statusline
+' > /dev/null 2>&1
 
 # Verify install worked with correct selections
 assert_file_exists "$CLAUDE_DIR/CLAUDE.md" "CLAUDE.md created"
@@ -149,14 +131,14 @@ assert_dir_exists "$CLAUDE_DIR/commands" "commands installed"
 
 # Verify MCP selection was processed
 if jq -e '.mcpServers["pdf-reader"]' "$MCP_CONFIG_FILE" > /dev/null 2>&1; then
-    pass "pdf-reader MCP installed (selection '3' worked)"
+    pass "pdf-reader MCP installed (toggle selection worked)"
 else
     fail "pdf-reader MCP not installed"
 fi
 
 # Verify skill selection was processed
 if [[ -d "$CLAUDE_DIR/skills/standards-python" ]]; then
-    pass "standards-python skill installed (selection '4' worked)"
+    pass "standards-python skill installed (toggle selection worked)"
 else
     fail "standards-python skill not installed"
 fi
