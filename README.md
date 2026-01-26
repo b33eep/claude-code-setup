@@ -104,7 +104,7 @@ cd claude-code-setup
 
 ### 3. Disable Auto-Compact (Required)
 
-> **This is critical.** Auto-compact destroys context unpredictably. This setup uses controlled `/clear-session` instead.
+> **This is critical.** Auto-compact destroys context unpredictably. This setup uses `/clear-session` → `/clear` instead.
 
 **Claude Code Settings** → `Cmd+,` (macOS) or `Ctrl+,` (Linux)
 
