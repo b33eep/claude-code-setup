@@ -209,10 +209,16 @@ do_install() {
     echo "  1. New project: Run /init-project to set up CLAUDE.md"
     echo "  2. After session: Run /clear-session to document and commit"
     echo ""
-    echo "Commands:"
-    echo "  ./install.sh --add     Add more modules"
-    echo "  ./install.sh --update  Update installed modules"
-    echo "  ./install.sh --list    Show all modules"
+    # Show different commands based on install method
+    if [[ "${QUICK_INSTALL:-}" == "true" ]]; then
+        echo "Manage installation (in Claude session):"
+        echo "  /claude-code-setup  Update or add more modules"
+    else
+        echo "Commands:"
+        echo "  ./install.sh --add     Add more modules"
+        echo "  ./install.sh --update  Update installed modules"
+        echo "  ./install.sh --list    Show all modules"
+    fi
     echo ""
 }
 

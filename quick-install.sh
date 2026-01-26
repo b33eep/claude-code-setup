@@ -31,6 +31,8 @@ cd "$temp_dir"
 
 # Interactive only if stdin is a terminal
 # curl | bash consumes stdin, so use: bash <(curl ...) for interactive mode
+# QUICK_INSTALL tells install.sh to show appropriate commands (not ./install.sh)
+export QUICK_INSTALL=true
 if [[ -t 0 ]]; then
     ./install.sh
 else
