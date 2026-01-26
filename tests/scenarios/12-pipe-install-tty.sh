@@ -161,9 +161,20 @@ else
     fail "standards-python skill not installed"
 fi
 
-# Verify statusline selection was processed
+# Verify statusline selection was processed with correct format
 if jq -e '.statusLine' "$CLAUDE_DIR/settings.json" > /dev/null 2>&1; then
-    pass "statusLine enabled (selection 'Y' worked)"
+    # Verify statusLine is an object (not a string)
+    statusline_type=$(jq -r '.statusLine | type' "$CLAUDE_DIR/settings.json")
+    if [[ "$statusline_type" == "object" ]]; then
+        # Verify required fields exist
+        if jq -e '.statusLine.type == "command" and .statusLine.command' "$CLAUDE_DIR/settings.json" > /dev/null 2>&1; then
+            pass "statusLine configured correctly as object with type and command"
+        else
+            fail "statusLine object missing required fields (type, command)"
+        fi
+    else
+        fail "statusLine must be object, got: $statusline_type"
+    fi
 else
     # statusLine might not be configured if npx is not available
     pass "statusLine skipped (npx not available)"

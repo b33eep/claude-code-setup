@@ -51,7 +51,8 @@ configure_statusline() {
     fi
 
     # Update settings.json with error handling
-    if ! jq '.statusLine = "npx -y ccstatusline@latest"' "$claude_settings" > "$claude_settings.tmp" 2>/dev/null; then
+    # statusLine must be an object with type and command (not a string)
+    if ! jq '.statusLine = {"type": "command", "command": "npx -y ccstatusline@latest"}' "$claude_settings" > "$claude_settings.tmp" 2>/dev/null; then
         print_error "Failed to update settings.json"
         rm -f "$claude_settings.tmp"
         return 1

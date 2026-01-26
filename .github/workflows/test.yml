@@ -109,9 +109,25 @@ jobs:
 
           # Check settings.json has statusLine
           [[ -f ~/.claude/settings.json ]] || { echo "FAIL: settings.json missing"; exit 1; }
-          statusline=$(jq -r '.statusLine // ""' ~/.claude/settings.json)
-          [[ -n "$statusline" ]] || { echo "FAIL: statusLine not configured"; exit 1; }
-          echo "  statusLine: $statusline"
+
+          # statusLine must be an object, not a string
+          # Claude Code expects: {"statusLine": {"type": "command", "command": "..."}}
+          statusline_type=$(jq -r '.statusLine | type' ~/.claude/settings.json)
+          if [[ "$statusline_type" != "object" ]]; then
+            echo "FAIL: statusLine must be an object, got: $statusline_type"
+            echo "  Content: $(jq '.statusLine' ~/.claude/settings.json)"
+            exit 1
+          fi
+
+          # Verify required fields
+          sl_type=$(jq -r '.statusLine.type // ""' ~/.claude/settings.json)
+          sl_command=$(jq -r '.statusLine.command // ""' ~/.claude/settings.json)
+
+          [[ "$sl_type" == "command" ]] || { echo "FAIL: statusLine.type must be 'command', got: $sl_type"; exit 1; }
+          [[ -n "$sl_command" ]] || { echo "FAIL: statusLine.command is missing"; exit 1; }
+
+          echo "  statusLine.type: $sl_type"
+          echo "  statusLine.command: $sl_command"
 
           # Check ccstatusline config exists
           [[ -f ~/.config/ccstatusline/settings.json ]] || { echo "FAIL: ccstatusline config missing"; exit 1; }

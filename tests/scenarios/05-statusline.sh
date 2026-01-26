@@ -24,10 +24,11 @@ scenario "Status line enabled when user accepts (Y)"
 # Fresh install, accept status line
 printf 'none\nnone\nY\n' | "$PROJECT_DIR/install.sh" > /dev/null
 
-# Verify Claude settings.json has statusLine
+# Verify Claude settings.json has statusLine as object
 assert_file_exists "$CLAUDE_DIR/settings.json" "settings.json created"
 assert_json_exists "$CLAUDE_DIR/settings.json" ".statusLine" "statusLine field exists"
-assert_json_eq "$CLAUDE_DIR/settings.json" ".statusLine" "npx -y ccstatusline@latest" "statusLine command correct"
+assert_json_eq "$CLAUDE_DIR/settings.json" ".statusLine.type" "command" "statusLine type is command"
+assert_json_eq "$CLAUDE_DIR/settings.json" ".statusLine.command" "npx -y ccstatusline@latest" "statusLine command correct"
 
 # Verify ccstatusline config created
 assert_file_exists "$CCSTATUS_CONFIG_DIR/settings.json" "ccstatusline config created"
