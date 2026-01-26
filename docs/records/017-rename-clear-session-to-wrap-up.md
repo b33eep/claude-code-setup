@@ -1,6 +1,6 @@
-# Record 017: Rename /clear-session to /wrap-up
+# Record 017: Rename /clear-session to /wrapup
 
-**Status:** Pending
+**Status:** Done
 **Date:** 2025-01-27
 
 ## Context
@@ -9,12 +9,12 @@
 
 ## Decision
 
-Rename to `/wrap-up` - signifies "wrapping up" the session before clearing.
+Rename to `/wrapup` - signifies "wrapping up" the session before clearing. Consistent with `/catchup` (no hyphen).
 
 ## Implementation Steps
 
 1. **Rename command file:**
-   - `commands/clear-session.md` → `commands/wrap-up.md`
+   - `commands/clear-session.md` → `commands/wrapup.md`
    - Update title and description in file
 
 2. **Update global prompt** (`templates/base/global-CLAUDE.md`):
@@ -48,7 +48,7 @@ Rename to `/wrap-up` - signifies "wrapping up" the session before clearing.
 ## New Workflow
 
 ```
-1. /wrap-up   → Document status, commit
+1. /wrapup    → Document status, commit
 2. /clear     → Clear context
 3. /catchup   → Reload context
 ```

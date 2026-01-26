@@ -67,7 +67,7 @@ else
 fi
 
 # Verify commands match source
-for cmd in catchup.md clear-session.md init-project.md; do
+for cmd in catchup.md wrapup.md init-project.md; do
     expected=$(sha256_file "$PROJECT_DIR/commands/$cmd")
     actual=$(sha256_file "$CLAUDE_DIR/commands/$cmd")
     if [ "$expected" = "$actual" ]; then

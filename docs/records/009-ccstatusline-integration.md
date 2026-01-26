@@ -5,9 +5,9 @@
 
 ## Context
 
-The `/clear-session` workflow depends on users knowing when context usage is high. Without visibility into context usage, users:
+The `/wrapup` workflow depends on users knowing when context usage is high. Without visibility into context usage, users:
 
-1. Don't know when to run `/clear-session`
+1. Don't know when to run `/wrapup`
 2. May hit context limits unexpectedly
 3. Miss the opportunity to document before auto-compaction
 
@@ -60,7 +60,7 @@ npx ccstatusline@latest
 ### Positive
 
 - Context visibility out-of-box
-- Supports `/clear-session` workflow (know when to clear)
+- Supports `/wrapup` workflow (know when to clear)
 - Respects existing user config
 - Easy customization via npx
 
@@ -91,7 +91,7 @@ Added to `install.sh` after skills installation:
 
 The status line prompt defaults to **"Y" (yes)**, unlike other prompts in install.sh which default to "N" (no). This is intentional because:
 
-1. The feature directly supports the core `/clear-session` workflow
+1. The feature directly supports the core `/wrapup` workflow
 2. It's non-destructive (can be disabled anytime)
 3. New users benefit most from context visibility
 

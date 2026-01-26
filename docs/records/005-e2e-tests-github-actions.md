@@ -37,7 +37,7 @@ Implement comprehensive E2E tests in GitHub Actions that validate all install.sh
 ~/.claude/
   CLAUDE.md           # Global config with selected standards
   installed.json      # Tracks installed modules
-  commands/           # Slash commands (catchup, clear-session, init-project)
+  commands/           # Slash commands (catchup, wrapup, init-project)
   skills/             # Installed skills
 ~/.claude.json        # MCP server configurations
 ```

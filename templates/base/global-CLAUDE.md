@@ -28,13 +28,13 @@
 | Rule | Description |
 |------|-------------|
 | **No /compact** | Never use. Auto-compaction is error-prone. |
-| **Document & Clear** | At context limit: Run `/clear-session`, then `/clear` |
+| **Document & Clear** | At context limit: Run `/wrapup`, then `/clear` |
 | **External Memory** | CLAUDE.md + Records are the "memory" - versioned, readable, persistent |
 
 ### End Session
 
 ```
-/clear-session  → Documents status in CLAUDE.md
+/wrapup  → Documents status in CLAUDE.md
 /clear          → Clear context
 ```
 
@@ -74,10 +74,10 @@
                           ▼
                     Back to 1.
                          or
-              /clear-session → /clear
+              /wrapup → /clear
 ```
 
-> **Note:** `/clear-session` handles updating CLAUDE.md and committing changes.
+> **Note:** `/wrapup` handles updating CLAUDE.md and committing changes.
 
 ---
 

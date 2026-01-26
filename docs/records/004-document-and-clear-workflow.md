@@ -18,7 +18,7 @@ The question: How to handle context limits reliably?
 
 Adopt the "Document & Clear" workflow instead of `/compact`:
 
-1. **Before context limit**: Run `/clear-session`
+1. **Before context limit**: Run `/wrapup`
    - Update CLAUDE.md with current status
    - Document what was done
    - Set clear "Next Step"
@@ -50,12 +50,12 @@ Adopt the "Document & Clear" workflow instead of `/compact`:
 - Human-readable state (not hidden in Claude's context)
 
 ### Negative
-- Requires discipline to run `/clear-session`
+- Requires discipline to run `/wrapup`
 - Manual process (not automatic)
 - CLAUDE.md can get verbose if not curated
 
 ## References
 
 - [How I Use Every Claude Code Feature](https://blog.anthropic.com/) - Philosophy source
-- `/clear-session` command
+- `/wrapup` command
 - `/catchup` command

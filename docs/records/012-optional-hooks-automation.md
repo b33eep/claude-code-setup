@@ -9,7 +9,7 @@
 The current workflow requires three manual steps when context gets full:
 
 ```
-1. /clear-session  → Document status, commit
+1. /wrapup  → Document status, commit
 2. /clear          → Clear context
 3. /catchup        → Reload context
 ```
@@ -38,15 +38,15 @@ We investigated several approaches to automate this workflow:
 ### The Fundamental Problem
 
 Hooks can only execute bash commands. They **cannot**:
-- Run Claude slash commands (`/clear-session`, `/catchup`)
+- Run Claude slash commands (`/wrapup`, `/catchup`)
 - Make Claude read files
 - Make Claude load skills
 - Make Claude do anything intelligent
 
 | What we need | Hook can do it? |
 |--------------|-----------------|
-| `/clear-session`: Update CLAUDE.md with status | ❌ Requires Claude |
-| `/clear-session`: Git commit | ✅ Yes |
+| `/wrapup`: Update CLAUDE.md with status | ❌ Requires Claude |
+| `/wrapup`: Git commit | ✅ Yes |
 | `/catchup`: List changed files | ✅ Yes |
 | `/catchup`: Read and understand files | ❌ Requires Claude |
 | `/catchup`: Load context skills | ❌ Requires Claude |
@@ -60,7 +60,7 @@ Hooks can only execute bash commands. They **cannot**:
 
 ### What Hooks CANNOT Do
 
-- Invoke `/clear-session` to update CLAUDE.md intelligently
+- Invoke `/wrapup` to update CLAUDE.md intelligently
 - Invoke `/catchup` to have Claude read files
 - Make Claude perform any action
 
@@ -94,7 +94,7 @@ All feature requests are open. Anthropic has not implemented command invocation 
 The hooks approach is not viable until Claude Code provides a way to invoke commands programmatically. The current 3-step workflow remains:
 
 ```
-1. /clear-session  (manual)
+1. /wrapup  (manual)
 2. /clear          (manual)
 3. /catchup        (manual)
 ```

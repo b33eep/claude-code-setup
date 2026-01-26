@@ -15,7 +15,7 @@
 [![macOS](https://img.shields.io/badge/platform-macOS-blue.svg)](https://www.apple.com/macos/)
 [![Linux](https://img.shields.io/badge/platform-Linux-blue.svg)](https://www.linux.org/)
 [![WSL](https://img.shields.io/badge/platform-WSL-blue.svg)](https://docs.microsoft.com/en-us/windows/wsl/)
-[![Content v15](https://img.shields.io/badge/content-v15-blue.svg)](CHANGELOG.md)
+[![Content v16](https://img.shields.io/badge/content-v16-blue.svg)](CHANGELOG.md)
 
 ---
 
@@ -104,7 +104,7 @@ cd claude-code-setup
 
 ### 3. Disable Auto-Compact (Required)
 
-> **This is critical.** Auto-compact destroys context unpredictably. This setup uses `/clear-session` → `/clear` instead.
+> **This is critical.** Auto-compact destroys context unpredictably. This setup uses `/wrapup` → `/clear` instead.
 
 **Claude Code Settings** → `Cmd+,` (macOS) or `Ctrl+,` (Linux)
 
@@ -196,7 +196,7 @@ The global CLAUDE.md has a "User Instructions" section at the bottom. Add your p
 ┌─────────────────────────────────────────────────────────┐
 │  SESSION END (when context fills up)                    │
 │                                                         │
-│  /clear-session → Saves status to CLAUDE.md, commits    │
+│  /wrapup → Saves status to CLAUDE.md, commits    │
 │  /clear → Fresh start with full memory                  │
 └─────────────────────────────────────────────────────────┘
 ```
@@ -214,7 +214,7 @@ https://github.com/user-attachments/assets/e385aa9e-7480-441c-8a30-e196992de9f9
 | Command | What it does |
 |---------|--------------|
 | `/catchup` | Shows recent changes and next steps |
-| `/clear-session` | Saves status to CLAUDE.md, commits changes |
+| `/wrapup` | Saves status to CLAUDE.md, commits changes |
 | `/init-project` | Generates project CLAUDE.md from template |
 | `/claude-code-setup` | Check status, upgrade, install modules |
 | `/add-custom <url>` | Add custom modules from Git repo |
@@ -252,7 +252,7 @@ https://github.com/user-attachments/assets/e385aa9e-7480-441c-8a30-e196992de9f9
 Ctx: 45% | Model: opus | Branch: main
 ```
 
-When it hits ~80%, time for `/clear-session`.
+When it hits ~80%, time for `/wrapup`.
 
 ---
 

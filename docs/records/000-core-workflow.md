@@ -22,7 +22,7 @@ Implement a three-command workflow with CLAUDE.md as persistent memory:
 | Command | When | Purpose |
 |---------|------|---------|
 | `/init-project` | New project | Create CLAUDE.md with project structure |
-| `/clear-session` | Before /clear | Document status, commit state |
+| `/wrapup` | Before /clear | Document status, commit state |
 | `/catchup` | After /clear | Read CLAUDE.md + changed files |
 
 ### The Flow
@@ -45,7 +45,7 @@ Implement a three-command workflow with CLAUDE.md as persistent memory:
                           ▼
 ┌─────────────────────────────────────────────────────────┐
 │  CONTEXT LIMIT APPROACHING                              │
-│  → /clear-session (document + commit)                   │
+│  → /wrapup (document + commit)                   │
 │  → /clear (reset context)                               │
 └─────────────────────────────────────────────────────────┘
                           │
@@ -81,7 +81,7 @@ The project CLAUDE.md contains:
 ### Positive
 - CLAUDE.md is human-readable and Git-versioned
 - Works across machines and sessions
-- Clear handoff points (/clear-session → /clear → /catchup)
+- Clear handoff points (/wrapup → /clear → /catchup)
 - Self-documenting project history
 - No external dependencies
 
@@ -94,5 +94,5 @@ The project CLAUDE.md contains:
 
 - "How I Use Every Claude Code Feature" - Inspiration
 - `/init-project` command - [commands/init-project.md](../../commands/init-project.md)
-- `/clear-session` command - [commands/clear-session.md](../../commands/clear-session.md)
+- `/wrapup` command - [commands/wrapup.md](../../commands/wrapup.md)
 - `/catchup` command - [commands/catchup.md](../../commands/catchup.md)

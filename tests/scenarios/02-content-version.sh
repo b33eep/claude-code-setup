@@ -190,5 +190,37 @@ else
     fail "-y short flag should work (got: $output)"
 fi
 
+scenario "Migration removes obsolete clear-session.md"
+
+# Set lower version (pre-v16)
+jq '.content_version = 15' "$INSTALLED_FILE" > "$INSTALLED_FILE.tmp" && mv "$INSTALLED_FILE.tmp" "$INSTALLED_FILE"
+
+# Create the obsolete file (simulates old install)
+touch "$CLAUDE_DIR/commands/clear-session.md"
+
+# Verify it exists before update
+if [[ -f "$CLAUDE_DIR/commands/clear-session.md" ]]; then
+    pass "clear-session.md exists before update"
+else
+    fail "clear-session.md should exist before update"
+fi
+
+# Run update
+"$PROJECT_DIR/install.sh" --update -y > /dev/null 2>&1
+
+# Verify it's gone after update
+if [[ ! -f "$CLAUDE_DIR/commands/clear-session.md" ]]; then
+    pass "clear-session.md removed by migration"
+else
+    fail "clear-session.md should be removed by v16 migration"
+fi
+
+# Verify wrapup.md exists
+if [[ -f "$CLAUDE_DIR/commands/wrapup.md" ]]; then
+    pass "wrapup.md exists after update"
+else
+    fail "wrapup.md should exist after update"
+fi
+
 # Print summary
 print_summary

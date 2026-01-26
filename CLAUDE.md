@@ -21,7 +21,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Custom Modules | Done | ~/.claude/custom/ for user modules |
 | Solo/Team Mode | Done | /init-project asks for .gitignore preference |
 | Install Script | Done | --add, --update, --list, --yes flags, ShellCheck compliant |
-| Records | Done | 17 Records (000-016) |
+| Records | Done | 18 Records (000-017) |
 | Open Source Release | Done | Published to b33eep/claude-code-setup |
 | GitHub Actions E2E | Done | Full test coverage |
 | Open Source Polish | Done | SECURITY.md, CONTRIBUTING.md, CHANGELOG.md, templates |
@@ -42,8 +42,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Preserve User Instructions | Done | Content v15: [Record 016](docs/records/016-preserve-user-instructions.md) - Section markers in global CLAUDE.md |
 | README Restructure | Done | Problem→Solution flow, Installation steps, all features documented |
 | Optional Hooks | Rejected | Hooks cannot invoke Claude commands ([Record 012](docs/records/012-optional-hooks-automation.md)) |
-
-**Next:** Rename /clear-session → /wrap-up ([Record 017](docs/records/017-rename-clear-session-to-wrap-up.md))
+| Rename /clear-session | Done | Content v16: /wrapup for consistency with /catchup ([Record 017](docs/records/017-rename-clear-session-to-wrap-up.md)) |
 
 ### Future
 
@@ -58,7 +57,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 
 | Decision | Choice | Record |
 |----------|--------|--------|
-| Core Workflow | /init-project, /clear-session, /catchup | [000](docs/records/000-core-workflow.md) |
+| Core Workflow | /init-project, /wrapup, /catchup | [000](docs/records/000-core-workflow.md) |
 | Modular Architecture | Base + optional modules | [001](docs/records/001-modular-architecture.md) |
 | Custom Modules | ~/.claude/custom/ directory | [002](docs/records/002-custom-modules-directory.md) |
 | Solo vs Team | User choice at /init-project | [003](docs/records/003-solo-vs-team-mode.md) |
@@ -75,7 +74,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Linux Support | OS detection, package manager abstraction | [014](docs/records/014-linux-support.md) |
 | Install Script Refactoring | Split into lib/ modules at 1000 lines | [015](docs/records/015-install-script-refactoring.md) |
 | Preserve User Instructions | Section markers in global CLAUDE.md | [016](docs/records/016-preserve-user-instructions.md) |
-| Rename /clear-session | /wrap-up - clearer naming | [017](docs/records/017-rename-clear-session-to-wrap-up.md) |
+| Rename /clear-session | /wrapup - clearer naming | [017](docs/records/017-rename-clear-session-to-wrap-up.md) |
 
 ---
 
