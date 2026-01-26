@@ -21,7 +21,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Custom Modules | Done | ~/.claude/custom/ for user modules |
 | Solo/Team Mode | Done | /init-project asks for .gitignore preference |
 | Install Script | Done | --add, --update, --list, --yes flags, ShellCheck compliant |
-| Records | Done | 16 Records (000-015) |
+| Records | Done | 17 Records (000-016) |
 | Open Source Release | Done | Published to b33eep/claude-code-setup |
 | GitHub Actions E2E | Done | Full test coverage |
 | Open Source Polish | Done | SECURITY.md, CONTRIBUTING.md, CHANGELOG.md, templates |
@@ -40,6 +40,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Interactive Toggle Selection | Done | Toggle-based module selection with smart defaults, Linux-compatible |
 | Arrow-Key Navigation | Done | ↑↓ navigation, space toggle, enter confirm (macOS + Linux) |
 | Preserve User Instructions | Done | Content v15: [Record 016](docs/records/016-preserve-user-instructions.md) - Section markers in global CLAUDE.md |
+| README Restructure | Done | Problem→Solution flow, Installation steps, all features documented |
 
 ### Before v1.0.0
 
@@ -101,7 +102,7 @@ claude-code-setup/
 ├── mcp/
 ├── commands/
 ├── skills/
-└── docs/records/000-015-*.md
+└── docs/records/000-016-*.md
 ```
 
 ---
