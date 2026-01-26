@@ -143,10 +143,16 @@ jobs:
           echo "ccstatusline E2E test passed"
 
       - name: Test Claude session with statusLine
-        if: ${{ secrets.ANTHROPIC_API_KEY != '' }}
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
+          # Skip if no API key configured
+          if [[ -z "$ANTHROPIC_API_KEY" ]]; then
+            echo "Skipping Claude session test (ANTHROPIC_API_KEY secret not configured)"
+            echo "To enable: Add ANTHROPIC_API_KEY secret to repository settings"
+            exit 0
+          fi
+
           echo "Testing Claude session with statusLine..."
 
           # Run a minimal Claude session to verify statusLine works
@@ -172,9 +178,3 @@ jobs:
 
           echo ""
           echo "Claude session E2E test passed"
-
-      - name: Skip Claude session test (no API key)
-        if: ${{ secrets.ANTHROPIC_API_KEY == '' }}
-        run: |
-          echo "Skipping Claude session test (ANTHROPIC_API_KEY secret not configured)"
-          echo "To enable: Add ANTHROPIC_API_KEY secret to repository settings"
