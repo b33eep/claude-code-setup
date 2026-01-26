@@ -5,7 +5,7 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_DIR="${1:-$(cd "$SCRIPT_DIR/../.." && pwd)}"
+export PROJECT_DIR="${1:-$(cd "$SCRIPT_DIR/../.." && pwd)}"
 
 # Source helpers
 # shellcheck source=../helpers.sh
@@ -77,9 +77,19 @@ fi
 
 scenario "skill-creator can be installed"
 
-# Fresh install with skill-creator
-# MCP: none, Skills: 2=skill-creator, Status line: n
-printf 'none\n2\nn\n' | "$PROJECT_DIR/install.sh" > /dev/null
+# Fresh install with only skill-creator (#2)
+# Skill order (alphabetical): 1=create-slidev, 2=skill-creator, 3=standards-javascript,
+#                             4=standards-python, 5=standards-shell, 6=standards-typescript
+run_install_expect '
+    # Deselect all MCP
+    deselect_all_mcp
+
+    # Select only skill-creator (#2)
+    select_only_skill 2
+
+    # Decline status line
+    decline_statusline
+' > /dev/null
 
 assert_dir_exists "$CLAUDE_DIR/skills/skill-creator" "skill-creator installed"
 assert_file_exists "$CLAUDE_DIR/skills/skill-creator/SKILL.md" "SKILL.md installed"

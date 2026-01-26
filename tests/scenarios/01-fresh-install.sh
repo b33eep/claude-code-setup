@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Scenario: Fresh installation
+# Scenario: Fresh installation with interactive toggle selection
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_DIR="${1:-$(cd "$SCRIPT_DIR/../.." && pwd)}"
+export PROJECT_DIR="${1:-$(cd "$SCRIPT_DIR/../.." && pwd)}"
 
 # Source helpers
 # shellcheck source=../helpers.sh
@@ -17,10 +17,23 @@ trap cleanup_test_env EXIT
 
 scenario "Fresh install with pdf-reader and standards-python"
 
-# Run install: select pdf-reader (3), standards-python (4), enable status line (Y)
-# MCP: 1=brave-search, 2=google-search, 3=pdf-reader
-# Skills: 1=create-slidev, 2=skill-creator, 3=standards-javascript, 4=standards-python, 5=standards-shell, 6=standards-typescript
-printf '3\n4\nY\n' | "$PROJECT_DIR/install.sh" > /dev/null
+# Run install with expect:
+# - MCP: confirm defaults (pdf-reader pre-selected)
+# - Skills: select only standards-python (skill #4 in alphabetical order)
+# - Accept status line
+#
+# Skill order (alphabetical): 1=create-slidev, 2=skill-creator, 3=standards-javascript,
+#                             4=standards-python, 5=standards-shell, 6=standards-typescript
+run_install_expect '
+    # MCP: pdf-reader is pre-selected, just confirm
+    confirm_mcp
+
+    # Skills: all pre-selected, use dynamic helper to keep only #4 (standards-python)
+    select_only_skill 4
+
+    # Accept status line
+    accept_statusline
+' > /dev/null
 
 # Verify core files
 assert_file_exists "$CLAUDE_DIR/CLAUDE.md" "CLAUDE.md created"

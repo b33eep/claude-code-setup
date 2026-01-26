@@ -37,6 +37,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Interactive Pipe Install | Done | `bash <(curl ...)` for interactive, `curl \| bash` for --yes mode |
 | ccstatusline Object Format | Done | Fix statusLine settings.json format (object, not string) |
 | One-liner UX | Done | Show `/claude-code-setup` instead of `./install.sh` for one-liner users |
+| Interactive Toggle Selection | Done | Toggle-based module selection with smart defaults, Linux-compatible |
 
 ### Before v1.0.0
 
@@ -44,9 +45,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 |------|----------|---------|----------|
 | Optional Hooks | Medium | User must remember 3 manual steps (/clear-session, /clear, /catchup) | Hooks automate 2 of 3 steps, user only types /clear ([Record 012](docs/records/012-optional-hooks-automation.md)) |
 
-**Current:** Bug fixes for ccstatusline and one-liner UX complete. All CI tests green.
-
-**Next Step:** Optional Hooks ([Record 012](docs/records/012-optional-hooks-automation.md)).
+**Next:** PR mergen, dann Optional Hooks ([Record 012](docs/records/012-optional-hooks-automation.md)).
 
 ### Future (Post v1.0.0)
 
@@ -115,6 +114,20 @@ claude-code-setup/
 ```
 
 Tests run in isolation (`/tmp/claude-test-*`), real `~/.claude` stays untouched.
+
+Tests use `expect` for real interactive simulation (toggle selection, API key input, etc.).
+
+### Manual Testing
+
+Test the install script without affecting your real `~/.claude`:
+
+```bash
+HOME=/tmp/claude-manual-test && rm -rf $HOME && mkdir -p $HOME && ./install.sh
+```
+
+This creates a clean test environment under `/tmp/claude-manual-test/`. After testing:
+- Config: `/tmp/claude-manual-test/.claude/`
+- MCP: `/tmp/claude-manual-test/.claude.json`
 
 ### Bump Content Version
 

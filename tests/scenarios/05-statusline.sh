@@ -5,7 +5,7 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_DIR="${1:-$(cd "$SCRIPT_DIR/../.." && pwd)}"
+export PROJECT_DIR="${1:-$(cd "$SCRIPT_DIR/../.." && pwd)}"
 
 # Source helpers
 # shellcheck source=../helpers.sh
@@ -15,14 +15,23 @@ source "$SCRIPT_DIR/../helpers.sh"
 setup_test_env
 trap cleanup_test_env EXIT
 
-# Export HOME and CCSTATUS_CONFIG_DIR for ccstatusline config location
-export HOME="$TEST_DIR"
+# Export CCSTATUS_CONFIG_DIR for ccstatusline config location
 export CCSTATUS_CONFIG_DIR="$TEST_DIR/.config/ccstatusline"
 
 scenario "Status line enabled when user accepts (Y)"
 
 # Fresh install, accept status line
-printf 'none\nnone\nY\n' | "$PROJECT_DIR/install.sh" > /dev/null
+# Uses dynamic helpers that determine count from prompt
+run_install_expect '
+    # Deselect all MCP
+    deselect_all_mcp
+
+    # Deselect all skills
+    deselect_all_skills
+
+    # Accept status line
+    accept_statusline
+' > /dev/null
 
 # Verify Claude settings.json has statusLine as object
 assert_file_exists "$CLAUDE_DIR/settings.json" "settings.json created"
@@ -47,7 +56,16 @@ mkdir -p "$CLAUDE_DIR"
 echo "{\"content_version\":2,\"mcp\":[],\"skills\":[]}" > "$INSTALLED_FILE"
 
 # Fresh install, decline status line
-printf 'none\nnone\nn\n' | "$PROJECT_DIR/install.sh" > /dev/null 2>&1
+run_install_expect '
+    # Deselect all MCP
+    deselect_all_mcp
+
+    # Deselect all skills
+    deselect_all_skills
+
+    # Decline status line
+    decline_statusline
+' > /dev/null 2>&1
 
 # Verify settings.json either doesn't exist or has no statusLine
 if [[ -f "$CLAUDE_DIR/settings.json" ]]; then
@@ -76,7 +94,13 @@ echo "{\"content_version\":2,\"mcp\":[],\"skills\":[]}" > "$INSTALLED_FILE"
 echo '{"statusLine":"custom-command"}' > "$CLAUDE_DIR/settings.json"
 
 # Run --add (should skip status line prompt)
-output=$(printf 'none\nnone\n' | "$PROJECT_DIR/install.sh" --add 2>&1)
+output=$(run_add_expect '
+    # Deselect all MCP
+    deselect_all_mcp
+
+    # Deselect all skills
+    deselect_all_skills
+' 2>&1)
 
 # Verify original statusLine preserved
 assert_json_eq "$CLAUDE_DIR/settings.json" ".statusLine" "custom-command" "existing statusLine preserved"
@@ -104,7 +128,16 @@ cat > "$CCSTATUS_CONFIG_DIR/settings.json" << 'EOF'
 EOF
 
 # Fresh install, accept status line
-printf 'none\nnone\nY\n' | "$PROJECT_DIR/install.sh" > /dev/null
+run_install_expect '
+    # Deselect all MCP
+    deselect_all_mcp
+
+    # Deselect all skills
+    deselect_all_skills
+
+    # Accept status line
+    accept_statusline
+' > /dev/null
 
 # Verify Claude settings.json has statusLine
 assert_json_exists "$CLAUDE_DIR/settings.json" ".statusLine" "statusLine configured"
@@ -126,7 +159,16 @@ rm -rf "$CLAUDE_DIR" "$CCSTATUS_CONFIG_DIR"
 mkdir -p "$CLAUDE_DIR"
 
 # Empty input (just press Enter) - should enable status line
-printf 'none\nnone\n\n' | "$PROJECT_DIR/install.sh" > /dev/null
+run_install_expect '
+    # Deselect all MCP
+    deselect_all_mcp
+
+    # Deselect all skills
+    deselect_all_skills
+
+    # Press Enter (default is Y)
+    expect {Enable context status line} { send "\r" }
+' > /dev/null
 
 assert_json_exists "$CLAUDE_DIR/settings.json" ".statusLine" "statusLine enabled with empty input (default Y)"
 assert_file_exists "$CCSTATUS_CONFIG_DIR/settings.json" "ccstatusline config created with empty input"
@@ -141,7 +183,16 @@ mkdir -p "$CLAUDE_DIR"
 echo "this is not valid json {{{" > "$CLAUDE_DIR/settings.json"
 
 # Install should recover and configure status line
-output=$(printf 'none\nnone\nY\n' | "$PROJECT_DIR/install.sh" 2>&1)
+output=$(run_install_expect '
+    # Deselect all MCP
+    deselect_all_mcp
+
+    # Deselect all skills
+    deselect_all_skills
+
+    # Accept status line
+    accept_statusline
+' 2>&1)
 
 # Verify recovery message shown
 if echo "$output" | grep -q "corrupted"; then

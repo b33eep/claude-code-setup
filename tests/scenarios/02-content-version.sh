@@ -5,7 +5,7 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_DIR="${1:-$(cd "$SCRIPT_DIR/../.." && pwd)}"
+export PROJECT_DIR="${1:-$(cd "$SCRIPT_DIR/../.." && pwd)}"
 
 # Source helpers
 # shellcheck source=../helpers.sh
@@ -20,8 +20,18 @@ EXPECTED_VERSION=$(cat "$PROJECT_DIR/templates/VERSION" | tr -d '[:space:]')
 
 scenario "Content version is tracked correctly"
 
-# Fresh install (no MCP, no skills, decline status line for simpler test)
-printf 'none\nnone\nn\n' | "$PROJECT_DIR/install.sh" > /dev/null
+# Fresh install: deselect all MCP and all skills, decline status line
+# Uses dynamic helpers that determine count from prompt
+run_install_expect '
+    # Deselect all MCP (pdf-reader is pre-selected)
+    deselect_all_mcp
+
+    # Deselect all skills (all pre-selected)
+    deselect_all_skills
+
+    # Decline status line
+    decline_statusline
+' > /dev/null
 
 # Verify content_version field exists (not the specific value - that changes with every release)
 assert_json_exists "$INSTALLED_FILE" ".content_version" "content_version field exists"
@@ -41,18 +51,34 @@ scenario "Update when version differs"
 # Manually set lower version to simulate outdated install
 jq '.content_version = 0' "$INSTALLED_FILE" > "$INSTALLED_FILE.tmp" && mv "$INSTALLED_FILE.tmp" "$INSTALLED_FILE"
 
-# Run update - should prompt with version diff
-output=$(printf 'n\n' | "$PROJECT_DIR/install.sh" --update 2>&1)
-if echo "$output" | grep -q "v0 → v${EXPECTED_VERSION}"; then
+# Run update - should prompt with version diff, decline
+run_update_expect '
+    expect {
+        -re {v0 → v[0-9]+} { send "n\r" }
+        timeout { puts "TIMEOUT at version diff"; exit 1 }
+    }
+' > /tmp/update-output.txt 2>&1
+
+if grep -q "v0 → v${EXPECTED_VERSION}" /tmp/update-output.txt; then
     pass "Update shows version diff (v0 → v${EXPECTED_VERSION})"
 else
-    fail "Update should show version diff v0 → v${EXPECTED_VERSION} (got: $output)"
+    fail "Update should show version diff v0 → v${EXPECTED_VERSION}"
 fi
 
 scenario "Update applies new version"
 
 # Accept update (decline new modules prompt)
-printf 'y\nn\n' | "$PROJECT_DIR/install.sh" --update > /dev/null
+# Note: "Update complete" appears BEFORE "Install new modules?" prompt
+run_update_expect '
+    expect {
+        {Proceed?} { send "y\r" }
+        timeout { puts "TIMEOUT at continue"; exit 1 }
+    }
+    expect {
+        {Install new modules?} { send "n\r" }
+        timeout { puts "TIMEOUT at new modules"; exit 1 }
+    }
+' > /dev/null
 
 # Verify version updated to current
 assert_json_eq "$INSTALLED_FILE" ".content_version" "$EXPECTED_VERSION" "content_version updated to v${EXPECTED_VERSION}"
@@ -66,16 +92,25 @@ scenario "Update shows new modules available"
 jq '.content_version = 0' "$INSTALLED_FILE" > "$INSTALLED_FILE.tmp" && mv "$INSTALLED_FILE.tmp" "$INSTALLED_FILE"
 
 # Run update and check for new modules prompt
-output=$(printf 'y\nn\n' | "$PROJECT_DIR/install.sh" --update 2>&1)
+run_update_expect '
+    expect {
+        {Proceed?} { send "y\r" }
+        timeout { puts "TIMEOUT at continue"; exit 1 }
+    }
+    expect {
+        {Install new modules?} { send "n\r" }
+        timeout { puts "TIMEOUT at new modules"; exit 1 }
+    }
+' > /tmp/update-output.txt 2>&1
 
-if echo "$output" | grep -q "New Modules Available"; then
+if grep -q "New Modules Available" /tmp/update-output.txt; then
     pass "Update shows 'New Modules Available'"
 else
-    fail "Update should show 'New Modules Available' (got: $output)"
+    fail "Update should show 'New Modules Available'"
 fi
 
 # Should list the available skills
-if echo "$output" | grep -q "Skills:"; then
+if grep -q "Skills:" /tmp/update-output.txt; then
     pass "Update lists available skills"
 else
     fail "Update should list available skills"
@@ -86,9 +121,23 @@ scenario "Update can install new modules"
 # Set lower version again
 jq '.content_version = 0' "$INSTALLED_FILE" > "$INSTALLED_FILE.tmp" && mv "$INSTALLED_FILE.tmp" "$INSTALLED_FILE"
 
-# Accept update and install standards-python
-# After fresh install: none installed, so 1=create-slidev, 2=skill-creator, 3=standards-javascript, 4=standards-python...
-printf 'y\ny\nnone\n4\n' | "$PROJECT_DIR/install.sh" --update > /dev/null
+# Accept update and install only standards-python
+# Skill order (alphabetical): 1=create-slidev, 2=skill-creator, 3=standards-javascript,
+#                             4=standards-python, 5=standards-shell, 6=standards-typescript
+run_update_expect '
+    expect {
+        {Proceed?} { send "y\r" }
+        timeout { puts "TIMEOUT at continue"; exit 1 }
+    }
+    expect {
+        {Install new modules?} { send "y\r" }
+        timeout { puts "TIMEOUT at new modules"; exit 1 }
+    }
+    # MCP selection - deselect all
+    deselect_all_mcp
+    # Skills selection - keep only standards-python (#4)
+    select_only_skill 4
+' > /dev/null
 
 # Verify skill was installed
 assert_dir_exists "$CLAUDE_DIR/skills/standards-python" "standards-python installed via update"
