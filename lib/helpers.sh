@@ -43,11 +43,6 @@ read_input() {
     fi
 }
 
-# Check if interactive prompts are possible
-# Returns 0 if interactive, 1 if not
-can_prompt() {
-    [[ -t 0 ]] || [[ -e /dev/tty ]]
-}
 
 # ============================================
 # COLORS
