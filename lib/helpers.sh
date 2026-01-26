@@ -2,6 +2,57 @@
 
 # Helper functions: colors, printing, JSON utilities
 
+# ============================================
+# TTY-AWARE INPUT
+# ============================================
+
+# Read user input, using /dev/tty if stdin is not a terminal (e.g., pipe install)
+# Usage: result=$(read_input "prompt") || handle_no_tty
+# Returns: echoes the input value; returns 1 if no TTY available
+#
+# Priority:
+# 1. If stdin is a terminal → read from stdin
+# 2. If /dev/tty is available and works → read from /dev/tty (enables: curl | bash)
+# 3. If stdin has data (pipe) → read from stdin (enables: printf '1\n' | ./install.sh for tests)
+# 4. Otherwise → return 1 (non-interactive)
+read_input() {
+    local prompt=$1
+    local result
+
+    if [[ -t 0 ]]; then
+        # stdin is a terminal, read normally
+        read -rp "$prompt" result
+        printf '%s' "$result"
+    elif [[ -r /dev/tty ]] && { : < /dev/tty; } 2>/dev/null; then
+        # stdin is not a terminal (pipe), but /dev/tty is usable
+        # This enables interactivity for: curl ... | bash
+        read -rp "$prompt" result < /dev/tty
+        printf '%s' "$result"
+    elif [[ ! -t 0 ]]; then
+        # stdin is a pipe with data (for tests: printf '1\n' | ./install.sh)
+        # Show prompt on stderr so user sees it, read from stdin pipe
+        printf '%s' "$prompt" >&2
+        if read -r result; then
+            printf '%s' "$result"
+        else
+            return 1
+        fi
+    else
+        # No TTY available, can't prompt interactively
+        return 1
+    fi
+}
+
+# Check if interactive prompts are possible
+# Returns 0 if interactive, 1 if not
+can_prompt() {
+    [[ -t 0 ]] || [[ -e /dev/tty ]]
+}
+
+# ============================================
+# COLORS
+# ============================================
+
 # Colors for output
 readonly RED='\033[0;31m'
 readonly GREEN='\033[0;32m'

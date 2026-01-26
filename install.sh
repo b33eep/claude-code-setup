@@ -273,10 +273,15 @@ main() {
                 echo "Existing installation detected."
                 echo "Use --add to add modules or --update to update."
                 echo ""
-                read -rp "Continue with fresh install? (y/N): " confirm
-                if [[ "$confirm" != "y" ]] && [[ "$confirm" != "Y" ]]; then
-                    echo "Cancelled."
-                    exit 0
+                local confirm
+                if confirm=$(read_input "Continue with fresh install? (y/N): "); then
+                    if [[ "$confirm" != "y" ]] && [[ "$confirm" != "Y" ]]; then
+                        echo "Cancelled."
+                        exit 0
+                    fi
+                else
+                    echo "Non-interactive environment detected. Use --yes to force."
+                    exit 1
                 fi
                 # Reset installed.json for fresh install
                 echo "{\"content_version\":$(get_content_version),\"mcp\":[],\"skills\":[]}" > "$INSTALLED_FILE"
