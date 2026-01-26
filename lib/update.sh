@@ -2,6 +2,21 @@
 
 # Update installation logic
 
+# Run version migrations
+# $1: from_version, $2: to_version
+run_migrations() {
+    local from_v=$1
+    local to_v=$2
+
+    # v16: Rename /clear-session to /wrapup
+    if [[ "$from_v" -lt 16 ]] && [[ "$to_v" -ge 16 ]]; then
+        if [[ -f "$CLAUDE_DIR/commands/clear-session.md" ]]; then
+            rm -f "$CLAUDE_DIR/commands/clear-session.md"
+            print_info "Removed obsolete clear-session.md (renamed to wrapup.md)"
+        fi
+    fi
+}
+
 # Update all installed modules
 do_update() {
     echo ""
@@ -36,6 +51,9 @@ do_update() {
             exit 0
         fi
     fi
+
+    # Run migrations
+    run_migrations "$installed_v" "$available_v"
 
     # Update commands
     print_header "Updating Commands"

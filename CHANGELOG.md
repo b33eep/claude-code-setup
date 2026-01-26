@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MCP server configurations: pdf-reader, brave-search, google-search
 - Skills: create-slidev-presentation, skill-creator
 - Custom modules support via `~/.claude/custom/`
-- Workflow commands: `/catchup`, `/clear-session`, `/init-project`
+- Workflow commands: `/catchup`, `/wrapup`, `/init-project`
 - Upgrade commands: `/claude-code-setup`, `/add-custom`, `/upgrade-custom`
 - In-session updates via `/claude-code-setup` (no terminal needed)
 - Solo/Team mode selection in `/init-project`
@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v16**: Rename `/clear-session` to `/wrapup` for consistency with `/catchup`
 - **v15**: Preserve user instructions in global CLAUDE.md during updates (section markers)
 - **v14**: Strengthen "No Co-Authored-By" rule to override Claude Code default behavior
 - **v13**: Add Linux support (Ubuntu/Debian, Arch, Fedora, openSUSE) and refactor install.sh into lib/ modules

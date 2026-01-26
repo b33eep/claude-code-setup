@@ -155,7 +155,7 @@ No separate `.custom-source` file needed - Git already stores the remote URL.
 ├── commands/
 │   ├── init-project.md
 │   ├── catchup.md
-│   ├── clear-session.md
+│   ├── wrapup.md
 │   ├── claude-code-setup.md
 │   ├── add-custom.md              # NEW
 │   └── upgrade-custom.md          # NEW

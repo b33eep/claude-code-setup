@@ -207,7 +207,7 @@ do_install() {
     echo ""
     echo "Next steps:"
     echo "  1. New project: Run /init-project to set up CLAUDE.md"
-    echo "  2. After session: Run /clear-session to document and commit"
+    echo "  2. After session: Run /wrapup to document and commit"
     echo ""
     # Show different commands based on install method
     if [[ "${QUICK_INSTALL:-}" == "true" ]]; then

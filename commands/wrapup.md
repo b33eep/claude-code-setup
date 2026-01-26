@@ -1,6 +1,6 @@
-# Clear Session: Document and Restart
+# Wrapup: Document and Restart
 
-Before `/clear`, document the current status for the next session.
+Wrap up the session before `/clear`. Document the current status for the next session.
 
 ## Tasks
 

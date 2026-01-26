@@ -29,7 +29,7 @@ How will you use CLAUDE.md in this project?
 - **Solo mode**: Add `CLAUDE.md` to `.gitignore`
 - **Team mode**: Keep `CLAUDE.md` tracked in Git
 
-The `/clear-session` command respects this choice:
+The `/wrapup` command respects this choice:
 - Solo: Only commits Records and code changes
 - Team: Commits CLAUDE.md updates
 
@@ -47,7 +47,7 @@ The `/clear-session` command respects this choice:
 ### Positive
 - Supports both solo and team workflows
 - User makes explicit choice
-- `/clear-session` adapts automatically
+- `/wrapup` adapts automatically
 
 ### Negative
 - Extra step during project initialization
@@ -57,4 +57,4 @@ The `/clear-session` command respects this choice:
 ## References
 
 - `/init-project` command
-- `/clear-session` command
+- `/wrapup` command
