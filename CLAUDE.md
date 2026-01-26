@@ -38,6 +38,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | ccstatusline Object Format | Done | Fix statusLine settings.json format (object, not string) |
 | One-liner UX | Done | Show `/claude-code-setup` instead of `./install.sh` for one-liner users |
 | Interactive Toggle Selection | Done | Toggle-based module selection with smart defaults, Linux-compatible |
+| Arrow-Key Navigation | Done | ↑↓ navigation, space toggle, enter confirm (macOS + Linux) |
 
 ### Before v1.0.0
 
@@ -45,7 +46,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 |------|----------|---------|----------|
 | Optional Hooks | Medium | User must remember 3 manual steps (/clear-session, /clear, /catchup) | Hooks automate 2 of 3 steps, user only types /clear ([Record 012](docs/records/012-optional-hooks-automation.md)) |
 
-**Next:** PR mergen, dann Optional Hooks ([Record 012](docs/records/012-optional-hooks-automation.md)).
+**Next:** Optional Hooks ([Record 012](docs/records/012-optional-hooks-automation.md)).
 
 ### Future (Post v1.0.0)
 
