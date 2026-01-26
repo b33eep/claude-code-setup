@@ -43,6 +43,8 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | README Restructure | Done | Problem→Solution flow, Installation steps, all features documented |
 | Optional Hooks | Rejected | Hooks cannot invoke Claude commands ([Record 012](docs/records/012-optional-hooks-automation.md)) |
 
+**Next:** Rename /clear-session → /wrap-up ([Record 017](docs/records/017-rename-clear-session-to-wrap-up.md))
+
 ### Future
 
 | Todo | Priority | Problem | Solution |
@@ -73,6 +75,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Linux Support | OS detection, package manager abstraction | [014](docs/records/014-linux-support.md) |
 | Install Script Refactoring | Split into lib/ modules at 1000 lines | [015](docs/records/015-install-script-refactoring.md) |
 | Preserve User Instructions | Section markers in global CLAUDE.md | [016](docs/records/016-preserve-user-instructions.md) |
+| Rename /clear-session | /wrap-up - clearer naming | [017](docs/records/017-rename-clear-session-to-wrap-up.md) |
 
 ---
 
