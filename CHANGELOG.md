@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v17**: `/catchup` reads project README.md first for context
 - **v16**: Rename `/clear-session` to `/wrapup` for consistency with `/catchup`
 - **v15**: Preserve user instructions in global CLAUDE.md during updates (section markers)
 - **v14**: Strengthen "No Co-Authored-By" rule to override Claude Code default behavior
