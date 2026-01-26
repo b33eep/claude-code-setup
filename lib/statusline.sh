@@ -30,7 +30,8 @@ configure_statusline() {
         echo "ccstatusline shows context usage in the status bar (e.g., Ctx: 21.9%)"
         echo "Useful to know when to run /clear-session"
         echo ""
-        read -rp "Enable context status line? (Y/n): " enable_statusline
+        local enable_statusline
+        enable_statusline=$(read_input "Enable context status line? (Y/n): ") || enable_statusline="Y"
 
         if [[ "$enable_statusline" = "n" ]] || [[ "$enable_statusline" = "N" ]]; then
             print_info "Status line skipped"

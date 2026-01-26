@@ -24,8 +24,9 @@ trap 'rm -rf "$temp_dir"' EXIT
 git clone --depth 1 --branch "$BRANCH" "https://github.com/${REPO}.git" "$temp_dir"
 cd "$temp_dir"
 
-# Use --yes if not running interactively (no tty)
-if [[ -t 0 ]]; then
+# Run interactively if possible (stdin is tty OR /dev/tty exists)
+# This allows: curl ... | bash to still be interactive
+if [[ -t 0 ]] || [[ -r /dev/tty ]]; then
     ./install.sh
 else
     ./install.sh --yes

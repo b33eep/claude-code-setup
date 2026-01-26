@@ -205,7 +205,8 @@ select_mcp() {
     fi
 
     echo ""
-    read -rp "Select (e.g., '1 2' or 'none'): " selection
+    local selection
+    selection=$(read_input "Select (e.g., '1 2' or 'none'): ") || selection=""
 
     if [[ "$selection" != "none" ]] && [[ -n "$selection" ]]; then
         for num in $selection; do
@@ -269,7 +270,8 @@ select_skills() {
     fi
 
     echo ""
-    read -rp "Select (e.g., '1 2' or 'none'): " selection
+    local selection
+    selection=$(read_input "Select (e.g., '1 2' or 'none'): ") || selection=""
 
     if [[ "$selection" != "none" ]] && [[ -n "$selection" ]]; then
         for num in $selection; do
