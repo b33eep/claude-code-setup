@@ -35,6 +35,8 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Linux Support | Done | Content v13: OS detection, package manager abstraction ([Record 014](docs/records/014-linux-support.md)) |
 | Install Script Refactoring | Done | Content v13: Split into lib/ modules ([Record 015](docs/records/015-install-script-refactoring.md)) |
 | Interactive Pipe Install | Done | `bash <(curl ...)` for interactive, `curl \| bash` for --yes mode |
+| ccstatusline Object Format | Done | Fix statusLine settings.json format (object, not string) |
+| One-liner UX | Done | Show `/claude-code-setup` instead of `./install.sh` for one-liner users |
 
 ### Before v1.0.0
 
@@ -42,7 +44,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 |------|----------|---------|----------|
 | Optional Hooks | Medium | User must remember 3 manual steps (/clear-session, /clear, /catchup) | Hooks automate 2 of 3 steps, user only types /clear ([Record 012](docs/records/012-optional-hooks-automation.md)) |
 
-**Current:** Interactive pipe install fix merged. All CI tests green.
+**Current:** Bug fixes for ccstatusline and one-liner UX complete. All CI tests green.
 
 **Next Step:** Optional Hooks ([Record 012](docs/records/012-optional-hooks-automation.md)).
 
