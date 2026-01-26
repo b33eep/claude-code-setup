@@ -17,49 +17,67 @@
 [![WSL](https://img.shields.io/badge/platform-WSL-blue.svg)](https://docs.microsoft.com/en-us/windows/wsl/)
 [![Content v15](https://img.shields.io/badge/content-v15-blue.svg)](CHANGELOG.md)
 
-A modular setup for Claude Code that solves context loss and keeps your workflow consistent.
+---
 
 ## The Problem
 
-> *"Claude forgets everything after /compact"*
->
-> *"Context full, all my progress is gone"*
->
-> *"Where did I leave off yesterday?"*
->
-> *"What should I even put in CLAUDE.md?"*
->
-> *"My code style is inconsistent across sessions"*
+Claude Code has a context limit. When it fills up, you have two options:
 
-Sound familiar?
+1. **Auto-Compact** - Claude summarizes the conversation, losing details and decisions
+2. **/clear** - Everything is gone, you start from zero
+
+Both options mean lost progress. And it gets worse:
+
+**Daily friction:**
+- "Where did I leave off yesterday?"
+- "What decisions did we make last session?"
+- "Why did we choose approach X over Y?"
+
+**Inconsistency:**
+- Code style varies between sessions
+- Different formatting, different patterns
+- No shared standards across the team
+
+**Setup overhead:**
+- "What should I even put in CLAUDE.md?"
+- New team member = manual setup from scratch
+- Company standards need to be copy-pasted everywhere
+
+**Maintenance pain:**
+- Updates overwrite your customizations
+- Personal preferences get lost
+- "When exactly is context getting full?"
 
 ## The Solution
 
 | Problem | How we solve it |
 |---------|-----------------|
-| Context loss | External memory via two CLAUDE.md files |
-| "Where was I?" | `/catchup` shows what changed + next steps |
-| "What goes in CLAUDE.md?" | `/init-project` generates it for your project |
-| Inconsistent code | Coding standards load automatically per tech stack |
-| "Which MCP servers?" | Curated selection, one-click install |
-| "How to document decisions?" | Records for design + planning → becomes documentation |
+| Context loss | Two CLAUDE.md files (global + project) as external memory |
+| "Where was I?" | `/catchup` shows changes and next steps |
+| Lost decisions | Records preserve design docs and reasoning |
 | "When is context full?" | ccstatusline shows live usage (e.g., `Ctx: 70%`) |
+| Inconsistent code | Coding standards load automatically per tech stack |
+| "What goes in CLAUDE.md?" | `/init-project` generates it from a template |
+| Team setup overhead | Custom modules repo - one command to install |
+| Updates overwrite settings | User Instructions section survives updates |
+| Staying current | `/claude-code-setup` updates without leaving Claude |
 
-**Smart skill loading:** Working on a Python project? Python standards load automatically. Writing a shell script? Shell standards appear. No manual setup, no commands to remember.
+---
 
-## Quick Start
+## Installation
 
-### Prerequisites
+### 1. Prerequisites (install yourself)
 
-| Platform | Required | Optional |
-|----------|----------|----------|
-| All | [Claude Code](https://claude.ai/download) | [Node.js](https://nodejs.org/) *(for status line)* |
-| macOS | - | [Homebrew](https://brew.sh) |
-| Linux/WSL | `sudo` access | - |
+| Requirement | Why |
+|-------------|-----|
+| [Claude Code](https://claude.ai/download) | The CLI this setup extends |
+| macOS, Linux, or WSL | Supported platforms |
 
-> `git` and `curl` are needed but usually pre-installed. `jq` is installed automatically (via Homebrew if available, otherwise as binary).
+Optional:
+- [Node.js](https://nodejs.org/) - Required for context status line
+- [Homebrew](https://brew.sh) (macOS) - For automatic jq installation
 
-### Install
+### 2. Run Installer
 
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/b33eep/claude-code-setup/main/quick-install.sh)
@@ -67,7 +85,14 @@ bash <(curl -fsSL https://raw.githubusercontent.com/b33eep/claude-code-setup/mai
 
 ![Install Demo](docs/assets/install.gif)
 
-Or clone manually:
+The installer:
+- Installs `jq` automatically (via Homebrew or binary)
+- Lets you select MCP servers, coding standards, and tools
+- Configures [ccstatusline](https://github.com/sirmalloc/ccstatusline) for context monitoring
+- Sets up commands, skills, and templates
+
+<details>
+<summary>Alternative: Clone and run manually</summary>
 
 ```bash
 git clone https://github.com/b33eep/claude-code-setup.git
@@ -75,108 +100,141 @@ cd claude-code-setup
 ./install.sh
 ```
 
-The installer guides you through selecting MCP servers, coding standards, and tools.
+</details>
 
-**After install:** Disable auto-compact in Claude Code settings (`Cmd+,` → Config → Auto-compact: `false`). This setup uses controlled `/clear-session` instead.
+### 3. Disable Auto-Compact (Required)
 
-## How It Works
+> **This is critical.** Auto-compact destroys context unpredictably. This setup uses controlled `/clear-session` instead.
 
-**Two files + Records = persistent memory:**
+**Claude Code Settings** → `Cmd+,` (macOS) or `Ctrl+,` (Linux)
+
+```
+Auto-compact: false
+```
+
+### 4. Future Updates
+
+After initial install, update exclusively via Claude Code:
+
+```
+You: /claude-code-setup
+Claude: Installed: v15, Available: v16
+        What would you like to do?
+You: Upgrade
+```
+
+No terminal needed. Your customizations in the "User Instructions" section are preserved.
+
+---
+
+## Core Concept
+
+### Two CLAUDE.md Files
 
 | File | Location | Purpose |
 |------|----------|---------|
-| Global | `~/.claude/CLAUDE.md` | Your workflow, standards, conventions |
-| Project | `your-project/CLAUDE.md` | Current status, tasks, decisions |
-| Records | `your-project/docs/records/` | Design docs, implementation plans |
+| **Global** | `~/.claude/CLAUDE.md` | Your workflow, conventions, preferences |
+| **Project** | `your-project/CLAUDE.md` | Current status, tasks, next steps |
 
-Both CLAUDE.md files load automatically. Records are referenced when relevant (e.g., "Why did we choose X?").
+Both load automatically. Claude always knows your workflow and where you left off.
 
-> **Your customizations are safe:** The global CLAUDE.md has a "User Instructions" section at the bottom. Add your personal preferences there - they survive updates via `/claude-code-setup`.
+### Records
 
-**Records:** Start as solution design or implementation plan, become permanent documentation. One file per decision, versioned in Git.
+Design decisions, implementation plans, and feature specs go in `docs/records/`. They start as planning docs and become permanent documentation.
 
-## Daily Workflow
+```
+docs/records/
+├── 001-authentication-design.md
+├── 002-api-refactoring.md
+└── 003-caching-strategy.md
+```
+
+### Auto-Loading Skills
+
+Coding standards load automatically based on your project's tech stack:
+
+| Your Tech Stack | Standards that load |
+|-----------------|---------------------|
+| Python, FastAPI | Python standards |
+| TypeScript, React | TypeScript standards |
+| Bash scripts | Shell standards |
+
+Writing a shell script in a Python project? Shell standards load for that file.
+
+### User Instructions (Preserved)
+
+The global CLAUDE.md has a "User Instructions" section at the bottom. Add your personal preferences there - they survive updates.
+
+```markdown
+<!-- USER INSTRUCTIONS START -->
+- Always respond in German
+- Use formal code comments
+- My API keys are in ~/.config/secrets/
+<!-- USER INSTRUCTIONS END -->
+```
+
+---
+
+## Workflow
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│  Session Start                                          │
+│  SESSION START                                          │
+│                                                         │
 │  /catchup → See what changed, what's next               │
 └─────────────────────────────────────────────────────────┘
                           │
                           ▼
 ┌─────────────────────────────────────────────────────────┐
-│  Work                                                   │
-│  Tasks in CLAUDE.md, implement, test                    │
+│  WORK                                                   │
+│                                                         │
+│  Implement tasks from CLAUDE.md                         │
 │  Monitor context: Ctx: 70% (via ccstatusline)           │
 └─────────────────────────────────────────────────────────┘
                           │
                           ▼
 ┌─────────────────────────────────────────────────────────┐
-│  Session End (when context fills up)                    │
-│  /clear-session → Saves status, commits                 │
+│  SESSION END (when context fills up)                    │
+│                                                         │
+│  /clear-session → Saves status to CLAUDE.md, commits    │
 │  /clear → Fresh start with full memory                  │
 └─────────────────────────────────────────────────────────┘
 ```
 
 https://github.com/user-attachments/assets/e385aa9e-7480-441c-8a30-e196992de9f9
 
-**First time on a project?** Run `/init-project` once to generate the project CLAUDE.md.
+**First time on a project?** Run `/init-project` to generate the project CLAUDE.md.
 
-> **Tip:** The installer sets up [ccstatusline](https://github.com/sirmalloc/ccstatusline) to show context usage in your terminal. When it hits ~80%, time for `/clear-session`.
+---
 
-## Updates
+## Features
 
-Stay in Claude Code - no terminal needed:
+### Commands
 
 | Command | What it does |
 |---------|--------------|
-| `/claude-code-setup` | Status, upgrade, install modules |
-| `/add-custom <url>` | Add custom modules (company/personal) |
+| `/catchup` | Shows recent changes and next steps |
+| `/clear-session` | Saves status to CLAUDE.md, commits changes |
+| `/init-project` | Generates project CLAUDE.md from template |
+| `/claude-code-setup` | Check status, upgrade, install modules |
+| `/add-custom <url>` | Add custom modules from Git repo |
 | `/upgrade-custom` | Pull latest from custom repo |
-
-```
-You: /claude-code-setup
-Claude: claude-code-setup status:
-        - Installed: v9
-        - Available: v10
-
-        Modules available to install:
-        - standards-javascript (JS/Node.js standards)
-
-        What would you like to do?
-You: Upgrade + install modules
-Claude: Which modules? (standards-javascript)
-You: standards-javascript
-Claude: ✓ Upgraded v9 → v10
-        ✓ standards-javascript installed
-```
-
-https://github.com/user-attachments/assets/f3e9e14c-5d9c-4a49-adf6-417c0e8f2fd6
-
-<details>
-<summary>Shell commands</summary>
-
-```bash
-./install.sh --add           # Add more modules
-./install.sh --update        # Update all modules
-./install.sh --update --yes  # Non-interactive (used by /claude-code-setup)
-./install.sh --list          # Show installed modules
-```
-
-</details>
-
-## What's Included
+| `/skill-creator` | Create your own custom skills |
 
 ### Coding Standards (auto-loading)
 
-| Skill | Loads when Tech Stack contains |
-|-------|--------------------------------|
-| JavaScript | javascript, nodejs, express, fastify, npm... |
-| Python | python, fastapi, django, flask, pytest... |
-| TypeScript | typescript, react, nextjs, vue, angular... |
-| Shell | bash, sh, shell, zsh, shellcheck... |
+| Skill | Loads for |
+|-------|-----------|
+| `standards-python` | python, fastapi, django, flask, pytest |
+| `standards-typescript` | typescript, react, nextjs, vue, angular |
+| `standards-javascript` | javascript, nodejs, express, npm |
+| `standards-shell` | bash, sh, shell, zsh, shellcheck |
 
-Standards load based on your project's `Tech Stack:` in CLAUDE.md. Writing a shell script in a Python project? Shell standards load for that file.
+### Other Skills
+
+| Skill | Description |
+|-------|-------------|
+| `create-slidev-presentation` | Create Slidev slide decks (loads when you ask for presentations) |
 
 ### MCP Servers
 
@@ -186,29 +244,34 @@ Standards load based on your project's `Tech Stack:` in CLAUDE.md. Writing a she
 | `brave-search` | Web search (2000 free/month) | Yes |
 | `google-search` | Google Custom Search | Yes |
 
-### Other Skills
+### Context Status Line
 
-| Skill | Description |
-|-------|-------------|
-| `create-slidev-presentation` | Create Slidev slide decks |
-| `skill-creator` | Create your own custom skills |
+[ccstatusline](https://github.com/sirmalloc/ccstatusline) shows live context usage in your terminal:
 
-## Custom Skills
+```
+Ctx: 45% | Model: opus | Branch: main
+```
 
-Create your own skills with `/skill-creator`:
+When it hits ~80%, time for `/clear-session`.
+
+---
+
+## Custom Modules
+
+### Create Your Own Skills
 
 ```
 You: /skill-creator
-Claude: What type of skill do you want to create?
+Claude: What type of skill?
         1. Command skill - Invoked with /skill-name
         2. Context skill - Auto-loads based on tech stack
 ```
 
-Skills are saved to `~/.claude/custom/skills/` and available immediately.
+Skills are saved to `~/.claude/custom/skills/`.
 
-## For Teams
+### For Teams
 
-Create a company repo with your standards:
+Create a company repo with shared standards:
 
 ```
 company-claude-modules/
@@ -218,13 +281,10 @@ company-claude-modules/
     └── company-standards/
 ```
 
-Setup for team members:
+Add for all team members:
 
 ```
 You: /add-custom git@company.com:team/claude-modules.git
-Claude: Cloned to ~/.claude/custom
-        Found: 2 skills, 1 MCP server
-        Run install.sh --add to install.
 ```
 
 Custom skills **override** built-in ones. Your `standards-python` replaces ours.
@@ -264,6 +324,8 @@ Content here...
 
 </details>
 
+---
+
 ## Solo vs Team Mode
 
 When running `/init-project`:
@@ -271,9 +333,11 @@ When running `/init-project`:
 | Mode | CLAUDE.md | Use case |
 |------|-----------|----------|
 | **Solo** | In `.gitignore` | Personal notes, not shared |
-| **Team** | Tracked in Git | Shared status for everyone |
+| **Team** | Tracked in Git | Shared status for the team |
 
-## Plugins (Optional)
+---
+
+## Optional: Code Review Plugin
 
 Claude Code has a built-in plugin marketplace:
 
@@ -282,57 +346,48 @@ Claude Code has a built-in plugin marketplace:
 /install code-review-ai@claude-code-workflows
 ```
 
-After installing, the `code-review-ai:architect-review` agent is available for code reviews.
+After installing, the `code-review-ai:architect-review` agent is available.
 
-## Roadmap
-
-Before v1.0.0:
-
-| Feature | Record |
-|---------|--------|
-| Optional hooks for workflow automation | [012](docs/records/012-optional-hooks-automation.md) |
-
-Have ideas? Open a [Discussion](https://github.com/b33eep/claude-code-setup/discussions).
+---
 
 ## File Structure
+
+<details>
+<summary>What gets installed</summary>
+
+```
+~/.claude/
+├── CLAUDE.md           # Global config (your workflow)
+├── settings.json       # Claude Code settings
+├── installed.json      # Tracks installed modules
+├── commands/           # Slash commands
+├── skills/             # Coding standards, tools
+├── templates/          # Project CLAUDE.md template
+└── custom/             # Your custom modules
+
+~/.claude.json          # MCP server configs
+```
+
+</details>
 
 <details>
 <summary>Repository structure</summary>
 
 ```
 claude-code-setup/
-├── templates/
-│   ├── VERSION
-│   ├── project-CLAUDE.md
-│   └── base/global-CLAUDE.md
-├── lib/              # Modular install script components
-├── mcp/
-├── skills/
-├── commands/
-├── tests/
-├── quick-install.sh
-└── install.sh
+├── install.sh          # Main installer
+├── quick-install.sh    # One-liner installer
+├── lib/                # Modular install components
+├── templates/          # CLAUDE.md templates
+├── mcp/                # MCP server configs
+├── skills/             # Coding standards
+├── commands/           # Slash commands
+└── tests/              # Test scenarios
 ```
 
 </details>
 
-<details>
-<summary>Installed structure</summary>
-
-```
-~/.claude/
-├── CLAUDE.md
-├── settings.json
-├── installed.json
-├── commands/
-├── skills/
-├── templates/
-└── custom/         # Your custom modules
-
-~/.claude.json      # MCP servers
-```
-
-</details>
+---
 
 ## Development
 
@@ -347,6 +402,14 @@ Tests run in isolation - your `~/.claude` stays untouched.
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Roadmap
+
+| Feature | Record |
+|---------|--------|
+| Optional hooks for workflow automation | [012](docs/records/012-optional-hooks-automation.md) |
+
+Have ideas? Open a [Discussion](https://github.com/b33eep/claude-code-setup/discussions).
 
 ## Acknowledgments
 
