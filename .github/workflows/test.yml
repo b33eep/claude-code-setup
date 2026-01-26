@@ -103,7 +103,7 @@ jobs:
           echo "  Commands: $(ls ~/.claude/commands | wc -l | tr -d ' ')"
           echo "  Skills: $(ls ~/.claude/skills | wc -l | tr -d ' ')"
 
-      - name: Verify ccstatusline
+      - name: Verify ccstatusline config
         run: |
           echo "Verifying ccstatusline configuration..."
 
@@ -118,4 +118,26 @@ jobs:
           echo "  ccstatusline config: exists"
 
           echo ""
-          echo "ccstatusline verified successfully"
+          echo "ccstatusline config verified successfully"
+
+      - name: Test ccstatusline execution
+        run: |
+          echo "Testing ccstatusline execution..."
+
+          # Run ccstatusline with empty JSON input (simulates Claude Code calling it)
+          # The -y flag should prevent any interactive prompts during npm package download
+          output=$(echo '{}' | npx -y ccstatusline@latest 2>&1)
+          exit_code=$?
+
+          if [[ $exit_code -eq 0 ]] && [[ -n "$output" ]]; then
+            echo "  ccstatusline executed successfully"
+            echo "  Output: $output"
+          else
+            echo "FAIL: ccstatusline execution failed"
+            echo "  Exit code: $exit_code"
+            echo "  Output: $output"
+            exit 1
+          fi
+
+          echo ""
+          echo "ccstatusline E2E test passed"

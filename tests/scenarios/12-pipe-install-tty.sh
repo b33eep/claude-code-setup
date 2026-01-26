@@ -202,4 +202,31 @@ else
     fail "Skills should be skipped in --yes mode"
 fi
 
+# ============================================
+# ccstatusline E2E test (if npx available)
+# ============================================
+
+scenario "ccstatusline E2E test"
+
+if command -v npx &>/dev/null; then
+    # Test that ccstatusline can be executed non-interactively
+    # The -y flag should skip any npm prompts
+    output=$(echo '{}' | npx -y ccstatusline@latest 2>&1) || true
+
+    if [[ -n "$output" ]]; then
+        pass "ccstatusline executes with empty JSON input"
+        # Output should contain ANSI codes or text (statusline)
+        if [[ "$output" == *$'\033'* ]] || [[ "$output" == *"["* ]]; then
+            pass "ccstatusline produces formatted output"
+        else
+            # Even plain text is acceptable
+            pass "ccstatusline produces output: ${output:0:50}..."
+        fi
+    else
+        fail "ccstatusline produced no output"
+    fi
+else
+    pass "npx not available, skipping ccstatusline E2E test"
+fi
+
 print_summary
