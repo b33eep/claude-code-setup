@@ -1,6 +1,11 @@
 #!/bin/bash
 # Quick installer for claude-code-setup
-# Usage: curl -fsSL https://raw.githubusercontent.com/b33eep/claude-code-setup/main/quick-install.sh | bash
+#
+# For interactive install (select modules):
+#   bash <(curl -fsSL https://raw.githubusercontent.com/b33eep/claude-code-setup/main/quick-install.sh)
+#
+# For non-interactive install (defaults only):
+#   curl -fsSL https://raw.githubusercontent.com/b33eep/claude-code-setup/main/quick-install.sh | bash
 
 set -euo pipefail
 
@@ -24,9 +29,9 @@ trap 'rm -rf "$temp_dir"' EXIT
 git clone --depth 1 --branch "$BRANCH" "https://github.com/${REPO}.git" "$temp_dir"
 cd "$temp_dir"
 
-# Run interactively if possible (stdin is tty OR /dev/tty exists)
-# This allows: curl ... | bash to still be interactive
-if [[ -t 0 ]] || [[ -r /dev/tty ]]; then
+# Interactive only if stdin is a terminal
+# curl | bash consumes stdin, so use: bash <(curl ...) for interactive mode
+if [[ -t 0 ]]; then
     ./install.sh
 else
     ./install.sh --yes

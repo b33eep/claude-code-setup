@@ -28,11 +28,11 @@ else
     fail "read_input function not found"
 fi
 
-# Test 2: quick-install.sh has correct TTY check logic
-if grep -q '\[\[ -r /dev/tty \]\]' "$PROJECT_DIR/quick-install.sh"; then
-    pass "quick-install.sh checks for /dev/tty"
+# Test 2: quick-install.sh has correct TTY check logic (simple stdin check)
+if grep -q '\[\[ -t 0 \]\]' "$PROJECT_DIR/quick-install.sh"; then
+    pass "quick-install.sh checks if stdin is a terminal"
 else
-    fail "quick-install.sh missing /dev/tty check"
+    fail "quick-install.sh missing stdin tty check"
 fi
 
 # Test 3: quick-install.sh uses --yes as fallback
