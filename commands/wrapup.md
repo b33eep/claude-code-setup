@@ -10,11 +10,17 @@ Wrap up the session before `/clear`. Document the current status for the next se
    - Update "Next Step" with clear next action
 
 2. **Create Record (if needed)**
-   - Was an architecture decision made?
+   - Was a decision, design, or significant feature documented this session?
    - If yes: Create Record in `docs/records/`
-   - Add link to CLAUDE.md architecture table
+   - Add link to CLAUDE.md Records table
 
-3. **Git commit (if applicable)**
+3. **Sync Records table**
+   - Scan `docs/records/` for all existing Records
+   - Compare with the Records table in project CLAUDE.md
+   - Add any missing Records to the table
+   - This keeps CLAUDE.md in sync with the actual Records on disk
+
+4. **Git commit (if applicable)**
 
    First check: Is CLAUDE.md tracked in Git?
    ```
@@ -28,7 +34,7 @@ Wrap up the session before `/clear`. Document the current status for the next se
      - Stage: CLAUDE.md, docs/records/
      - Commit: `docs: update project status`
 
-4. **Output summary**
+5. **Output summary**
    - What was documented in CLAUDE.md?
    - What was committed (if any)?
    - Reminder: Run `/clear` to clear context
