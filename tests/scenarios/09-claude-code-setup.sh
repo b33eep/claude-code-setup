@@ -52,5 +52,12 @@ assert_file_contains "$PROJECT_DIR/commands/claude-code-setup.md" "Check for new
 assert_file_contains "$PROJECT_DIR/commands/claude-code-setup.md" "install.sh --add" "Can install new modules"
 assert_file_contains "$PROJECT_DIR/commands/claude-code-setup.md" "Modules available to install" "Shows available modules output"
 
+scenario "Command has custom repo support"
+
+assert_file_contains "$PROJECT_DIR/commands/claude-code-setup.md" "Check custom repo" "Has custom repo check step"
+assert_file_contains "$PROJECT_DIR/commands/claude-code-setup.md" "custom_version" "Checks custom_version"
+assert_file_contains "$PROJECT_DIR/commands/claude-code-setup.md" "Upgrade custom" "Has upgrade custom option"
+assert_file_contains "$PROJECT_DIR/commands/claude-code-setup.md" "not configured" "Has no-custom-repo message"
+
 # Print summary
 print_summary

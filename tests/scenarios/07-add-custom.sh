@@ -26,7 +26,13 @@ scenario "Command has required sections"
 assert_file_contains "$PROJECT_DIR/commands/add-custom.md" "Validate URL format" "Has URL validation step"
 assert_file_contains "$PROJECT_DIR/commands/add-custom.md" "git clone" "Has clone instruction"
 assert_file_contains "$PROJECT_DIR/commands/add-custom.md" "remote get-url" "Has remote check"
-assert_file_contains "$PROJECT_DIR/commands/add-custom.md" "install.sh --add" "Has next step hint"
+assert_file_contains "$PROJECT_DIR/commands/add-custom.md" "/claude-code-setup" "Has next step hint"
+
+scenario "Command has VERSION support"
+
+assert_file_contains "$PROJECT_DIR/commands/add-custom.md" "VERSION" "Has VERSION handling"
+assert_file_contains "$PROJECT_DIR/commands/add-custom.md" "custom_version" "Updates custom_version in installed.json"
+assert_file_contains "$PROJECT_DIR/commands/add-custom.md" "custom_url" "Updates custom_url in installed.json"
 
 scenario "Command has error handling"
 

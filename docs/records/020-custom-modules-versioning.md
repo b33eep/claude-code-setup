@@ -1,6 +1,6 @@
 # Record 020: Custom Modules Versioning
 
-**Status:** Proposed
+**Status:** Done
 **Date:** 2026-01-27
 
 ## Problem
@@ -80,21 +80,21 @@ claude-code-custom/
 ## Implementation
 
 ### Phase 1: Prepare custom repo
-- [ ] Create VERSION file (initial: 1)
-- [ ] Create CHANGELOG.md
+- [x] Create VERSION file (initial: 1)
+- [x] Create CHANGELOG.md
 
 ### Phase 2: Extend /add-custom
-- [ ] After clone: Read VERSION
-- [ ] Write `custom_version` + `custom_url` to installed.json
+- [x] After clone: Read VERSION
+- [x] Write `custom_version` + `custom_url` to installed.json
 
 ### Phase 3: Extend /claude-code-setup
-- [ ] Detect custom repo
-- [ ] Fetch remote VERSION and compare
-- [ ] Add "Upgrade custom" option
+- [x] Detect custom repo
+- [x] Fetch remote VERSION and compare
+- [x] Add "Upgrade custom" option
 
 ### Phase 4: Extend /upgrade-custom
-- [ ] After pull: Read VERSION
-- [ ] Update `custom_version` in installed.json
+- [x] After pull: Read VERSION
+- [x] Update `custom_version` in installed.json
 
 ## Alternatives Considered
 
