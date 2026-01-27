@@ -79,7 +79,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Preserve User Instructions | Section markers in global CLAUDE.md | [016](docs/records/016-preserve-user-instructions.md) |
 | Rename /clear-session | /wrapup - clearer naming | [017](docs/records/017-rename-clear-session-to-wrap-up.md) |
 | /todo Command | Add/list todos, Records for complex ones | [018](docs/records/018-todo-command.md) |
-| Upgrade Permissions | Auto-allow rules for /claude-code-setup | [019](docs/records/019-upgrade-permissions.md) |
+| Upgrade Permissions | **Rejected** - May discourage new users | [019](docs/records/019-upgrade-permissions.md) |
 | Custom Modules Versioning | VERSION + installed.json tracking | [020](docs/records/020-custom-modules-versioning.md) |
 
 ---
@@ -103,7 +103,7 @@ claude-code-setup/
 ├── mcp/
 ├── commands/
 ├── skills/
-└── docs/records/000-019-*.md
+└── docs/records/000-020-*.md
 ```
 
 ---
