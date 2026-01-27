@@ -28,13 +28,28 @@ Add a custom module repository (company or personal) to claude-code-setup.
    git clone <url> ~/.claude/custom
    ```
 
-4. **Show available modules**
+4. **Read VERSION and update installed.json**
+   - Read `~/.claude/custom/VERSION` (if exists)
+   - Update `~/.claude/installed.json`:
+     ```bash
+     # Only if VERSION exists and installed.json exists
+     if [[ -f ~/.claude/custom/VERSION ]] && [[ -f ~/.claude/installed.json ]]; then
+         version=$(cat ~/.claude/custom/VERSION 2>/dev/null || echo "0")
+         jq --arg v "$version" --arg u "<url>" \
+            '.custom_version = ($v | tonumber) | .custom_url = $u' \
+            ~/.claude/installed.json > tmp && mv tmp ~/.claude/installed.json
+     fi
+     ```
+   - If VERSION doesn't exist, skip (legacy custom repo without versioning)
+
+5. **Show available modules**
    - Count skills in `~/.claude/custom/skills/`
    - Count MCP servers in `~/.claude/custom/mcp/`
    - Display: "Found X skills, Y MCP servers"
+   - Display: "Custom version: vX" (if VERSION exists)
 
-5. **Hint next step**
-   - "Run install.sh --add to select and install modules"
+6. **Hint next step**
+   - "Run /claude-code-setup to select and install modules"
 
 ## Output
 
@@ -42,22 +57,24 @@ Success (new clone):
 ```
 Cloned custom modules from <url>
 
+Custom version: v1
 Found:
 - 3 skills
 - 2 MCP servers
 
-Run install.sh --add to select and install modules.
+Run /claude-code-setup to select and install modules.
 ```
 
 Success (existing, pulled):
 ```
 Custom repo already configured. Pulled latest changes.
 
+Custom version: v2 (was v1)
 Found:
 - 3 skills
 - 2 MCP servers
 
-Run install.sh --add to install new modules.
+Run /claude-code-setup to install new modules.
 ```
 
 Error (different repo exists):

@@ -33,5 +33,10 @@ assert_file_contains "$PROJECT_DIR/commands/upgrade-custom.md" "No custom repo f
 assert_file_contains "$PROJECT_DIR/commands/upgrade-custom.md" "not a git repository" "Has not-a-repo error"
 assert_file_contains "$PROJECT_DIR/commands/upgrade-custom.md" "/add-custom" "References add-custom command"
 
+scenario "Command has VERSION support"
+
+assert_file_contains "$PROJECT_DIR/commands/upgrade-custom.md" "VERSION" "Has VERSION handling"
+assert_file_contains "$PROJECT_DIR/commands/upgrade-custom.md" "custom_version" "Updates custom_version in installed.json"
+
 # Print summary
 print_summary

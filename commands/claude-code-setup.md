@@ -41,20 +41,37 @@ Manage your claude-code-setup installation: check status, upgrade, and install m
    - Determine if upgrade is needed (current < latest)
    - Fetch CHANGELOG.md from GitHub to show changes
 
+7. **Check custom repo** (if exists)
+   - If `~/.claude/custom` exists:
+     ```bash
+     # Fetch latest from remote
+     git -C ~/.claude/custom fetch origin 2>/dev/null
+
+     # Get local VERSION
+     local_version=$(cat ~/.claude/custom/VERSION 2>/dev/null || echo "0")
+
+     # Get remote VERSION
+     remote_version=$(git -C ~/.claude/custom show origin/main:VERSION 2>/dev/null || echo "0")
+     ```
+   - Compare local vs remote VERSION
+   - If remote > local: custom update available
+   - Read `custom_version` from installed.json for comparison
+   - List uninstalled custom modules (custom:* not in installed.json)
+
 ### Phase 2: Show Status & Ask User
 
-7. **Present findings to user**
+8. **Present findings to user**
 
    Show a summary like this:
    ```
    claude-code-setup status:
-   - Installed: v8
-   - Available: v9
+   - Base: v8 installed, v9 available
+   - Custom: v1 installed, v2 available
 
    Modules available to install:
      Skills:
      - skill-creator (Create custom skills)
-     - standards-javascript (JS/Node.js standards)
+     - custom:standards-java (Java standards)
 
      MCP Servers:
      - brave-search (Web search via Brave)
@@ -62,28 +79,35 @@ Manage your claude-code-setup installation: check status, upgrade, and install m
    What would you like to do?
    ```
 
-8. **STOP and ask user** (use AskUserQuestion tool)
+9. **STOP and ask user** (use AskUserQuestion tool)
 
-   If upgrade available AND uninstalled modules:
-   - Options: "Upgrade + install modules", "Upgrade only", "Install modules only", "Nothing"
+   Options depend on what's available:
+   - "Upgrade base" (if base update available)
+   - "Upgrade custom" (if custom update available)
+   - "Install modules" (if uninstalled modules exist)
+   - "Nothing"
 
-   If upgrade available, NO uninstalled modules:
-   - Options: "Upgrade", "Nothing"
-
-   If already up-to-date AND uninstalled modules:
-   - Options: "Install modules", "Nothing"
-
-   If already up-to-date, NO uninstalled modules:
-   - Just report: "Up-to-date (v{version}), all modules installed."
+   Combine options as appropriate (e.g., "Upgrade base + custom + install modules")
 
 ### Phase 3: Execute User's Choice
 
-9. **Perform upgrade** (if requested)
-   ```bash
-   cd "$temp_dir" && ./install.sh --update --yes
-   ```
+10. **Perform base upgrade** (if requested)
+    ```bash
+    cd "$temp_dir" && ./install.sh --update --yes
+    ```
 
-10. **Install new modules** (if requested)
+11. **Perform custom upgrade** (if requested)
+    ```bash
+    git -C ~/.claude/custom pull
+    # Update custom_version in installed.json
+    if [[ -f ~/.claude/custom/VERSION ]] && [[ -f ~/.claude/installed.json ]]; then
+        new_version=$(cat ~/.claude/custom/VERSION 2>/dev/null || echo "0")
+        jq --arg v "$new_version" '.custom_version = ($v | tonumber)' \
+           ~/.claude/installed.json > tmp && mv tmp ~/.claude/installed.json
+    fi
+    ```
+
+12. **Install new modules** (if requested)
     - Ask which specific modules to install
     - Run install.sh --add with appropriate input:
       ```bash
@@ -91,7 +115,7 @@ Manage your claude-code-setup installation: check status, upgrade, and install m
       printf 'none\n2\nn\n' | "$temp_dir/install.sh" --add
       ```
 
-11. **Cleanup**
+13. **Cleanup**
     ```bash
     rm -rf "$temp_dir"
     ```
@@ -107,8 +131,8 @@ Manage your claude-code-setup installation: check status, upgrade, and install m
 ### Status presentation (before asking):
 ```
 claude-code-setup status:
-- Installed: v8
-- Available: v9
+- Base: v8 installed, v9 available
+- Custom: v1 (up-to-date)
 
 Modules available to install:
   Skills:
@@ -120,10 +144,15 @@ Modules available to install:
 
 ### After upgrade:
 ```
-Upgraded claude-code-setup: v8 → v9
+Upgraded:
+- Base: v8 → v9
+- Custom: v1 → v2
 
-Changes:
+Changes (base):
 - v9: Add /skill-creator command skill
+
+Changes (custom):
+- v2: Add standards-kotlin skill
 
 Run /catchup to reload context.
 ```
@@ -131,11 +160,12 @@ Run /catchup to reload context.
 ### Already current, modules available to install:
 ```
 claude-code-setup status:
-- Version: v9 (up-to-date)
+- Base: v9 (up-to-date)
+- Custom: v2 (up-to-date)
 
 Modules available to install:
   Skills:
-  - standards-javascript (JS/Node.js standards)
+  - custom:standards-kotlin (Kotlin standards)
 
   MCP Servers:
   - brave-search (Web search via Brave)
@@ -145,8 +175,22 @@ Would you like to install any modules?
 
 ### Already current, all modules installed:
 ```
-claude-code-setup is up-to-date (v9)
+claude-code-setup status:
+- Base: v9 (up-to-date)
+- Custom: v2 (up-to-date)
+
 All available modules are installed.
+```
+
+### No custom repo configured:
+```
+claude-code-setup status:
+- Base: v9 (up-to-date)
+- Custom: (not configured)
+
+All available modules are installed.
+
+Tip: Use /add-custom <url> to add company modules.
 ```
 
 ### Error:

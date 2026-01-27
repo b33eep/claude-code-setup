@@ -21,7 +21,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Custom Modules | Done | ~/.claude/custom/ for user modules |
 | Solo/Team Mode | Done | /init-project asks for .gitignore preference |
 | Install Script | Done | --add, --update, --list, --yes flags, ShellCheck compliant |
-| Records | Done | 20 Records (000-019) |
+| Records | Done | 21 Records (000-020) |
 | Open Source Release | Done | Published to b33eep/claude-code-setup |
 | GitHub Actions E2E | Done | Full test coverage |
 | Open Source Polish | Done | SECURITY.md, CONTRIBUTING.md, CHANGELOG.md, templates |
@@ -46,6 +46,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | /todo Command | Done | Content v18: Add/list todos in CLAUDE.md ([Record 018](docs/records/018-todo-command.md)) |
 | Upgrade Permissions | Done | Content v19: Auto-allow rules for /claude-code-setup ([Record 019](docs/records/019-upgrade-permissions.md)) |
 | Custom Modules E2E Test | Done | Validated: custom repo → /add-custom → /claude-code-setup installs custom:standards-java |
+| Custom Modules Versioning | Done | VERSION + CHANGELOG.md in custom repo, tracked in installed.json ([Record 020](docs/records/020-custom-modules-versioning.md)) |
 
 ### Future
 
