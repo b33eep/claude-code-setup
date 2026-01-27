@@ -1,7 +1,8 @@
 # Record 019: Auto-Allow Permissions for /claude-code-setup
 
-**Status:** Done
+**Status:** Rejected
 **Date:** 2026-01-27
+**Rejected:** 2026-01-27 - May discourage new users who see pre-configured auto-permissions
 
 ## Problem
 

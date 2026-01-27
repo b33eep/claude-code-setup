@@ -44,7 +44,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Optional Hooks | Rejected | Hooks cannot invoke Claude commands ([Record 012](docs/records/012-optional-hooks-automation.md)) |
 | Rename /clear-session | Done | Content v16: /wrapup for consistency with /catchup ([Record 017](docs/records/017-rename-clear-session-to-wrap-up.md)) |
 | /todo Command | Done | Content v18: Add/list todos in CLAUDE.md ([Record 018](docs/records/018-todo-command.md)) |
-| Upgrade Permissions | Done | Content v19: Auto-allow rules for /claude-code-setup ([Record 019](docs/records/019-upgrade-permissions.md)) |
+| Upgrade Permissions | Rejected | Auto-permissions may discourage new users ([Record 019](docs/records/019-upgrade-permissions.md)) |
 | Custom Modules E2E Test | Done | Validated: custom repo → /add-custom → /claude-code-setup installs custom:standards-java |
 | Custom Modules Versioning | Done | VERSION + CHANGELOG.md in custom repo, tracked in installed.json ([Record 020](docs/records/020-custom-modules-versioning.md)) |
 
