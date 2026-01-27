@@ -21,7 +21,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Custom Modules | Done | ~/.claude/custom/ for user modules |
 | Solo/Team Mode | Done | /init-project asks for .gitignore preference |
 | Install Script | Done | --add, --update, --list, --yes flags, ShellCheck compliant |
-| Records | Done | 18 Records (000-017) |
+| Records | Done | 19 Records (000-018) |
 | Open Source Release | Done | Published to b33eep/claude-code-setup |
 | GitHub Actions E2E | Done | Full test coverage |
 | Open Source Polish | Done | SECURITY.md, CONTRIBUTING.md, CHANGELOG.md, templates |
@@ -43,12 +43,12 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | README Restructure | Done | Problem→Solution flow, Installation steps, all features documented |
 | Optional Hooks | Rejected | Hooks cannot invoke Claude commands ([Record 012](docs/records/012-optional-hooks-automation.md)) |
 | Rename /clear-session | Done | Content v16: /wrapup for consistency with /catchup ([Record 017](docs/records/017-rename-clear-session-to-wrap-up.md)) |
+| /todo Command | Done | Content v18: Add/list todos in CLAUDE.md ([Record 018](docs/records/018-todo-command.md)) |
 
 ### Future
 
 | Todo | Priority | Problem | Solution |
 |------|----------|---------|----------|
-| /todo command | Low | Manually editing CLAUDE.md for todos is cumbersome | Create command that appends todos directly to CLAUDE.md |
 | /do-review command | Low | Unclear when to trigger code review, easy to forget | Create command + refine global prompt guidance |
 
 ---
@@ -75,6 +75,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Install Script Refactoring | Split into lib/ modules at 1000 lines | [015](docs/records/015-install-script-refactoring.md) |
 | Preserve User Instructions | Section markers in global CLAUDE.md | [016](docs/records/016-preserve-user-instructions.md) |
 | Rename /clear-session | /wrapup - clearer naming | [017](docs/records/017-rename-clear-session-to-wrap-up.md) |
+| /todo Command | Add/list todos, Records for complex ones | [018](docs/records/018-todo-command.md) |
 
 ---
 
