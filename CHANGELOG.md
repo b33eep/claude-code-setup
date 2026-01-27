@@ -7,25 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-- Modular installation system with `--add`, `--update`, `--list`, `--version` flags
-- Quick install via curl one-liner (`quick-install.sh`)
-- Coding standards skills: Python, TypeScript, JavaScript, Shell
-- MCP server configurations: pdf-reader, brave-search, google-search
-- Skills: create-slidev-presentation, skill-creator
-- Custom modules support via `~/.claude/custom/`
-- Workflow commands: `/catchup`, `/wrapup`, `/init-project`
-- Upgrade commands: `/claude-code-setup`, `/add-custom`, `/upgrade-custom`
-- In-session updates via `/claude-code-setup` (no terminal needed)
-- Solo/Team mode selection in `/init-project`
-- Project template system (`~/.claude/templates/`)
-- GitHub Actions CI for automated testing
-- Documentation: README, CONTRIBUTING, SECURITY, 15 Records
-- Content versioning system
-- ccstatusline integration for context visibility
-
 ### Content Versions
 
+- **v19**: Auto-configure permission allow rules for `/claude-code-setup` upgrade command ([Record 019](docs/records/019-upgrade-permissions.md))
 - **v18**: Add `/todo` command, `/catchup` loads relevant Records, `/wrapup` syncs Records table ([Record 018](docs/records/018-todo-command.md))
 - **v17**: `/catchup` reads project README.md first for context
 - **v16**: Rename `/clear-session` to `/wrapup` for consistency with `/catchup`

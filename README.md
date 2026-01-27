@@ -15,7 +15,7 @@
 [![macOS](https://img.shields.io/badge/platform-macOS-blue.svg)](https://www.apple.com/macos/)
 [![Linux](https://img.shields.io/badge/platform-Linux-blue.svg)](https://www.linux.org/)
 [![WSL](https://img.shields.io/badge/platform-WSL-blue.svg)](https://docs.microsoft.com/en-us/windows/wsl/)
-[![Content v18](https://img.shields.io/badge/content-v18-blue.svg)](CHANGELOG.md)
+[![Content v18](https://img.shields.io/badge/content-v19-blue.svg)](CHANGELOG.md)
 
 ---
 

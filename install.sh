@@ -30,6 +30,8 @@ source "$SCRIPT_DIR/lib/modules.sh"
 source "$SCRIPT_DIR/lib/mcp.sh"
 # shellcheck source=lib/skills.sh
 source "$SCRIPT_DIR/lib/skills.sh"
+# shellcheck source=lib/permissions.sh
+source "$SCRIPT_DIR/lib/permissions.sh"
 # shellcheck source=lib/statusline.sh
 source "$SCRIPT_DIR/lib/statusline.sh"
 # shellcheck source=lib/update.sh
@@ -189,6 +191,10 @@ do_install() {
             fi
         done
     fi
+
+    # Configure permissions
+    print_header "Permissions"
+    configure_permissions
 
     # Configure status line
     print_header "Status Line"
