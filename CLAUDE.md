@@ -26,7 +26,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | GitHub Actions E2E | Done | Full test coverage |
 | Open Source Polish | Done | SECURITY.md, CONTRIBUTING.md, CHANGELOG.md, templates |
 | README Overhaul | Done | Core Concept prominent, ccstatusline, Plugins, Solo/Team |
-| Upgrade Commands | Done | /claude-code-setup, /upgrade-custom, /add-custom ([Record 011](docs/records/011-upgrade-command.md)) |
+| Upgrade Commands | Done | /claude-code-setup, /add-custom ([Record 011](docs/records/011-upgrade-command.md)) |
 | Records Rename | Done | ADR → Records, added guidance in global prompt |
 | --yes Flag Bug Fix | Done | Content v7: Non-interactive updates for /claude-code-setup |
 | JavaScript Skill | Done | Content v8: standards-javascript for Node.js/JS projects |

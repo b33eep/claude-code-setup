@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v20**: Remove `/upgrade-custom` command (replaced by `/claude-code-setup`), add custom modules versioning ([Record 020](docs/records/020-custom-modules-versioning.md))
 - **v19**: Auto-configure permission allow rules for `/claude-code-setup` upgrade command ([Record 019](docs/records/019-upgrade-permissions.md))
 - **v18**: Add `/todo` command, `/catchup` loads relevant Records, `/wrapup` syncs Records table ([Record 018](docs/records/018-todo-command.md))
 - **v17**: `/catchup` reads project README.md first for context

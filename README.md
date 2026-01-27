@@ -15,7 +15,7 @@
 [![macOS](https://img.shields.io/badge/platform-macOS-blue.svg)](https://www.apple.com/macos/)
 [![Linux](https://img.shields.io/badge/platform-Linux-blue.svg)](https://www.linux.org/)
 [![WSL](https://img.shields.io/badge/platform-WSL-blue.svg)](https://docs.microsoft.com/en-us/windows/wsl/)
-[![Content v18](https://img.shields.io/badge/content-v19-blue.svg)](CHANGELOG.md)
+[![Content v20](https://img.shields.io/badge/content-v20-blue.svg)](CHANGELOG.md)
 
 ---
 
@@ -217,9 +217,8 @@ https://github.com/user-attachments/assets/e385aa9e-7480-441c-8a30-e196992de9f9
 | `/catchup` | Shows recent changes and next steps |
 | `/wrapup` | Saves status to CLAUDE.md, commits changes |
 | `/init-project` | Generates project CLAUDE.md from template |
-| `/claude-code-setup` | Check status, upgrade, install modules |
+| `/claude-code-setup` | Check status, upgrade base + custom, install modules |
 | `/add-custom <url>` | Add custom modules from Git repo |
-| `/upgrade-custom` | Pull latest from custom repo |
 | `/todo` | Add todos to CLAUDE.md, create Records for complex ones |
 | `/skill-creator` | Create your own custom skills |
 

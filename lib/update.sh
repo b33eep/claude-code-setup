@@ -8,6 +8,14 @@ run_migrations() {
     local from_v=$1
     local to_v=$2
 
+    # v20: Remove /upgrade-custom (replaced by /claude-code-setup)
+    if [[ "$from_v" -lt 20 ]] && [[ "$to_v" -ge 20 ]]; then
+        if [[ -f "$CLAUDE_DIR/commands/upgrade-custom.md" ]]; then
+            rm -f "$CLAUDE_DIR/commands/upgrade-custom.md"
+            print_info "Removed obsolete upgrade-custom.md (use /claude-code-setup instead)"
+        fi
+    fi
+
     # v19: Add permission rules for /claude-code-setup
     if [[ "$from_v" -lt 19 ]] && [[ "$to_v" -ge 19 ]]; then
         print_header "Permissions"
