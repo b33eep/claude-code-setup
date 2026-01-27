@@ -16,7 +16,7 @@ Analog to base versioning:
 ```
 claude-code-custom/
 ├── VERSION              # e.g. "1"
-├── CHANGELOG.md         # Optional, for team communication
+├── CHANGELOG.md         # Documents changes for team
 ├── skills/
 │   └── standards-java/
 └── mcp/
@@ -44,7 +44,7 @@ claude-code-custom/
 │  MAINTAINER: New skill / Update                         │
 │  1. Add skill or update existing                        │
 │  2. Bump VERSION (1 → 2)                                │
-│  3. Optional: Update CHANGELOG.md                       │
+│  3. Update CHANGELOG.md                                 │
 │  4. git push                                            │
 └─────────────────────────────────────────────────────────┘
                           │
@@ -81,7 +81,7 @@ claude-code-custom/
 
 ### Phase 1: Prepare custom repo
 - [ ] Create VERSION file (initial: 1)
-- [ ] Create CHANGELOG.md (optional)
+- [ ] Create CHANGELOG.md
 
 ### Phase 2: Extend /add-custom
 - [ ] After clone: Read VERSION
