@@ -28,6 +28,11 @@
 |----------|--------|--------|
 | {What} | {Decision} | [001](docs/records/001-xxx.md) |
 
+### Future
+
+| Todo | Priority | Problem | Solution |
+|------|----------|---------|----------|
+
 ---
 
 ## User Stories

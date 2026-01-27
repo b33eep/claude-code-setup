@@ -124,6 +124,11 @@ Records document decisions, designs, features, and implementation plans. They ke
 - Implementation plans
 - Or combinations of the above
 
+**Keeping Records in sync:**
+- `/wrapup` scans `docs/records/` and adds missing entries to the Records table in project CLAUDE.md
+- `/catchup` reads Records relevant to in-progress or next-step work
+- `/todo` lists existing todos or creates Records for complex ones automatically
+
 ---
 
 ## MCP Servers

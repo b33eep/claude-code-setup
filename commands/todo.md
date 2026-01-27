@@ -1,6 +1,6 @@
-# Todo: Add Todos to CLAUDE.md
+# Todo: Manage Project Todos
 
-Add todos to the project CLAUDE.md Future table. Keeps CLAUDE.md lean - complex todos get a Record.
+List or add todos in the project CLAUDE.md Future table. Keeps CLAUDE.md lean - complex todos get a Record.
 
 ## Tasks
 
@@ -26,7 +26,8 @@ Add todos to the project CLAUDE.md Future table. Keeps CLAUDE.md lean - complex 
 
 1. Read project CLAUDE.md
 2. Find the `### Future` section and its table
-3. Assess the todo:
+3. **Check for duplicates**: If a similar todo already exists in the Future table, inform the user and ask whether to update the existing entry or add a new one
+4. Assess the todo:
 
    **Simple** (bug fix, small change, config tweak):
    - Append row to Future table
@@ -38,8 +39,15 @@ Add todos to the project CLAUDE.md Future table. Keeps CLAUDE.md lean - complex 
    - Append row to Future table with link to Record
    - Example: `| Add caching layer | Medium | API too slow | [Record 019](docs/records/019-caching.md) |`
 
-4. **If unsure** whether simple or complex: Ask the user
-5. Confirm what was added
+5. **If unsure** whether simple or complex: Ask the user
+6. Confirm what was added
+
+## Lifecycle
+
+`/todo` only manages the **Future** table. When work begins on a todo:
+- Move the row from Future to the **Current Status** table with status "In Progress"
+- This transition happens naturally during implementation, not via `/todo`
+- `/wrapup` updates the Current Status table at session end
 
 ## Decision: Simple vs Complex
 

@@ -44,3 +44,10 @@ Create a `/todo` command that:
 | Single file change | Multiple sessions expected |
 | Config tweak | Architecture decision |
 | Bug fix with clear cause | Would need >5 lines in CLAUDE.md |
+
+## Related Changes (v18)
+
+Alongside `/todo`, two existing commands were enhanced for better Records management:
+
+- **`/catchup`**: Now reads Records referenced by in-progress or next-step work, so context is restored automatically after `/clear`
+- **`/wrapup`**: Now scans `docs/records/` and syncs the Records table in project CLAUDE.md, ensuring no Records are missing from the table
