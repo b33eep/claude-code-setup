@@ -79,6 +79,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Rename /clear-session | /wrapup - clearer naming | [017](docs/records/017-rename-clear-session-to-wrap-up.md) |
 | /todo Command | Add/list todos, Records for complex ones | [018](docs/records/018-todo-command.md) |
 | Upgrade Permissions | Auto-allow rules for /claude-code-setup | [019](docs/records/019-upgrade-permissions.md) |
+| Custom Modules Versioning | VERSION + installed.json tracking | [020](docs/records/020-custom-modules-versioning.md) |
 
 ---
 
