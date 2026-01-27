@@ -17,7 +17,7 @@ Manage your claude-code-setup installation: check status, upgrade, and install m
 
 3. **Clone repo to temp** (needed for module discovery)
    ```bash
-   temp_dir=$(mktemp -d)
+   temp_dir=$(mktemp -d /tmp/claude-setup-XXXXXX)
    git clone --depth 1 https://github.com/b33eep/claude-code-setup.git "$temp_dir"
    ```
 

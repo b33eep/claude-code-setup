@@ -8,6 +8,12 @@ run_migrations() {
     local from_v=$1
     local to_v=$2
 
+    # v19: Add permission rules for /claude-code-setup
+    if [[ "$from_v" -lt 19 ]] && [[ "$to_v" -ge 19 ]]; then
+        print_header "Permissions"
+        configure_permissions
+    fi
+
     # v16: Rename /clear-session to /wrapup
     if [[ "$from_v" -lt 16 ]] && [[ "$to_v" -ge 16 ]]; then
         if [[ -f "$CLAUDE_DIR/commands/clear-session.md" ]]; then

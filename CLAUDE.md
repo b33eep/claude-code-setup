@@ -44,6 +44,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Optional Hooks | Rejected | Hooks cannot invoke Claude commands ([Record 012](docs/records/012-optional-hooks-automation.md)) |
 | Rename /clear-session | Done | Content v16: /wrapup for consistency with /catchup ([Record 017](docs/records/017-rename-clear-session-to-wrap-up.md)) |
 | /todo Command | Done | Content v18: Add/list todos in CLAUDE.md ([Record 018](docs/records/018-todo-command.md)) |
+| Upgrade Permissions | Done | Content v19: Auto-allow rules for /claude-code-setup ([Record 019](docs/records/019-upgrade-permissions.md)) |
 
 ### Future
 
@@ -76,6 +77,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Preserve User Instructions | Section markers in global CLAUDE.md | [016](docs/records/016-preserve-user-instructions.md) |
 | Rename /clear-session | /wrapup - clearer naming | [017](docs/records/017-rename-clear-session-to-wrap-up.md) |
 | /todo Command | Add/list todos, Records for complex ones | [018](docs/records/018-todo-command.md) |
+| Upgrade Permissions | Auto-allow rules for /claude-code-setup | [019](docs/records/019-upgrade-permissions.md) |
 
 ---
 
