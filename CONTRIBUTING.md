@@ -66,10 +66,7 @@ shellcheck install.sh lib/*.sh
 ### Shell Scripts
 
 - Follow [ShellCheck](https://www.shellcheck.net/) recommendations
-- Use `set -euo pipefail` for defensive scripting
-- Quote variables to prevent word splitting
-- Use `[[ ]]` instead of `[ ]` for conditionals
-- Use `local` for function variables
+- See [`skills/standards-shell/SKILL.md`](skills/standards-shell/SKILL.md) for detailed guidelines
 
 ### Markdown
 
