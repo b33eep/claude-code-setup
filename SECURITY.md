@@ -18,8 +18,31 @@ This project is a configuration installer. Security considerations include:
 - **Shell Script**: `install.sh` runs with user permissions only
 - **No Network Calls**: The installer itself makes no network requests (MCP servers may, but those are user-selected)
 
+## Trust Model
+
+This project follows the same trust model as package managers (npm, pip, brew):
+
+| Source | Trust Level | Notes |
+|--------|-------------|-------|
+| Built-in modules | Trusted | Maintained by this project |
+| Custom modules via `/add-custom` | User responsibility | User explicitly provides the repo URL |
+
+### Skill Dependencies (deps.json)
+
+Skills may include a `deps.json` file that specifies system dependencies to install. When you install such a skill, the installer will run the platform-specific install commands (e.g., `brew install ffmpeg`).
+
+**This is expected behavior**, similar to:
+- `npm install` running postinstall scripts
+- `pip install` running setup.py
+- `brew install` executing formula code
+
+**Before using `/add-custom`** with an untrusted repository, review:
+- The `deps.json` files in any skills
+- The install commands specified for your platform
+
 ## Best Practices for Users
 
 - Keep your `~/.claude.json` file secure (contains API keys)
 - Don't commit `~/.claude/` to version control
 - Review custom modules before installing from untrusted sources
+- Only use `/add-custom` with repositories you trust
