@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+- Remove `eval` from deps.json dependency check ([PR #22](https://github.com/b33eep/claude-code-setup/pull/22))
+  - Use `command -v $name` directly instead of eval'ing arbitrary check commands
+  - Document trust model in SECURITY.md
+  - Add `SKIP_SKILL_DEPS` env var for test isolation
+
 ### Content Versions
 
 - **v22**: Add `/youtube-transcript` skill - download transcripts with automatic frame extraction ([Record 021](docs/records/021-youtube-transcript-skill.md))

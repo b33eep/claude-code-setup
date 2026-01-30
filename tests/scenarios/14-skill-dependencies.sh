@@ -23,7 +23,6 @@ assert_file_exists "$PROJECT_DIR/skills/youtube-transcript/deps.json" "deps.json
 # Verify deps.json is valid JSON with expected structure
 assert_json_exists "$PROJECT_DIR/skills/youtube-transcript/deps.json" ".dependencies" "deps.json has dependencies array"
 assert_json_exists "$PROJECT_DIR/skills/youtube-transcript/deps.json" '.dependencies[0].name' "First dependency has name"
-assert_json_exists "$PROJECT_DIR/skills/youtube-transcript/deps.json" '.dependencies[0].check' "First dependency has check command"
 assert_json_exists "$PROJECT_DIR/skills/youtube-transcript/deps.json" '.dependencies[0].install.macos' "First dependency has macOS install"
 assert_json_exists "$PROJECT_DIR/skills/youtube-transcript/deps.json" '.dependencies[0].install.debian' "First dependency has Debian install"
 

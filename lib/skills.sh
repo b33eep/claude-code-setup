@@ -24,9 +24,15 @@ run_install_cmd() {
 
 # Install dependencies for a skill from deps.json
 # Arguments: $1 = source directory containing deps.json
+# Set SKIP_SKILL_DEPS=1 to skip (for testing)
 install_skill_deps() {
     local source_dir=$1
     local deps_file="$source_dir/deps.json"
+
+    # Skip dependency installation in test mode
+    if [[ "${SKIP_SKILL_DEPS:-}" == "1" ]]; then
+        return 0
+    fi
 
     # No deps.json = no dependencies
     if [[ ! -f "$deps_file" ]]; then
@@ -43,14 +49,13 @@ install_skill_deps() {
     echo ""
     echo "  Checking dependencies..."
 
-    local i name check_cmd install_cmd hint
+    local i name install_cmd hint
     for ((i=0; i<dep_count; i++)); do
         name=$(jq -r ".dependencies[$i].name" "$deps_file")
-        check_cmd=$(jq -r ".dependencies[$i].check" "$deps_file")
         hint=$(jq -r ".dependencies[$i].post_install_hint // empty" "$deps_file")
 
-        # Check if already installed
-        if eval "$check_cmd" &>/dev/null; then
+        # Check if already installed (safe: no eval, just command -v)
+        if command -v "$name" &>/dev/null; then
             print_info "$name (found)"
             continue
         fi
