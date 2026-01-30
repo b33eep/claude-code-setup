@@ -48,6 +48,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Custom Modules E2E Test | Done | Validated: custom repo → /add-custom → /claude-code-setup installs custom:standards-java |
 | Custom Modules Versioning | Done | VERSION + CHANGELOG.md in custom repo, tracked in installed.json ([Record 020](docs/records/020-custom-modules-versioning.md)) |
 | YouTube Transcript Skill | Done | Content v22: `/youtube-transcript` with frame extraction ([Record 021](docs/records/021-youtube-transcript-skill.md)) |
+| Security: Remove eval | PR Open | [PR #22](https://github.com/b33eep/claude-code-setup/pull/22): Remove eval from deps.json check |
 
 ### Future
 
