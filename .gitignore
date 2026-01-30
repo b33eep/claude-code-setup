@@ -15,3 +15,6 @@
 # Temporary files
 *.tmp
 *.temp
+
+# Private notes
+docs/notes/
