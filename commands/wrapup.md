@@ -20,7 +20,13 @@ Wrap up the session before `/clear`. Document the current status for the next se
    - Add any missing Records to the table
    - This keeps CLAUDE.md in sync with the actual Records on disk
 
-4. **Git commit (if applicable)**
+4. **Review for missed decisions**
+   - Were any decisions made this session that are not in Recent Decisions?
+   - A decision has: an alternative, a non-obvious "why", future relevance
+   - If yes: Add them now (better late than never)
+   - This is a safety net - decisions should be added in real-time
+
+5. **Git commit (if applicable)**
 
    First check: Is CLAUDE.md tracked in Git?
    ```
@@ -34,7 +40,7 @@ Wrap up the session before `/clear`. Document the current status for the next se
      - Stage: CLAUDE.md, docs/records/
      - Commit: `docs: update project status`
 
-5. **Output summary**
+6. **Output summary**
    - What was documented in CLAUDE.md?
    - What was committed (if any)?
    - Reminder: Run `/clear` to clear context

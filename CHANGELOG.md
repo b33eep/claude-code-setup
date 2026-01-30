@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v23**: Add Decision Log feature - "Recent Decisions" section in project CLAUDE.md ([Record 023](docs/records/023-context-quality-improvements.md))
+  - Small decisions with reasoning survive `/clear`
+  - Added immediately when decision is made (not at /wrapup)
+  - Max 20 entries, pruned by relevance
 - **v22**: Add `/youtube-transcript` skill - download transcripts with automatic frame extraction ([Record 021](docs/records/021-youtube-transcript-skill.md))
 - **v21**: Remove auto-permissions feature (may discourage new users) - reverts v19 ([Record 019](docs/records/019-upgrade-permissions.md))
 - **v20**: Remove `/upgrade-custom` command (replaced by `/claude-code-setup`), add custom modules versioning ([Record 020](docs/records/020-custom-modules-versioning.md))
