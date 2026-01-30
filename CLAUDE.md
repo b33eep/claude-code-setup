@@ -54,6 +54,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 
 | Todo | Priority | Problem | Solution |
 |------|----------|---------|----------|
+| Context Quality Improvements | Medium | Decisions lost after /clear, manual documentation burden | Decision log, session notes, auto-context from git ([Record 023](docs/records/023-context-quality-improvements.md)) |
 | /do-review command | Low | Unclear when to trigger code review, easy to forget | Create command + refine global prompt guidance |
 | Docker Matrix Tests | Low | deps.json install commands not tested on real distros | GitHub Actions with Docker matrix ([Record 022](docs/records/022-docker-matrix-tests.md)) |
 
@@ -86,6 +87,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Custom Modules Versioning | VERSION + installed.json tracking | [020](docs/records/020-custom-modules-versioning.md) |
 | YouTube Transcript Skill | yt-dlp + ffmpeg, frame extraction | [021](docs/records/021-youtube-transcript-skill.md) |
 | Docker Matrix Tests | **Planned** - Validate deps.json on distros | [022](docs/records/022-docker-matrix-tests.md) |
+| Context Quality Improvements | **Planned** - Decision log, session notes, auto-context | [023](docs/records/023-context-quality-improvements.md) |
 
 ---
 
