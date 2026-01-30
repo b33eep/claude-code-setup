@@ -19,12 +19,17 @@ After `/clear` or new chat, understand recent changes.
    - Example: Status shows "OAuth2 | In Progress | [Record 019]" → Read `docs/records/019-oauth2-auth.md`
    - Only load Records relevant to current/next work, not all
 
-4. **Load context skills**
+4. **Check Recent Decisions**
+   - Read the "Recent Decisions" table in project CLAUDE.md
+   - Note any decisions relevant to current work
+   - These are small decisions with reasoning that survived the last `/clear`
+
+5. **Load context skills**
    - Check `Tech Stack:` in project CLAUDE.md
    - Load matching skills from `~/.claude/skills/` (see Skill Loading in global CLAUDE.md)
    - Example: Tech Stack includes "Bash" → Read `standards-shell/SKILL.md`
 
-5. **Summary**
+6. **Summary**
    - What was recently changed?
    - What Records were loaded and why?
    - What's the next step according to CLAUDE.md?

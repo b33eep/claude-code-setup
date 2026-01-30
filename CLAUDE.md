@@ -49,12 +49,12 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Custom Modules Versioning | Done | VERSION + CHANGELOG.md in custom repo, tracked in installed.json ([Record 020](docs/records/020-custom-modules-versioning.md)) |
 | YouTube Transcript Skill | Done | Content v22: `/youtube-transcript` with frame extraction ([Record 021](docs/records/021-youtube-transcript-skill.md)) |
 | Security: Remove eval | Done | Remove eval from deps.json check, document trust model ([PR #22](https://github.com/b33eep/claude-code-setup/pull/22)) |
+| Decision Log | Done | Content v23: Recent Decisions section ([Record 023](docs/records/023-context-quality-improvements.md)) |
 
 ### Future
 
 | Todo | Priority | Problem | Solution |
 |------|----------|---------|----------|
-| Context Quality Improvements | Medium | Decisions lost after /clear, manual documentation burden | Decision log, session notes, auto-context from git ([Record 023](docs/records/023-context-quality-improvements.md)) |
 | /do-review command | Low | Unclear when to trigger code review, easy to forget | Create command + refine global prompt guidance |
 | Docker Matrix Tests | Low | deps.json install commands not tested on real distros | GitHub Actions with Docker matrix ([Record 022](docs/records/022-docker-matrix-tests.md)) |
 
@@ -87,7 +87,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Custom Modules Versioning | VERSION + installed.json tracking | [020](docs/records/020-custom-modules-versioning.md) |
 | YouTube Transcript Skill | yt-dlp + ffmpeg, frame extraction | [021](docs/records/021-youtube-transcript-skill.md) |
 | Docker Matrix Tests | **Planned** - Validate deps.json on distros | [022](docs/records/022-docker-matrix-tests.md) |
-| Context Quality Improvements | **Planned** - Decision log, session notes, auto-context | [023](docs/records/023-context-quality-improvements.md) |
+| Context Quality Improvements | Decision Log (v23) | [023](docs/records/023-context-quality-improvements.md) |
 
 ---
 

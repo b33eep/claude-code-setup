@@ -129,6 +129,34 @@ Records document decisions, designs, features, and implementation plans. They ke
 - `/catchup` reads Records relevant to in-progress or next-step work
 - `/todo` lists existing todos or creates Records for complex ones automatically
 
+### Recent Decisions
+
+For decisions that are:
+- Too small for a Record
+- Have a "why" worth remembering
+- Might come up again after `/clear`
+
+**Add immediately** to the "Recent Decisions" table in project CLAUDE.md.
+
+**Criteria for adding:**
+1. There was an alternative (it's a decision, not just an action)
+2. The "why" is not obvious
+3. It could be relevant in future sessions
+
+**Examples:**
+- ✅ "pip --user instead of global" → Reason not obvious (PEP 668)
+- ❌ "Fixed typo in line 42" → Action, not decision
+- ❌ "Added input validation" → Obvious why (security/robustness)
+
+**Maintenance:**
+- Max 20 entries
+- When over 20: Remove entries that are documented in Records, superseded, or obvious in hindsight
+
+**Graduating to Records:**
+- When a decision is referenced repeatedly → create a Record
+- When a decision needs more detail or context → create a Record
+- After creating the Record → remove from Recent Decisions
+
 ---
 
 ## MCP Servers

@@ -35,6 +35,13 @@
 
 ---
 
+## Recent Decisions
+
+| Date | Decision | Why |
+|------|----------|-----|
+
+---
+
 ## User Stories
 
 ### US-1: {Title}
