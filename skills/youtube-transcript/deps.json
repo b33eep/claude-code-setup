@@ -1,0 +1,27 @@
+{
+  "dependencies": [
+    {
+      "name": "yt-dlp",
+      "check": "command -v yt-dlp",
+      "install": {
+        "macos": "brew install yt-dlp",
+        "debian": "apt-get install -y python3-pip && pip3 install --user yt-dlp && export PATH=\"$HOME/.local/bin:$PATH\"",
+        "arch": "pacman -S --noconfirm yt-dlp",
+        "fedora": "dnf install -y python3-pip && pip3 install --user yt-dlp",
+        "suse": "zypper install -y python3-pip && pip3 install --user yt-dlp"
+      },
+      "post_install_hint": "Add ~/.local/bin to PATH: export PATH=\"$HOME/.local/bin:$PATH\""
+    },
+    {
+      "name": "ffmpeg",
+      "check": "command -v ffmpeg",
+      "install": {
+        "macos": "brew install ffmpeg",
+        "debian": "apt-get install -y ffmpeg",
+        "arch": "pacman -S --noconfirm ffmpeg",
+        "fedora": "dnf install -y ffmpeg",
+        "suse": "zypper install -y ffmpeg"
+      }
+    }
+  ]
+}

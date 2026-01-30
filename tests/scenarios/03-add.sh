@@ -123,10 +123,12 @@ assert_json_eq "$MCP_CONFIG_FILE" '.mcpServers["brave-search"].env.BRAVE_API_KEY
 scenario "--add shows installed modules with [installed] marker"
 
 # Run --add and capture output
+# Use deselect_all_skills to avoid installing youtube-transcript
+# (its deps yt-dlp/ffmpeg take too long on macOS, causing timeout)
 output=$(run_add_expect '
     # Just confirm defaults and capture output
     confirm_mcp
-    confirm_skills
+    deselect_all_skills
 
     # Decline status line
     decline_statusline

@@ -15,7 +15,7 @@
 [![macOS](https://img.shields.io/badge/platform-macOS-blue.svg)](https://www.apple.com/macos/)
 [![Linux](https://img.shields.io/badge/platform-Linux-blue.svg)](https://www.linux.org/)
 [![WSL](https://img.shields.io/badge/platform-WSL-blue.svg)](https://docs.microsoft.com/en-us/windows/wsl/)
-[![Content v21](https://img.shields.io/badge/content-v21-blue.svg)](CHANGELOG.md)
+[![Content v22](https://img.shields.io/badge/content-v22-blue.svg)](CHANGELOG.md)
 
 ---
 
@@ -235,7 +235,46 @@ https://github.com/user-attachments/assets/e385aa9e-7480-441c-8a30-e196992de9f9
 
 | Skill | Description |
 |-------|-------------|
+| `youtube-transcript` | Download YouTube transcripts with frame extraction at visual references |
 | `create-slidev-presentation` | Create Slidev slide decks (loads when you ask for presentations) |
+
+#### YouTube Transcript Skill
+
+Analyze YouTube videos by downloading transcripts and extracting frames at visual reference points.
+
+```
+You: /youtube-transcript https://www.youtube.com/watch?v=VIDEO_ID
+Claude: [Downloads transcript, detects "as you can see", "look at this diagram", etc.]
+        [Extracts frames at those timestamps]
+        [Presents transcript with embedded images]
+```
+
+**Features:**
+- Auto-detects visual references (EN + DE)
+- Extracts frames at key moments
+- Works with auto-generated and manual captions
+
+**Requirements:** `yt-dlp` and `ffmpeg` (installed automatically when you select the skill)
+
+#### Slidev Presentation Skill
+
+Create professional slide decks using [Slidev](https://sli.dev) - a Markdown-based presentation framework.
+
+```
+You: Create a presentation about our Q4 results
+Claude: [Creates slides.md with YAML config, layouts, animations]
+        [Sets up Slidev project structure]
+```
+
+**Features:**
+- 17 built-in layouts + custom layouts
+- Live code editors with syntax highlighting
+- Mermaid diagrams, LaTeX math
+- Export to PDF, PPTX, PNG
+
+**Requirements:** Node.js >= 24.0.0
+
+*Attribution: [AJBcoding/claude-skill-eval](https://github.com/AJBcoding/claude-skill-eval)*
 
 ### MCP Servers
 

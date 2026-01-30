@@ -47,6 +47,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Upgrade Permissions | Rejected | Auto-permissions may discourage new users ([Record 019](docs/records/019-upgrade-permissions.md)) |
 | Custom Modules E2E Test | Done | Validated: custom repo → /add-custom → /claude-code-setup installs custom:standards-java |
 | Custom Modules Versioning | Done | VERSION + CHANGELOG.md in custom repo, tracked in installed.json ([Record 020](docs/records/020-custom-modules-versioning.md)) |
+| YouTube Transcript Skill | Done | Content v22: `/youtube-transcript` with frame extraction ([Record 021](docs/records/021-youtube-transcript-skill.md)) |
 
 ### Future
 
@@ -81,6 +82,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | /todo Command | Add/list todos, Records for complex ones | [018](docs/records/018-todo-command.md) |
 | Upgrade Permissions | **Rejected** - May discourage new users | [019](docs/records/019-upgrade-permissions.md) |
 | Custom Modules Versioning | VERSION + installed.json tracking | [020](docs/records/020-custom-modules-versioning.md) |
+| YouTube Transcript Skill | yt-dlp + ffmpeg, frame extraction | [021](docs/records/021-youtube-transcript-skill.md) |
 
 ---
 
