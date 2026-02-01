@@ -51,6 +51,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Security: Remove eval | Done | Remove eval from deps.json check, document trust model ([PR #22](https://github.com/b33eep/claude-code-setup/pull/22)) |
 | Decision Log | Done | Content v23: Recent Decisions section ([Record 023](docs/records/023-context-quality-improvements.md)) |
 | Documentation Site | Done | Nextra in /website, GitHub Pages ([Record 024](docs/records/024-documentation-site.md)) |
+| Private Notes | Done | Content v24: `.open.md` convention, /catchup integration ([Record 025](docs/records/025-private-notes.md)) |
 
 ### Future
 
@@ -90,6 +91,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Docker Matrix Tests | **Planned** - Validate deps.json on distros | [022](docs/records/022-docker-matrix-tests.md) |
 | Context Quality Improvements | Decision Log (v23) | [023](docs/records/023-context-quality-improvements.md) |
 | Documentation Site | Nextra in /website, monorepo | [024](docs/records/024-documentation-site.md) |
+| Private Notes | `.open.md` convention, /catchup integration | [025](docs/records/025-private-notes.md) |
 
 ---
 

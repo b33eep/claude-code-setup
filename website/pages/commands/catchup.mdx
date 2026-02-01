@@ -18,9 +18,11 @@ Resume your work after `/clear` or a new chat session.
 
 4. **Checks Recent Decisions** - Reads small decisions that survived the last `/clear`
 
-5. **Loads context skills** - Matches your Tech Stack to coding standards
+5. **Reads open private notes** - Loads `docs/notes/*.open.md` files with session context
 
-6. **Summarizes** - Shows what changed and what's next
+6. **Loads context skills** - Matches your Tech Stack to coding standards
+
+7. **Summarizes** - Shows what changed, open notes, and what's next
 
 ## Example Output
 
@@ -35,6 +37,9 @@ Recent changes:
 Records loaded:
 - Record 015: Auth decision (in-progress work)
 
+Open notes:
+- session-2026-02-01.open.md (Reddit strategy, promotion notes)
+
 Next step: Implement password reset (from CLAUDE.md)
 ```
 
@@ -48,3 +53,4 @@ Next step: Implement password reset (from CLAUDE.md)
 
 - [/wrapup](/commands/wrapup) - Save status before clearing
 - [/init-project](/commands/init-project) - Set up a new project
+- [Private Notes](/concepts/private-notes) - Session notes that stay private
