@@ -155,6 +155,21 @@ When changing managed content (templates, commands, skills, mcp):
    - Content vX: Description of change
    ```
 4. Run tests: `./tests/test.sh`
+5. Update docs if relevant (see below)
+
+### Documentation Site
+
+When changing commands, skills, or features:
+
+1. Update relevant pages in `website/pages/`
+2. Test locally: `cd website && npm run dev`
+3. Changes deploy automatically on merge to main
+
+**What needs docs updates:**
+- New/changed commands → `website/pages/commands/`
+- New/changed skills → `website/pages/reference/skills/`
+- New concepts → `website/pages/concepts/`
+- Workflow changes → `website/pages/guides/`
 
 ### Git
 
