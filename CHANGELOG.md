@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v25**: `/init-project` now creates `docs/notes/` folder and adds it to `.gitignore`
+  - Completes Private Notes feature from v24
 - **v24**: Add Private Notes feature - `docs/notes/*.open.md` loaded by `/catchup` ([Record 025](docs/records/025-private-notes.md))
   - Gitignored notes for sessions, research, TODOs
   - `.open.md` suffix marks active notes
