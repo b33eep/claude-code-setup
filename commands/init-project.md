@@ -29,9 +29,11 @@ Initialize a new project with CLAUDE.md and folder structure.
 
 4. **Create folder structure**
    - Create `docs/records/` if it doesn't exist
+   - Create `docs/notes/` if it doesn't exist
 
-5. **Update .gitignore (if Solo mode)**
-   - Add `CLAUDE.md` to `.gitignore`
+5. **Update .gitignore**
+   - Add `docs/notes/` to `.gitignore` (always, for private notes)
+   - If Solo mode: Also add `CLAUDE.md` to `.gitignore`
    - Create `.gitignore` if it doesn't exist
 
 6. **Git commit (if Git repo)**
