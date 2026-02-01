@@ -1,0 +1,101 @@
+# Skill Creator
+
+Interactive wizard for creating custom skills.
+
+## Metadata
+
+| Field | Value |
+|-------|-------|
+| Type | command |
+| Invoked by | `/skill-creator` |
+
+## Usage
+
+```
+/skill-creator
+```
+
+## What It Does
+
+Guides you through creating a custom skill:
+
+1. **Choose skill type**
+   - Context skill (auto-loads based on tech stack)
+   - Command skill (invoked manually)
+
+2. **Define metadata**
+   - Name (kebab-case)
+   - Description
+   - For context: `applies_to` tech stacks
+
+3. **Write content**
+   - Standards, guidelines, or instructions
+   - Examples and code snippets
+
+4. **Save skill**
+   - Creates `~/.claude/custom/skills/your-skill/SKILL.md`
+
+## Example Session
+
+```
+You: /skill-creator
+
+Claude: What type of skill do you want to create?
+        1) Context skill - Auto-loads based on tech stack
+        2) Command skill - Invoked with /skill-name
+
+You: 1
+
+Claude: What's the skill name? (kebab-case, e.g., api-standards)
+
+You: api-standards
+
+Claude: What tech stacks should trigger this skill?
+        (comma-separated, e.g., python, typescript, nodejs)
+
+You: python, typescript, fastapi, express
+
+Claude: Describe what standards this skill should enforce:
+
+You: REST API design standards for our team...
+
+Claude: Created ~/.claude/custom/skills/api-standards/SKILL.md
+```
+
+## Output Location
+
+Skills are saved to:
+
+```
+~/.claude/custom/skills/
+└── your-skill/
+    └── SKILL.md
+```
+
+## Skill Format
+
+The wizard generates:
+
+```markdown
+---
+name: your-skill
+description: Your description
+type: context
+applies_to: [python, typescript]
+---
+
+# Your Skill Title
+
+Content you provided...
+```
+
+## Tips
+
+- **Be specific** - Include examples in your standards
+- **Keep it focused** - One topic per skill
+- **Test it** - Create a project with matching tech stack
+
+## Related
+
+- [Creating Skills](/guides/creating-skills) - Manual skill creation
+- [Team Setup](/guides/team-setup) - Share skills with your team

@@ -1,0 +1,95 @@
+# Contributing
+
+How to contribute to Claude Code Setup.
+
+## Ways to Contribute
+
+- **Bug Reports** - Found a bug? [Open an issue](https://github.com/b33eep/claude-code-setup/issues/new?template=bug_report.md)
+- **Feature Suggestions** - Have an idea? [Open a discussion](https://github.com/b33eep/claude-code-setup/discussions)
+- **Pull Requests** - Want to contribute code? See below
+
+## Development Setup
+
+### Prerequisites
+
+- Bash 4+ (macOS: `brew install bash`)
+- [ShellCheck](https://www.shellcheck.net/) for linting
+- [expect](https://core.tcl-lang.org/expect/) for tests (macOS: pre-installed)
+
+### Clone and Test
+
+```bash
+git clone https://github.com/b33eep/claude-code-setup.git
+cd claude-code-setup
+./tests/test.sh
+```
+
+### Run Specific Tests
+
+```bash
+./tests/test.sh 01        # Run scenario 01
+./tests/test.sh version   # Pattern match
+```
+
+## Code Style
+
+### Shell Scripts
+
+- Use `set -euo pipefail` at the start
+- Quote all variables: `"$var"`
+- Use `[[ ]]` for conditionals
+- Pass ShellCheck with no warnings
+
+### Markdown
+
+- Use ATX-style headers (`#`, `##`)
+- Use fenced code blocks with language hints
+- Keep lines under 100 characters
+
+## Adding New Features
+
+### New Skill
+
+1. Create `skills/your-skill/SKILL.md`
+2. Add frontmatter with name, type, applies_to
+3. Test with `./install.sh --add`
+4. Add to README.md feature table
+
+### New MCP Server
+
+1. Create `mcp/your-server.json`
+2. Include name, description, config, requiresApiKey
+3. Test with `./install.sh --add`
+4. Add to README.md MCP table
+
+### New Command
+
+1. Create `commands/your-command.md`
+2. Document tasks and output
+3. Test manually in Claude Code
+4. Add to README.md commands table
+
+## Pull Request Process
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feat/your-feature`
+3. Make changes and test
+4. Run ShellCheck: `shellcheck install.sh lib/*.sh`
+5. Run tests: `./tests/test.sh`
+6. Commit with conventional format: `feat(scope): description`
+7. Open a PR
+
+## Commit Format
+
+```
+<type>(<scope>): <description>
+```
+
+Types: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`
+
+Examples:
+```
+feat(skills): add rust coding standards
+fix(install): handle spaces in paths
+docs(readme): clarify Linux setup
+```

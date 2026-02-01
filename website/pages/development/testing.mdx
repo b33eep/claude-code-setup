@@ -1,0 +1,113 @@
+# Testing
+
+How to run and write tests for Claude Code Setup.
+
+## Running Tests
+
+### All Tests
+
+```bash
+./tests/test.sh
+```
+
+### Specific Scenario
+
+```bash
+./tests/test.sh 01        # Run scenario 01
+./tests/test.sh version   # Pattern match on name
+```
+
+### Verbose Output
+
+Tests show progress by default. For debugging, check the test output files in `/tmp/claude-test-*/`.
+
+## Test Environment
+
+Tests run in isolation:
+- Creates `/tmp/claude-test-XXXXX/` directory
+- Sets `HOME` to test directory
+- Doesn't touch your real `~/.claude`
+
+After tests complete, check the test directory to see installed files.
+
+## Test Scenarios
+
+Tests are in `tests/scenarios/`:
+
+| Scenario | Tests |
+|----------|-------|
+| 01-fresh-install.sh | Clean installation |
+| 02-update.sh | Updating existing install |
+| 03-add.sh | Adding modules with --add |
+| 04-list.sh | Listing installed modules |
+| ... | ... |
+
+## Writing Tests
+
+### Using expect
+
+Tests use `expect` for interactive simulation:
+
+```bash
+#!/usr/bin/env expect
+
+spawn ./install.sh
+
+# Wait for prompt
+expect "Select modules"
+
+# Send input
+send "j j \r"  # Move down twice, press enter
+
+# Verify output
+expect "Installation complete"
+```
+
+### Test Helpers
+
+`tests/helpers.sh` provides:
+
+```bash
+# Setup test environment
+setup_test_env
+
+# Assert file exists
+assert_file_exists "$HOME/.claude/CLAUDE.md"
+
+# Assert file contains
+assert_contains "$HOME/.claude/installed.json" '"version"'
+
+# Cleanup
+cleanup_test_env
+```
+
+### Adding a New Test
+
+1. Create `tests/scenarios/XX-your-test.sh`
+2. Source helpers: `source "$(dirname "$0")/../helpers.sh"`
+3. Use expect for interactive parts
+4. Use assertions for verification
+5. Run: `./tests/test.sh XX`
+
+## Manual Testing
+
+Test without affecting your real setup:
+
+```bash
+HOME=/tmp/claude-manual-test ./install.sh
+```
+
+Check results:
+```bash
+ls /tmp/claude-manual-test/.claude/
+cat /tmp/claude-manual-test/.claude/installed.json
+```
+
+## CI/CD
+
+Tests run on GitHub Actions:
+- On every push
+- On every PR
+- Matrix: Ubuntu, macOS
+
+See `.github/workflows/test.yml` for configuration.

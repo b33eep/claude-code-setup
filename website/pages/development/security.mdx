@@ -1,0 +1,97 @@
+# Security
+
+Security model and vulnerability reporting for Claude Code Setup.
+
+## Trust Model
+
+Claude Code Setup modifies files in `~/.claude/` and `~/.claude.json`. Understanding the trust model:
+
+### What We Install
+
+| Component | Source | Trust Level |
+|-----------|--------|-------------|
+| CLAUDE.md templates | This repo | Reviewed |
+| Commands | This repo | Reviewed |
+| Skills | This repo | Reviewed |
+| MCP servers | npm packages | Third-party |
+| Custom modules | User-provided Git | User responsibility |
+
+### User Responsibility
+
+- **Custom modules**: You're responsible for reviewing custom module repositories before using `/add-custom`
+- **API keys**: Store in environment variables or `.env` files, never in CLAUDE.md
+- **MCP servers**: npm packages are third-party; review before enabling
+
+## Best Practices
+
+### API Keys
+
+Never put secrets in CLAUDE.md:
+
+```markdown
+<!-- BAD - Don't do this -->
+API_KEY=sk-secret-123
+
+<!-- GOOD - Reference location -->
+API keys are in ~/.config/secrets/.env
+```
+
+### Custom Modules
+
+Before installing custom modules:
+
+1. Review the repository
+2. Check the SKILL.md and MCP configs
+3. Verify the source is trusted
+
+### File Permissions
+
+The installer creates files with default permissions. For sensitive configs:
+
+```bash
+chmod 600 ~/.claude.json  # Restrict MCP config with API keys
+```
+
+## Vulnerability Reporting
+
+Found a security issue?
+
+1. **Do not** open a public issue
+2. Use [GitHub's private vulnerability reporting](https://github.com/b33eep/claude-code-setup/security/advisories/new)
+3. Include:
+   - Description of the vulnerability
+   - Steps to reproduce
+   - Potential impact
+
+We'll respond within 48 hours.
+
+## Security Updates
+
+Security fixes are released as soon as possible:
+
+1. Patch is developed and tested
+2. Released with `fix(security):` commit
+3. Users update via `/claude-code-setup`
+
+Check the [Changelog](/changelog) for security updates.
+
+## Auditing
+
+### Check Installed Modules
+
+```bash
+./install.sh --list
+```
+
+### Review MCP Configuration
+
+```bash
+cat ~/.claude.json
+```
+
+### Check Custom Modules
+
+```bash
+ls ~/.claude/custom/
+cat ~/.claude/installed.json
+```

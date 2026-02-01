@@ -1,0 +1,64 @@
+# First Project Setup
+
+After installation, set up your first project with Claude Code Setup.
+
+## Initialize the Project
+
+In Claude Code, navigate to your project directory and run:
+
+```
+/init-project
+```
+
+Claude will:
+1. Ask about your project (name, tech stack, description)
+2. Generate a `CLAUDE.md` file with status tables and workflow
+3. Ask if you want Solo or Team mode
+
+## Solo vs Team Mode
+
+| Mode | CLAUDE.md | Use case |
+|------|-----------|----------|
+| **Solo** | In `.gitignore` | Personal notes, not shared |
+| **Team** | Tracked in Git | Shared status for the team |
+
+## What Gets Created
+
+```markdown
+# Your Project Name
+
+## About
+
+Your project description here.
+
+## Tech Stack
+
+- Python, FastAPI (or whatever you specified)
+
+## Current Status
+
+| Task | Status | Notes |
+|------|--------|-------|
+| Initial setup | Done | Project initialized |
+
+## Records
+
+| Decision | Choice | Record |
+|----------|--------|--------|
+| (empty - add as you go) |
+
+## Development
+
+### Commands
+
+(Project-specific commands go here)
+```
+
+## Next Steps
+
+1. Add your first task to the Current Status table
+2. Start working on your project
+3. When context fills up, use `/wrapup` then `/clear`
+4. Next session, use `/catchup` to resume
+
+See [First Session](/getting-started/first-session) for a walkthrough.

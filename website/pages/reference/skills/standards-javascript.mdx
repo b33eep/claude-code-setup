@@ -1,0 +1,129 @@
+# JavaScript Standards
+
+Auto-loads for projects with JavaScript/Node.js in their tech stack.
+
+## Metadata
+
+| Field | Value |
+|-------|-------|
+| Type | context |
+| Applies to | javascript, nodejs, express, fastify, hapi, npm, yarn, pnpm, bun, deno, vitest, jest, mocha |
+
+## Core Principles
+
+1. **Simplicity** - Simple, understandable code
+2. **Readability** - Readability over cleverness
+3. **Maintainability** - Code that's easy to maintain
+4. **Testability** - Code that's easy to test
+5. **DRY** - Don't Repeat Yourself
+
+## Naming Conventions
+
+| Element | Convention | Example |
+|---------|------------|---------|
+| Variables/Functions | camelCase | `getUserById`, `isActive` |
+| Classes | PascalCase | `UserService`, `ApiClient` |
+| Constants | UPPER_SNAKE_CASE | `MAX_RETRY_COUNT` |
+| Files | kebab-case | `user-service.js` |
+
+## ES Modules
+
+```javascript
+// math.js - Named exports
+export function add(a, b) {
+    return a + b;
+}
+
+// app.js - Import
+import { add, multiply } from './math.js';
+
+// Default export
+export default class UserService { }
+```
+
+**package.json:**
+```json
+{
+    "type": "module"
+}
+```
+
+## Async/Await
+
+```javascript
+// Always use async/await
+async function fetchUserData(userId) {
+    const response = await fetch(`/api/users/${userId}`);
+    if (!response.ok) {
+        throw new Error(`API error: ${response.statusText}`);
+    }
+    return await response.json();
+}
+
+// Parallel execution
+async function fetchMultipleUsers(userIds) {
+    return Promise.all(userIds.map(id => fetchUserData(id)));
+}
+```
+
+## Best Practices
+
+```javascript
+// Prefer const over let
+const users = [];
+
+// Nullish coalescing and optional chaining
+const name = user?.profile?.name ?? 'Anonymous';
+
+// Array methods over loops
+const activeUsers = users.filter(u => u.isActive);
+const userNames = users.map(u => u.name);
+
+// Private class fields
+class UserService {
+    #apiClient;
+
+    constructor(apiClient) {
+        this.#apiClient = apiClient;
+    }
+}
+```
+
+## Express Example
+
+```javascript
+import express from 'express';
+
+const app = express();
+app.use(express.json());
+
+app.get('/users/:id', (req, res) => {
+    const { id } = req.params;
+    res.json({ id, name: 'User' });
+});
+
+// Error handling (must be last)
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ error: 'Internal Server Error' });
+});
+```
+
+## Recommended Tooling
+
+| Tool | Purpose |
+|------|---------|
+| `pnpm` or `bun` | Package manager |
+| `eslint` | Linting |
+| `prettier` | Code formatting |
+| `vitest` or `jest` | Testing |
+| `node --watch` | Development |
+
+## Production Checklist
+
+1. Use ES Modules (`"type": "module"`)
+2. Always async/await for async operations
+3. Handle promise rejections
+4. Validate API input
+5. Use environment variables for config
+6. Handle SIGTERM for graceful shutdown

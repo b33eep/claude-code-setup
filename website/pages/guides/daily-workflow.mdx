@@ -1,0 +1,153 @@
+# Session Workflow
+
+A practical guide to working with Claude Code Setup. Sessions typically last 30-90 minutes before context fills up.
+
+## The Session Cycle
+
+```
+┌─────────────────┐
+│   /catchup      │  ← Start every session here
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│     Work        │  ← Implement, decide, document
+│  (30-90 min)    │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│   /wrapup       │  ← When Ctx hits ~80%
+│   /clear        │
+└────────┬────────┘
+         │
+         └──────────→ Next session
+```
+
+## Start: /catchup
+
+Every session begins the same way:
+
+```
+/catchup
+```
+
+Claude loads:
+- Recent Git changes
+- Your project's CLAUDE.md status
+- Relevant Records for in-progress work
+- Coding standards for your tech stack
+
+**Output example:**
+```
+Project: my-api
+Tech Stack: Python, FastAPI
+
+Recent changes (last 3 commits):
+- Added user authentication
+- Fixed rate limiting bug
+
+Records loaded:
+- Record 012: Auth design (in progress)
+
+Next step: Implement password reset
+```
+
+## Work: The Session
+
+### Pick a Task
+
+Look at what `/catchup` suggested, or check the Current Status table in CLAUDE.md.
+
+### Implement
+
+Work normally. Coding standards are already loaded.
+
+### Track Decisions
+
+**Significant decisions** → Create a Record:
+```
+Create a Record for why we chose JWT over sessions
+```
+
+**Small decisions** → Add to Recent Decisions:
+```
+Add to Recent Decisions: Using bcrypt with cost=12 for password hashing
+```
+
+### Add Tasks That Come Up
+
+```
+/todo Add rate limiting to auth endpoints
+```
+
+### Watch Context
+
+Your status line shows usage:
+```
+Ctx: 45% | Model: opus | Branch: main
+```
+
+| Level | Action |
+|-------|--------|
+| 0-60% | Keep working |
+| 60-80% | Plan your stopping point |
+| 80%+ | Run /wrapup now |
+
+## End: /wrapup + /clear
+
+When context approaches 80%:
+
+```
+/wrapup
+```
+
+Claude:
+- Updates CLAUDE.md with current status
+- Creates/syncs any new Records
+- Commits changes
+
+Then:
+
+```
+/clear
+```
+
+Your next session starts fresh with `/catchup`.
+
+## Multiple Sessions Per Day
+
+It's normal to have 2-5 sessions per day on an active project:
+
+| Session | Focus | Duration |
+|---------|-------|----------|
+| 1 | Fix auth bug | 45 min |
+| 2 | Add password reset | 60 min |
+| 3 | Code review feedback | 30 min |
+| 4 | Write tests | 50 min |
+
+Each session follows the same cycle: `/catchup` → work → `/wrapup` → `/clear`
+
+## Quick Session (Under 30 min)
+
+For small tasks, you might not need the full cycle:
+
+```
+/catchup
+Fix the typo in the header
+Done - no /wrapup needed for trivial changes
+/clear
+```
+
+Use `/wrapup` when:
+- You made significant progress
+- You created or updated Records
+- The next session needs context
+
+## Tips
+
+- **Start with /catchup** - Even if you just cleared 5 minutes ago
+- **Don't wait for 100%** - Context quality degrades before hitting the limit
+- **Add decisions immediately** - Not at /wrapup time
+- **Short sessions are fine** - Better to clear often than lose context
+- **Records are cheap** - Create them liberally

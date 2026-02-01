@@ -1,0 +1,89 @@
+# Auto-Loading Skills
+
+Coding standards that load automatically based on your tech stack.
+
+## How It Works
+
+1. Your project CLAUDE.md declares a tech stack:
+   ```markdown
+   ## Tech Stack
+
+   - Python, FastAPI
+   ```
+
+2. Claude matches this to available skills:
+   ```
+   Tech Stack: Python, FastAPI
+   Skill: standards-python (applies_to: [python, fastapi, django])
+   → Match! Loading Python standards.
+   ```
+
+3. Standards are applied when writing code.
+
+## Available Skills
+
+| Skill | Loads for |
+|-------|-----------|
+| `standards-python` | python, fastapi, django, flask, pytest |
+| `standards-typescript` | typescript, react, nextjs, vue, angular |
+| `standards-javascript` | javascript, nodejs, express, npm |
+| `standards-shell` | bash, sh, shell, zsh, shellcheck |
+
+## Task-Based Loading
+
+Even if not in your Tech Stack, skills load when needed:
+
+```
+Project Tech Stack: Python
+
+User: Write me a deployment script
+Claude: [Loads standards-shell for this .sh file]
+```
+
+## Skill Structure
+
+Skills live in `~/.claude/skills/`:
+
+```
+~/.claude/skills/
+├── standards-python/
+│   └── SKILL.md
+├── standards-typescript/
+│   └── SKILL.md
+└── standards-shell/
+    └── SKILL.md
+```
+
+Each SKILL.md has frontmatter:
+
+```markdown
+---
+name: standards-python
+description: Python coding standards
+type: context
+applies_to: [python, fastapi, django, flask, pytest]
+---
+
+# Python Coding Standards
+
+## Naming Conventions
+...
+```
+
+## Custom Skills Override
+
+Your custom skills in `~/.claude/custom/skills/` override built-in ones:
+
+```
+Built-in: ~/.claude/skills/standards-python/
+Custom:   ~/.claude/custom/skills/standards-python/
+
+→ Custom wins
+```
+
+This lets teams enforce their own standards.
+
+## Related
+
+- [Creating Skills](/guides/creating-skills) - Build your own
+- [/add-custom](/commands/add-custom) - Install team skills

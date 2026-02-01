@@ -1,0 +1,87 @@
+# Context Management
+
+Monitor and manage Claude's context window effectively.
+
+## The Problem
+
+Claude Code has a limited context window. When it fills up:
+
+- **Auto-compact** summarizes and loses details
+- **/clear** wipes everything
+
+Both options lose important context.
+
+## The Solution
+
+1. **Monitor** context usage with ccstatusline
+2. **Document** before clearing with /wrapup
+3. **Resume** after clearing with /catchup
+
+## ccstatusline
+
+[ccstatusline](https://github.com/sirmalloc/ccstatusline) shows live context usage:
+
+```
+Ctx: 45% | Model: opus | Branch: main
+```
+
+### Reading the Status
+
+| Level | Meaning | Action |
+|-------|---------|--------|
+| 0-50% | Plenty of room | Keep working |
+| 50-70% | Getting full | Plan wrap-up point |
+| 70-80% | Time to wrap up | Run /wrapup soon |
+| 80%+ | Critical | Run /wrapup now |
+
+### Installation
+
+ccstatusline is installed automatically if you select it during setup.
+
+To verify it's working, check your Claude Code settings:
+```json
+{
+  "statusLine": {
+    "enabled": true,
+    "command": ["npx", "-y", "ccstatusline"]
+  }
+}
+```
+
+## Document & Clear Workflow
+
+Instead of letting auto-compact destroy context:
+
+```
+1. Work until Ctx: ~80%
+2. /wrapup → Saves to CLAUDE.md
+3. /clear → Fresh context
+4. /catchup → Resume with full memory
+```
+
+## What Gets Preserved
+
+| Item | Where | Survives /clear? |
+|------|-------|------------------|
+| Project status | CLAUDE.md | Yes |
+| Decisions | Records | Yes |
+| Small choices | Recent Decisions | Yes |
+| Chat discussion | Context | No |
+
+The key insight: **External files are your memory**, not the context window.
+
+## Disable Auto-Compact
+
+import { Callout } from 'nextra/components'
+
+<Callout type="warning">
+Auto-compact must be disabled for this workflow to work.
+</Callout>
+
+See [Disable Auto-Compact](/getting-started/disable-autocompact) for instructions.
+
+## Related
+
+- [Workflow](/concepts/workflow) - Complete workflow overview
+- [/wrapup](/commands/wrapup) - Save before clearing
+- [/catchup](/commands/catchup) - Resume after clearing

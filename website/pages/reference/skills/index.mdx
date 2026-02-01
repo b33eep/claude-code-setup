@@ -1,0 +1,59 @@
+# Skills Overview
+
+Skills are reusable modules that provide coding standards or specialized functionality.
+
+## Skill Types
+
+| Type | How it loads | Example |
+|------|--------------|---------|
+| **Context** | Auto-loads based on tech stack | Coding standards |
+| **Command** | User invokes with /skill-name | Presentation creator |
+
+## Coding Standards
+
+Auto-load based on your project's tech stack:
+
+- [Python](/reference/skills/standards-python) - PEP 8, type hints, async patterns
+- [TypeScript](/reference/skills/standards-typescript) - Strict types, Zod, utility types
+- [JavaScript](/reference/skills/standards-javascript) - ES Modules, async/await, Express
+- [Shell/Bash](/reference/skills/standards-shell) - Defensive scripting, ShellCheck
+
+## Tool Skills
+
+Invoked manually or when relevant:
+
+- [YouTube Transcript](/reference/skills/youtube-transcript) - Download transcripts with frame extraction
+- [Slidev Presentations](/reference/skills/create-slidev-presentation) - Create slide decks
+- [Skill Creator](/reference/skills/skill-creator) - Build your own skills
+
+## Coming Soon
+
+Skills in development:
+
+### Coding Standards
+
+| Skill | Description | Status |
+|-------|-------------|--------|
+| `standards-java` | Java conventions, Spring patterns | Planned |
+| `standards-kotlin` | Kotlin idioms, coroutines | Planned |
+| `standards-gradle` | Gradle build scripts, Kotlin DSL | Planned |
+| `standards-go` | Go idioms, error handling | Planned |
+| `standards-rust` | Rust patterns, ownership, lifetimes | Planned |
+| `standards-nextjs` | Next.js App Router, SSR patterns | Planned |
+| `standards-vue` | Vue 3 Composition API, Pinia | Planned |
+| `standards-react` | React hooks, component patterns | Planned |
+
+### Tool Skills
+
+| Skill | Description | Status |
+|-------|-------------|--------|
+| `create-powerpoint` | Create and edit PowerPoint presentations | Planned |
+| `create-word-doc` | Create and edit Word documents | Planned |
+
+Want to contribute? See [Creating Skills](/guides/creating-skills).
+
+## Custom Skills
+
+Your custom skills in `~/.claude/custom/skills/` override built-in ones with the same name.
+
+See [Creating Skills](/guides/creating-skills) for how to build your own.

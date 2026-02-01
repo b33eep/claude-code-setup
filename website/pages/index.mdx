@@ -1,0 +1,56 @@
+```diff
++    _____ _                 _        _____          _
++   / ____| |               | |      / ____|        | |
++  | |    | | __ _ _   _  __| | ___ | |     ___   __| | ___
++  | |    | |/ _` | | | |/ _` |/ _ \| |    / _ \ / _` |/ _ \
++  | |____| | (_| | |_| | (_| |  __/| |___| (_) | (_| |  __/
++   \_____|_|\____|\_____|\____|\___|\_____\___/ \____|\___|
+-                                                     Setup
+```
+
+# Claude Code Setup
+
+**Never lose context again.** Persistent memory, auto-loading coding standards, and a clear workflow for Claude Code.
+
+## What We Solve
+
+| Challenge | Without Setup | With Setup |
+|-----------|---------------|------------|
+| **Context fills up** | Lost progress, forgotten decisions | External memory in CLAUDE.md survives /clear |
+| **"Where was I?"** | Start from scratch every session | `/catchup` shows changes and next steps |
+| **Inconsistent code** | Different style every session | Coding standards auto-load per tech stack |
+| **Lost decisions** | "Why did we do X?" forgotten | Records preserve reasoning permanently |
+| **Team onboarding** | Manual setup, copy-paste standards | One command installs shared modules |
+| **Setup overhead** | "What goes in CLAUDE.md?" | `/init-project` generates it for you |
+| **Context monitoring** | "Is it getting full?" | Live status line shows `Ctx: 70%` |
+
+## Quick Start
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/b33eep/claude-code-setup/main/quick-install.sh)
+```
+
+Then in Claude Code:
+
+```
+/init-project    # Set up your project
+/catchup         # Start each session
+/wrapup          # End each session (saves to CLAUDE.md)
+/clear           # Clear context, start fresh
+```
+
+## Core Features
+
+### Persistent Memory
+Two CLAUDE.md files (global + project) serve as external memory that survives any context clear.
+
+### Auto-Loading Standards
+Python, TypeScript, JavaScript, Shell standards load automatically based on your tech stack. More coming soon.
+
+### Session Workflow
+Clear cycle: `/catchup` → work → `/wrapup` → `/clear`. No more lost progress.
+
+### Team Support
+Custom modules repo for shared standards. One command to install for all team members.
+
+[Get Started →](/getting-started/installation)

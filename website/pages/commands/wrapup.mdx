@@ -1,0 +1,67 @@
+# /wrapup
+
+Save your session status before clearing context.
+
+## Usage
+
+```
+/wrapup
+```
+
+## What It Does
+
+1. **Updates CLAUDE.md**
+   - Updates Current Status table with task progress
+   - Documents what was done this session
+   - Sets clear next action
+
+2. **Creates Records (if needed)**
+   - If significant decisions or designs were made
+   - Adds links to CLAUDE.md Records table
+
+3. **Syncs Records table**
+   - Scans `docs/records/` for all Records
+   - Adds any missing entries to CLAUDE.md
+
+4. **Reviews missed decisions**
+   - Checks if any decisions should be in Recent Decisions
+   - Adds them as a safety net
+
+5. **Git commit**
+   - Solo mode: Only commits Records and code
+   - Team mode: Also commits CLAUDE.md updates
+
+## Example Output
+
+```
+Updated CLAUDE.md:
+- JWT auth: Done
+- Added Record 015 for auth decision
+- Next step: Implement password reset
+
+Committed: docs: update project status
+
+Ready for /clear
+```
+
+## Solo vs Team Mode
+
+| Mode | CLAUDE.md | Records |
+|------|-----------|---------|
+| Solo | Not committed | Committed |
+| Team | Committed | Committed |
+
+## When to Use
+
+- Context usage at ~80%
+- End of work session
+- Before switching to another project
+
+## After /wrapup
+
+Run `/clear` to start fresh. Your next session begins with `/catchup`.
+
+## Related
+
+- [/catchup](/commands/catchup) - Resume after clearing
+- [Disable Auto-Compact](/getting-started/disable-autocompact) - Why this matters

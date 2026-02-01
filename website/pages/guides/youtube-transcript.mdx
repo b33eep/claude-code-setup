@@ -1,0 +1,67 @@
+# YouTube Transcripts
+
+Download and analyze YouTube video transcripts with visual frame extraction.
+
+## Usage
+
+```
+/youtube-transcript https://www.youtube.com/watch?v=VIDEO_ID
+```
+
+## What It Does
+
+1. **Downloads transcript** - Auto-generated or manual captions
+2. **Detects visual references** - Phrases like "as you can see", "look at this"
+3. **Extracts frames** - Screenshots at key moments
+4. **Presents combined output** - Transcript with embedded images
+
+## Example Output
+
+```
+[00:00] Introduction to the topic...
+[01:23] Now let me show you the architecture diagram
+        [Frame extracted: architecture-01-23.png]
+[02:45] As you can see here, the data flows from...
+        [Frame extracted: diagram-02-45.png]
+```
+
+## Visual Reference Detection
+
+The skill detects phrases in English and German:
+
+**English:**
+- "as you can see"
+- "look at this"
+- "here's the diagram"
+- "on this slide"
+- "let me show you"
+
+**German:**
+- "wie Sie sehen"
+- "schauen Sie hier"
+- "auf dieser Folie"
+
+## Requirements
+
+The skill requires:
+- `yt-dlp` - Downloads videos and transcripts
+- `ffmpeg` - Extracts frames
+
+These are installed automatically when you select the YouTube Transcript skill during setup.
+
+## Use Cases
+
+- **Conference talks** - Extract slides and diagrams
+- **Tutorials** - Capture UI screenshots with instructions
+- **Code walkthroughs** - Save code snippets shown on screen
+- **Presentations** - Get slides without screen recording
+
+## Limitations
+
+- Requires captions (auto-generated or manual)
+- Frame quality depends on video quality
+- Large videos take longer to process
+
+## Related
+
+- [Record 021](/architecture/021-youtube-transcript-skill) - Implementation details

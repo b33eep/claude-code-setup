@@ -1,0 +1,111 @@
+# Install Options
+
+Command-line options for the install script.
+
+## Basic Usage
+
+```bash
+./install.sh [options]
+```
+
+## Options
+
+### --yes, -y
+
+Non-interactive mode. Accepts defaults for all prompts.
+
+```bash
+./install.sh --yes
+```
+
+Useful for:
+- CI/CD pipelines
+- Automated setups
+- Scripted installations
+
+### --add
+
+Install additional modules interactively.
+
+```bash
+./install.sh --add
+```
+
+Shows module selector for:
+- MCP servers not yet installed
+- Skills not yet installed
+
+### --update
+
+Update all installed modules to latest versions.
+
+```bash
+./install.sh --update
+```
+
+Equivalent to running `/claude-code-setup` from within Claude.
+
+### --list
+
+Show what's currently installed.
+
+```bash
+./install.sh --list
+```
+
+Output:
+```
+Installed modules:
+  MCP Servers:
+    - pdf-reader
+    - brave-search
+  Skills:
+    - standards-python
+    - standards-shell
+  Commands:
+    - catchup
+    - wrapup
+    - init-project
+```
+
+### --help, -h
+
+Show help message.
+
+```bash
+./install.sh --help
+```
+
+## Environment Variables
+
+### HOME
+
+Installation target directory.
+
+```bash
+HOME=/tmp/test ./install.sh
+```
+
+Useful for testing without affecting your real `~/.claude`.
+
+## One-Liner Installation
+
+Interactive:
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/b33eep/claude-code-setup/main/quick-install.sh)
+```
+
+Non-interactive:
+```bash
+curl -fsSL https://raw.githubusercontent.com/b33eep/claude-code-setup/main/quick-install.sh | bash -s -- --yes
+```
+
+## Updating
+
+After initial install, update from within Claude:
+
+```
+/claude-code-setup
+```
+
+This preserves your User Instructions section.

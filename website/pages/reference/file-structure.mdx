@@ -1,0 +1,107 @@
+# File Structure
+
+Complete reference for installed files and directories.
+
+## User Directory (~/.claude/)
+
+```
+~/.claude/
+├── CLAUDE.md           # Global workflow config
+├── settings.json       # Claude Code settings
+├── installed.json      # Tracks installed modules
+├── commands/           # Slash commands
+│   ├── catchup.md
+│   ├── wrapup.md
+│   ├── init-project.md
+│   ├── claude-code-setup.md
+│   ├── add-custom.md
+│   └── todo.md
+├── skills/             # Coding standards
+│   ├── standards-python/
+│   ├── standards-typescript/
+│   ├── standards-javascript/
+│   └── standards-shell/
+├── templates/          # Project templates
+│   ├── project-CLAUDE.md
+│   └── VERSION
+└── custom/             # User customizations
+    ├── skills/
+    └── mcp/
+```
+
+## MCP Configuration (~/.claude.json)
+
+```json
+{
+  "mcpServers": {
+    "pdf-reader": { ... },
+    "brave-search": { ... }
+  }
+}
+```
+
+## Project Files
+
+```
+your-project/
+├── CLAUDE.md           # Project status and tasks
+└── docs/
+    └── records/        # Design decisions
+        ├── 001-feature.md
+        └── 002-design.md
+```
+
+## Key Files Explained
+
+### ~/.claude/CLAUDE.md
+
+Global configuration that applies to all projects:
+- Workflow instructions
+- Conventions (commit format, etc.)
+- Skill loading rules
+- User Instructions (your customizations)
+
+### ~/.claude/installed.json
+
+Tracks what's installed and their versions:
+```json
+{
+  "version": "23",
+  "modules": {
+    "mcp": ["pdf-reader", "brave-search"],
+    "skills": ["standards-python"],
+    "commands": ["catchup", "wrapup"]
+  },
+  "custom": {
+    "repo": "git@company.com:team/modules.git",
+    "version": "1.0.0"
+  }
+}
+```
+
+### ~/.claude/settings.json
+
+Claude Code settings including status line:
+```json
+{
+  "statusLine": {
+    "enabled": true,
+    "command": ["npx", "-y", "ccstatusline"]
+  }
+}
+```
+
+### Project CLAUDE.md
+
+Project-specific status:
+- Current tasks and status
+- Records table
+- Recent Decisions
+- Development commands
+
+### docs/records/
+
+Permanent documentation:
+- Architecture decisions
+- Feature specifications
+- Implementation plans

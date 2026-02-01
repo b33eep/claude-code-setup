@@ -1,0 +1,63 @@
+# /claude-code-setup
+
+Check status and update Claude Code Setup from within Claude.
+
+## Usage
+
+```
+/claude-code-setup
+```
+
+## What It Does
+
+1. **Checks versions**
+   - Compares installed version with available version
+   - Shows what's new in the update
+
+2. **Offers actions**
+   - Upgrade base modules
+   - Upgrade custom modules
+   - Install new modules (--add)
+
+## Example Output
+
+```
+Claude Code Setup Status:
+
+Installed: v22
+Available: v23
+
+Changes in v23:
+- Decision Log feature
+- Context quality improvements
+
+What would you like to do?
+1) Upgrade to v23
+2) Check custom modules
+3) Add new modules
+4) Cancel
+```
+
+## Upgrade vs Fresh Install
+
+| Action | What happens |
+|--------|--------------|
+| Upgrade | Preserves User Instructions section |
+| Fresh install | Overwrites everything |
+
+Your customizations in the "User Instructions" section of `~/.claude/CLAUDE.md` are preserved during upgrades.
+
+## Custom Modules
+
+If you have custom modules installed (via `/add-custom`), this command also checks for updates to those.
+
+```
+Custom modules:
+- company-standards: v2 → v3 available
+- internal-mcp: up to date
+```
+
+## Related
+
+- [/add-custom](/commands/add-custom) - Install custom modules
+- [Installation](/getting-started/installation) - Initial setup
