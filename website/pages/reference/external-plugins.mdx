@@ -1,0 +1,102 @@
+# External Plugins
+
+Install official Claude Code plugins via the installer.
+
+## How It Works
+
+External plugins are installed using the official `claude plugin` CLI. The installer:
+
+1. Registers the plugin marketplace (if needed)
+2. Installs the plugin via `claude plugin install`
+3. Enables the plugin automatically
+
+This is different from our Skills (which are copied to `~/.claude/skills/`). External plugins are managed by Claude Code itself.
+
+## Available Plugins
+
+### document-skills
+
+Create and edit Office documents and PDFs.
+
+| Field | Value |
+|-------|-------|
+| Marketplace | anthropic-agent-skills |
+| Source | [anthropics/skills](https://github.com/anthropics/skills) |
+| License | Source-available (proprietary) |
+
+**Capabilities:**
+- **Excel (xlsx)**: Create spreadsheets with formulas, charts, formatting
+- **Word (docx)**: Create/edit documents with tracked changes, comments
+- **PowerPoint (pptx)**: Create presentations from scratch or templates
+- **PDF**: Extract text, tables, metadata; merge and annotate
+
+**Usage:**
+```
+"Create a PowerPoint about our Q4 results"
+"Edit this Word document and track changes"
+"Extract tables from this PDF"
+```
+
+## Installation
+
+External plugins are offered during installation:
+
+```bash
+./install.sh        # Fresh install
+./install.sh --add  # Add to existing installation
+```
+
+You'll see a selection like:
+
+```
+External Plugins (via Claude CLI):
+
+  ❯ ◉ document-skills - Excel, Word, PowerPoint, PDF creation/editing
+
+  ↑↓ navigate  ⎵ toggle  ⏎ confirm
+```
+
+## Manual Installation
+
+You can also install plugins directly via Claude Code:
+
+```bash
+# Add marketplace (once)
+claude plugin marketplace add anthropics/skills
+
+# Install plugin
+claude plugin install document-skills@anthropic-agent-skills
+
+# List installed plugins
+claude plugin list
+```
+
+## Adding Custom Plugins
+
+Create `~/.claude/custom/external-plugins.json`:
+
+```json
+{
+  "marketplaces": {
+    "my-company": {
+      "repo": "mycompany/claude-plugins",
+      "description": "Internal company plugins"
+    }
+  },
+  "plugins": [
+    {
+      "id": "company-standards",
+      "marketplace": "my-company",
+      "description": "Company coding standards"
+    }
+  ]
+}
+```
+
+These will appear in the installer alongside the default plugins.
+
+## Requirements
+
+- Claude Code CLI must be installed and available
+- Network access during installation (plugins are downloaded)
+- If CLI is not available, external plugins are skipped silently

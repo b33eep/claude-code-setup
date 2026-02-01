@@ -16,7 +16,7 @@
 [![macOS](https://img.shields.io/badge/platform-macOS-blue.svg)](https://www.apple.com/macos/)
 [![Linux](https://img.shields.io/badge/platform-Linux-blue.svg)](https://www.linux.org/)
 [![WSL](https://img.shields.io/badge/platform-WSL-blue.svg)](https://docs.microsoft.com/en-us/windows/wsl/)
-[![Content v25](https://img.shields.io/badge/content-v25-blue.svg)](CHANGELOG.md)
+[![Content v26](https://img.shields.io/badge/content-v26-blue.svg)](CHANGELOG.md)
 
 **Persistent memory for Claude Code via Markdown files.**
 
@@ -99,6 +99,14 @@ bash <(curl -fsSL https://raw.githubusercontent.com/b33eep/claude-code-setup/mai
 | pdf-reader | Read and analyze PDFs |
 | brave-search | Web search |
 | google-search | Google Custom Search |
+
+### External Plugins
+
+Install official Claude plugins via the installer:
+
+| Plugin | Description |
+|--------|-------------|
+| document-skills | Excel, Word, PowerPoint, PDF creation/editing |
 
 ---
 

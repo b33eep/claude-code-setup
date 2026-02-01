@@ -1,0 +1,16 @@
+{
+  "marketplaces": {
+    "anthropic-agent-skills": {
+      "repo": "anthropics/skills",
+      "description": "Official Anthropic Agent Skills"
+    }
+  },
+  "plugins": [
+    {
+      "id": "document-skills",
+      "marketplace": "anthropic-agent-skills",
+      "description": "Excel, Word, PowerPoint, PDF creation/editing",
+      "default": false
+    }
+  ]
+}

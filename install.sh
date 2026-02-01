@@ -34,6 +34,8 @@ source "$SCRIPT_DIR/lib/skills.sh"
 source "$SCRIPT_DIR/lib/statusline.sh"
 # shellcheck source=lib/update.sh
 source "$SCRIPT_DIR/lib/update.sh"
+# shellcheck source=lib/external-plugins.sh
+source "$SCRIPT_DIR/lib/external-plugins.sh"
 
 # Cleanup handler for temp files and interrupts
 cleanup() {
@@ -139,6 +141,7 @@ do_install() {
 
     select_mcp "$mode"
     select_skills "$mode"
+    select_external_plugins "$mode"
 
     # Install commands (always)
     print_header "Installing Commands"
@@ -189,6 +192,9 @@ do_install() {
             fi
         done
     fi
+
+    # Install external plugins
+    install_external_plugins
 
     # Configure status line
     print_header "Status Line"
