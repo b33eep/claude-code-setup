@@ -21,7 +21,7 @@ export default {
     title: 'Reference'
   },
   architecture: {
-    title: 'Architecture'
+    title: 'Records'
   },
   development: {
     title: 'Development'

@@ -1,0 +1,74 @@
+# MCP Servers
+
+Model Context Protocol servers extend Claude Code with additional capabilities.
+
+## Why MCP Servers?
+
+MCP servers run locally and give Claude access to external services. Benefits:
+
+- **Local control** - You decide when searches happen
+- **Cost control** - Free tiers available (Brave: 2000/month)
+- **Global availability** - Works everywhere, no geographic restrictions
+- **Advanced features** - Domain filtering, content extraction, research synthesis
+
+## MCP vs Built-in WebSearch
+
+Claude Code has a built-in `WebSearch` tool, but MCP search servers offer advantages:
+
+| Feature | Built-in WebSearch | MCP Search Servers |
+|---------|-------------------|-------------------|
+| Cost | $10/1000 searches | Free tier available |
+| Availability | May have restrictions | Global |
+| Control | Automatic | You decide when to search |
+| Providers | Anthropic only | Brave, Google, or custom |
+
+**Recommendation:** Install one search MCP server (brave-search or google-search), not both. They serve the same purpose.
+
+## Available Servers
+
+### Search
+
+- [brave-search](/reference/mcp-servers/brave-search) - Web search via Brave (2000 free/month)
+- [google-search](/reference/mcp-servers/google-search) - Google Custom Search with research features
+
+### Documents
+
+- [pdf-reader](/reference/mcp-servers/pdf-reader) - Read and analyze PDFs
+
+## Configuration
+
+All MCP servers are configured in `~/.claude.json`:
+
+```json
+{
+  "mcpServers": {
+    "server-name": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@package/name"],
+      "env": {
+        "API_KEY": "your-key"
+      }
+    }
+  }
+}
+```
+
+## Adding Custom Servers
+
+Create a JSON file in `~/.claude/custom/mcp/`:
+
+```json
+{
+  "name": "my-server",
+  "description": "My custom MCP server",
+  "config": {
+    "type": "stdio",
+    "command": "npx",
+    "args": ["-y", "@my-org/mcp-server"]
+  },
+  "requiresApiKey": false
+}
+```
+
+Then use `/add-custom` to install, or run `./install.sh --add`.

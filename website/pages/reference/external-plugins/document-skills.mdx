@@ -1,0 +1,97 @@
+# document-skills
+
+Create and edit Office documents and PDFs with Claude.
+
+## Overview
+
+| Field | Value |
+|-------|-------|
+| Marketplace | anthropic-agent-skills |
+| Source | [anthropics/skills](https://github.com/anthropics/skills) |
+| License | Source-available (proprietary) |
+| Default | Not pre-selected |
+
+## Capabilities
+
+### Excel (xlsx)
+
+- Create spreadsheets from scratch
+- Add formulas and calculations
+- Charts and data visualization
+- Formatting and styling
+- Data analysis
+
+### Word (docx)
+
+- Create/edit documents
+- Tracked changes support
+- Comments and annotations
+- Formatting preservation
+- Template-based creation
+
+### PowerPoint (pptx)
+
+- Create presentations from scratch
+- Use templates
+- Add slides, images, charts
+- Speaker notes
+- Layout customization
+
+### PDF
+
+- Extract text and tables
+- Read metadata
+- Merge and split documents
+- Annotate PDFs
+
+## Installation
+
+### Via Installer
+
+```bash
+./install.sh        # Fresh install
+./install.sh --add  # Add to existing
+```
+
+Select "document-skills" in the External Plugins section.
+
+### Manual
+
+```bash
+# Add marketplace
+claude plugin marketplace add anthropics/skills
+
+# Install plugin
+claude plugin install document-skills@anthropic-agent-skills
+```
+
+## Usage Examples
+
+```
+"Create a PowerPoint about our Q4 results"
+"Edit this Word document and track changes"
+"Extract tables from this PDF"
+"Create an Excel spreadsheet with sales data and charts"
+"Merge these three PDFs into one"
+```
+
+## When to Use
+
+Use document-skills when you need to:
+
+- Create Office documents programmatically
+- Edit existing documents while preserving formatting
+- Work with tracked changes in Word
+- Extract structured data from PDFs
+- Generate reports and presentations
+
+## vs pdf-reader MCP
+
+| Feature | document-skills | pdf-reader MCP |
+|---------|-----------------|----------------|
+| PDF reading | Yes | Yes |
+| PDF creation | Yes | No |
+| Office docs | Yes | No |
+| Installation | Claude plugin | MCP server |
+
+If you only need to read PDFs, the pdf-reader MCP server is sufficient. Use document-skills for creating/editing documents.

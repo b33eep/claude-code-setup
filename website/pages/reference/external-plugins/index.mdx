@@ -10,62 +10,17 @@ External plugins are installed using the official `claude plugin` CLI. The insta
 2. Installs the plugin via `claude plugin install`
 3. Enables the plugin automatically
 
-This is different from our Skills (which are copied to `~/.claude/skills/`). External plugins are managed by Claude Code itself.
+This is different from [Skills](/reference/skills) (which are copied to `~/.claude/skills/`). External plugins are managed by Claude Code itself.
 
 ## Available Plugins
 
-### document-skills
+### Document Creation
 
-Create and edit Office documents and PDFs.
+- [document-skills](/reference/external-plugins/document-skills) - Excel, Word, PowerPoint, PDF
 
-| Field | Value |
-|-------|-------|
-| Marketplace | anthropic-agent-skills |
-| Source | [anthropics/skills](https://github.com/anthropics/skills) |
-| License | Source-available (proprietary) |
+### Code Quality
 
-**Capabilities:**
-- **Excel (xlsx)**: Create spreadsheets with formulas, charts, formatting
-- **Word (docx)**: Create/edit documents with tracked changes, comments
-- **PowerPoint (pptx)**: Create presentations from scratch or templates
-- **PDF**: Extract text, tables, metadata; merge and annotate
-
-**Usage:**
-```
-"Create a PowerPoint about our Q4 results"
-"Edit this Word document and track changes"
-"Extract tables from this PDF"
-```
-
-### code-review-ai (Recommended)
-
-AI-powered architectural review and code quality analysis.
-
-| Field | Value |
-|-------|-------|
-| Marketplace | claude-code-workflows |
-| Source | [wshobson/agents](https://github.com/wshobson/agents) |
-| License | MIT |
-| Default | Pre-selected |
-
-**Why recommended:** This plugin integrates with our development workflow. The global CLAUDE.md references `code-review-ai:architect-review` as the agent for code reviews before committing significant changes.
-
-**Capabilities:**
-- Architectural review with pattern compliance
-- Security assessment
-- Code quality analysis
-- Best practices recommendations
-
-**Usage:**
-```
-"Review this PR for architectural issues"
-"Analyze the security of this module"
-```
-
-The Task tool can spawn this agent directly:
-```
-subagent_type: "code-review-ai:architect-review"
-```
+- [code-review-ai](/reference/external-plugins/code-review-ai) - Architectural review (recommended)
 
 ## Installation
 

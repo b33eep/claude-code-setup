@@ -1,0 +1,59 @@
+# pdf-reader
+
+Read and analyze PDF documents directly in Claude Code.
+
+## Overview
+
+| Field | Value |
+|-------|-------|
+| Package | @sylphx/pdf-reader-mcp |
+| Requires API Key | No |
+| Free | Yes |
+
+## Capabilities
+
+- Extract text from PDFs
+- Read specific pages or page ranges
+- Analyze PDF structure and metadata
+- Process multiple PDFs in one request
+
+## Installation
+
+Select during installation:
+
+```bash
+./install.sh        # Fresh install
+./install.sh --add  # Add to existing
+```
+
+Or configure manually in `~/.claude.json`:
+
+```json
+{
+  "mcpServers": {
+    "pdf-reader": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@sylphx/pdf-reader-mcp"]
+    }
+  }
+}
+```
+
+## Usage
+
+Once installed, Claude can read PDFs:
+
+```
+"Read the executive summary from report.pdf"
+"Extract pages 5-10 from this PDF"
+"What are the key findings in this document?"
+```
+
+## Tools Provided
+
+The MCP server provides:
+
+- `read_pdf` - Read content from PDF files
+- Supports local files and URLs
+- Page selection and metadata extraction

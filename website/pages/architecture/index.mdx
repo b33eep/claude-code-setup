@@ -1,10 +1,8 @@
-# Architecture
+# Records
 
-Design decisions and implementation records for Claude Code Setup.
+Records document decisions, feature designs, and rejected ideas - capturing the "why" behind this project.
 
-## Records
-
-Records document the "why" behind architectural decisions. They start as planning docs and become permanent documentation.
+They start as planning docs and become permanent documentation that survives any context clear.
 
 import { Callout } from 'nextra/components'
 
@@ -40,6 +38,7 @@ Records are maintained in the [source repository](https://github.com/b33eep/clau
 | 023 | [Context Quality Improvements](https://github.com/b33eep/claude-code-setup/blob/main/docs/records/023-context-quality-improvements.md) | Done |
 | 024 | [Documentation Site](https://github.com/b33eep/claude-code-setup/blob/main/docs/records/024-documentation-site.md) | Done |
 | 025 | [Private Notes](https://github.com/b33eep/claude-code-setup/blob/main/docs/records/025-private-notes.md) | Done |
+| 026 | [External Plugins](https://github.com/b33eep/claude-code-setup/blob/main/docs/records/026-external-plugins.md) | Done |
 
 ## Key Decisions
 
@@ -57,6 +56,6 @@ Records are maintained in the [source repository](https://github.com/b33eep/clau
 
 ### Implementation
 
-- **Single install script** - Avoid dependency on package managers.
+- **Single install script** - No npm/pip install required, just curl and run.
 - **ShellCheck compliant** - All scripts pass linting.
 - **Interactive by default** - Users choose what to install.

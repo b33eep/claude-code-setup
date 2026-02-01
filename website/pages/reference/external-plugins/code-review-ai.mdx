@@ -1,0 +1,129 @@
+# code-review-ai
+
+AI-powered architectural review and code quality analysis.
+
+## Overview
+
+| Field | Value |
+|-------|-------|
+| Marketplace | claude-code-workflows |
+| Source | [wshobson/agents](https://github.com/wshobson/agents) |
+| License | MIT |
+| Default | Pre-selected (recommended) |
+
+## Why Recommended?
+
+This plugin integrates with our [development workflow](/concepts/workflow). The global CLAUDE.md references `code-review-ai:architect-review` as the agent for code reviews before committing significant changes.
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  1. SPECIFY                                             │
+│     - Define user story / task in CLAUDE.md             │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│  2. IMPLEMENT                                           │
+│     - Write code                                        │
+│     - Write tests                                       │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│  3. CODE REVIEW  ◄──── code-review-ai                   │
+│     - Agent: code-review-ai:architect-review            │
+│     - Incorporate feedback                              │
+└─────────────────────────────────────────────────────────┘
+```
+
+## Capabilities
+
+### Architectural Review
+
+- Pattern compliance analysis
+- Design principle adherence
+- Dependency analysis
+- Scalability assessment
+
+### Security Assessment
+
+- Vulnerability detection
+- Security best practices
+- Authentication/authorization review
+- Input validation checks
+
+### Code Quality
+
+- Code smell detection
+- Complexity analysis
+- Maintainability scoring
+- Test coverage assessment
+
+### Best Practices
+
+- Language-specific conventions
+- Framework-specific patterns
+- Performance recommendations
+- Documentation quality
+
+## Installation
+
+### Via Installer
+
+```bash
+./install.sh        # Fresh install
+./install.sh --add  # Add to existing
+```
+
+code-review-ai is pre-selected by default.
+
+### Manual
+
+```bash
+# Add marketplace
+claude plugin marketplace add wshobson/agents
+
+# Install plugin
+claude plugin install code-review-ai@claude-code-workflows
+```
+
+## Usage
+
+### Direct Request
+
+```
+"Review this PR for architectural issues"
+"Analyze the security of this module"
+"Check this code for best practices"
+```
+
+### Via Task Tool
+
+The plugin provides a subagent that can be spawned via the Task tool:
+
+```
+subagent_type: "code-review-ai:architect-review"
+```
+
+This is used automatically when following the development workflow in global CLAUDE.md.
+
+## Review Output
+
+The agent provides structured feedback:
+
+1. **Summary** - Overall assessment
+2. **Architectural concerns** - Design issues
+3. **Security findings** - Vulnerabilities
+4. **Code quality** - Improvements
+5. **Recommendations** - Actionable next steps
+
+## Integration with Workflow
+
+After implementing a feature:
+
+1. Claude spawns `code-review-ai:architect-review`
+2. Agent reviews the changes
+3. Feedback is incorporated
+4. Code is committed
+
+This ensures consistent quality before commits.

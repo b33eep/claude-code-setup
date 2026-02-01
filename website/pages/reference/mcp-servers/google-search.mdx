@@ -1,0 +1,108 @@
+# google-search
+
+Google Custom Search with advanced research features.
+
+## Overview
+
+| Field | Value |
+|-------|-------|
+| Package | @anthropic/mcp-server-google-search |
+| Requires API Key | Yes (2 keys) |
+| Get Keys | [Google Cloud Console](https://console.cloud.google.com/) |
+
+## Why Google Search?
+
+- **Research synthesis** - AI-powered topic research
+- **Content extraction** - Extract and analyze web pages
+- **Advanced filters** - Date, language, domain restrictions
+- **Familiar results** - Google's search quality
+
+## Capabilities
+
+- Web search with filters
+- Content extraction from URLs
+- `research_topic` - Deep research with AI synthesis
+- Multiple webpage extraction
+
+## Installation
+
+### 1. Get API Keys
+
+You need two keys from Google Cloud:
+
+1. **API Key**
+   - Go to [Google Cloud Console](https://console.cloud.google.com/)
+   - Enable "Custom Search API"
+   - Create an API key
+
+2. **Custom Search Engine ID (CSE ID)**
+   - Go to [Programmable Search Engine](https://programmablesearchengine.google.com/)
+   - Create a new search engine
+   - Copy the Search Engine ID
+
+### 2. Install via Setup
+
+```bash
+./install.sh        # Fresh install
+./install.sh --add  # Add to existing
+```
+
+The installer will prompt for both keys.
+
+### 3. Manual Configuration
+
+Add to `~/.claude.json`:
+
+```json
+{
+  "mcpServers": {
+    "google-search": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-server-google-search"],
+      "env": {
+        "GOOGLE_API_KEY": "your-api-key",
+        "GOOGLE_CSE_ID": "your-cse-id"
+      }
+    }
+  }
+}
+```
+
+## Usage
+
+Once installed, Claude can search and research:
+
+```
+"Search for Python async best practices"
+"Research the topic of microservices architecture"
+"Extract content from this article URL"
+```
+
+## Tools Provided
+
+| Tool | Description |
+|------|-------------|
+| `google_search` | Web search with filters |
+| `extract_webpage_content` | Get content from a URL |
+| `extract_multiple_webpages` | Batch URL extraction |
+| `research_topic` | Deep research with synthesis |
+
+## vs Built-in WebSearch
+
+| Aspect | google-search MCP | Built-in WebSearch |
+|--------|------------------|-------------------|
+| Cost | Google API pricing | $10/1000 searches |
+| Features | Research synthesis | Basic search |
+| Control | You decide when | Claude decides |
+
+## vs brave-search
+
+| | google-search | brave-search |
+|-|---------------|--------------|
+| Setup | 2 keys | 1 key |
+| Free tier | Limited | 2000/month |
+| Features | Research synthesis | Basic search |
+| Best for | Deep research | Quick searches |
+
+Choose google-search if you need the `research_topic` feature for comprehensive analysis.

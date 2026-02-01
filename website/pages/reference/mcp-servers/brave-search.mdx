@@ -1,0 +1,94 @@
+# brave-search
+
+Web search via Brave Search API with a generous free tier.
+
+## Overview
+
+| Field | Value |
+|-------|-------|
+| Package | @brave/brave-search-mcp-server |
+| Requires API Key | Yes |
+| Free Tier | 2000 queries/month |
+| Get Key | [brave.com/search/api](https://brave.com/search/api/) |
+
+## Why Brave Search?
+
+- **Free tier** - 2000 searches/month at no cost
+- **No tracking** - Privacy-focused search engine
+- **Global** - Works everywhere, no geographic restrictions
+- **Fast** - Quick response times
+
+## Capabilities
+
+- Web search
+- News search
+- Image search
+- Local search
+
+## Installation
+
+### 1. Get API Key
+
+1. Visit [brave.com/search/api](https://brave.com/search/api/)
+2. Sign up for the "Data for AI" plan
+3. Create an API key (free tier: 2000 queries/month)
+
+### 2. Install via Setup
+
+```bash
+./install.sh        # Fresh install
+./install.sh --add  # Add to existing
+```
+
+The installer will prompt for your API key.
+
+### 3. Manual Configuration
+
+Add to `~/.claude.json`:
+
+```json
+{
+  "mcpServers": {
+    "brave-search": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@brave/brave-search-mcp-server"],
+      "env": {
+        "BRAVE_API_KEY": "your-api-key-here"
+      }
+    }
+  }
+}
+```
+
+## Usage
+
+Once installed, Claude can search the web:
+
+```
+"Search for recent news about AI regulations"
+"Find tutorials on React Server Components"
+"What's the current weather in Berlin?"
+```
+
+## vs Built-in WebSearch
+
+| Aspect | brave-search MCP | Built-in WebSearch |
+|--------|-----------------|-------------------|
+| Cost | Free (2000/month) | $10/1000 searches |
+| Control | You decide when | Claude decides |
+| Privacy | Brave (no tracking) | Anthropic |
+
+**Recommendation:** If you need web search, brave-search is the cost-effective choice.
+
+## vs google-search
+
+Both serve the same purpose. Choose one:
+
+| | brave-search | google-search |
+|-|--------------|---------------|
+| Free tier | 2000/month | Limited |
+| Setup | 1 API key | 2 keys (API + CSE ID) |
+| Features | Basic search | Research synthesis |
+
+For most users, brave-search is simpler to set up.
