@@ -1,8 +1,9 @@
 # Record 024: Documentation Site
 
-**Status:** In Progress
+**Status:** Done
 **Priority:** High
 **Date:** 2026-01-31
+**Live:** https://b33eep.github.io/claude-code-setup/
 
 ## Problem
 
