@@ -3,6 +3,10 @@
     "anthropic-agent-skills": {
       "repo": "anthropics/skills",
       "description": "Official Anthropic Agent Skills"
+    },
+    "claude-code-workflows": {
+      "repo": "wshobson/agents",
+      "description": "Claude Code Workflows by Seth Hobson"
     }
   },
   "plugins": [
@@ -11,6 +15,12 @@
       "marketplace": "anthropic-agent-skills",
       "description": "Excel, Word, PowerPoint, PDF creation/editing",
       "default": false
+    },
+    {
+      "id": "code-review-ai",
+      "marketplace": "claude-code-workflows",
+      "description": "AI-powered architectural review and code quality analysis (recommended)",
+      "default": true
     }
   ]
 }

@@ -37,6 +37,36 @@ Create and edit Office documents and PDFs.
 "Extract tables from this PDF"
 ```
 
+### code-review-ai (Recommended)
+
+AI-powered architectural review and code quality analysis.
+
+| Field | Value |
+|-------|-------|
+| Marketplace | claude-code-workflows |
+| Source | [wshobson/agents](https://github.com/wshobson/agents) |
+| License | MIT |
+| Default | Pre-selected |
+
+**Why recommended:** This plugin integrates with our development workflow. The global CLAUDE.md references `code-review-ai:architect-review` as the agent for code reviews before committing significant changes.
+
+**Capabilities:**
+- Architectural review with pattern compliance
+- Security assessment
+- Code quality analysis
+- Best practices recommendations
+
+**Usage:**
+```
+"Review this PR for architectural issues"
+"Analyze the security of this module"
+```
+
+The Task tool can spawn this agent directly:
+```
+subagent_type: "code-review-ai:architect-review"
+```
+
 ## Installation
 
 External plugins are offered during installation:
@@ -51,7 +81,8 @@ You'll see a selection like:
 ```
 External Plugins (via Claude CLI):
 
-  ❯ ◉ document-skills - Excel, Word, PowerPoint, PDF creation/editing
+    ○ document-skills - Excel, Word, PowerPoint, PDF creation/editing
+  ❯ ◉ code-review-ai - AI-powered architectural review (recommended)
 
   ↑↓ navigate  ⎵ toggle  ⏎ confirm
 ```
