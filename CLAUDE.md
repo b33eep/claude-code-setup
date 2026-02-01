@@ -50,6 +50,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | YouTube Transcript Skill | Done | Content v22: `/youtube-transcript` with frame extraction ([Record 021](docs/records/021-youtube-transcript-skill.md)) |
 | Security: Remove eval | Done | Remove eval from deps.json check, document trust model ([PR #22](https://github.com/b33eep/claude-code-setup/pull/22)) |
 | Decision Log | Done | Content v23: Recent Decisions section ([Record 023](docs/records/023-context-quality-improvements.md)) |
+| Documentation Site | Done | Nextra in /website, GitHub Pages ([Record 024](docs/records/024-documentation-site.md)) |
 
 ### Future
 
@@ -88,6 +89,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | YouTube Transcript Skill | yt-dlp + ffmpeg, frame extraction | [021](docs/records/021-youtube-transcript-skill.md) |
 | Docker Matrix Tests | **Planned** - Validate deps.json on distros | [022](docs/records/022-docker-matrix-tests.md) |
 | Context Quality Improvements | Decision Log (v23) | [023](docs/records/023-context-quality-improvements.md) |
+| Documentation Site | Nextra in /website, monorepo | [024](docs/records/024-documentation-site.md) |
 
 ---
 
@@ -110,7 +112,7 @@ claude-code-setup/
 ├── mcp/
 ├── commands/
 ├── skills/
-└── docs/records/000-020-*.md
+└── docs/records/000-024-*.md
 ```
 
 ---
