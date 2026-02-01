@@ -58,6 +58,21 @@ Project-specific private notes live in `docs/notes/` (gitignored).
 - Rename to `.md` when done to close them
 ```
 
+## Design Decision: Loading Behavior
+
+**Why different from Records?**
+
+| Aspect | Records | Notes |
+|--------|---------|-------|
+| Loading | Selective (referenced in CLAUDE.md) | All open (glob `*.open.md`) |
+| Quantity | Many (accumulate over time) | Few (temporary) |
+| Lifespan | Permanent | Session-bound |
+| Control | Explicit reference in status tables | Filename suffix |
+
+Records need selective loading because projects accumulate many (25+). Loading all would waste context.
+
+Notes use glob because the user controls what's "open" - the assumption is that notes are closed (renamed to `.md`) when no longer needed.
+
 ## Implementation
 
 1. [x] Update global CLAUDE.md template

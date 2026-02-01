@@ -21,7 +21,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Custom Modules | Done | ~/.claude/custom/ for user modules |
 | Solo/Team Mode | Done | /init-project asks for .gitignore preference |
 | Install Script | Done | --add, --update, --list, --yes flags, ShellCheck compliant |
-| Records | Done | 21 Records (000-020) |
+| Records | Done | 26 Records (000-025) |
 | Open Source Release | Done | Published to b33eep/claude-code-setup |
 | GitHub Actions E2E | Done | Full test coverage |
 | Open Source Polish | Done | SECURITY.md, CONTRIBUTING.md, CHANGELOG.md, templates |
@@ -114,7 +114,7 @@ claude-code-setup/
 ├── mcp/
 ├── commands/
 ├── skills/
-└── docs/records/000-024-*.md
+└── docs/records/000-025-*.md
 ```
 
 ---
