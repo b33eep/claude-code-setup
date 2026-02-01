@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v26**: Add External Plugins feature - install Claude plugins via installer ([Record 026](docs/records/026-external-plugins.md))
+  - Uses official `claude plugin` CLI
+  - Offers `document-skills` (Excel, Word, PowerPoint, PDF) from Anthropic
+  - Custom plugins via `~/.claude/custom/external-plugins.json`
 - **v25**: `/init-project` now creates `docs/notes/` folder and adds it to `.gitignore`
   - Completes Private Notes feature from v24
 - **v24**: Add Private Notes feature - `docs/notes/*.open.md` loaded by `/catchup` ([Record 025](docs/records/025-private-notes.md))

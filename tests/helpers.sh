@@ -178,6 +178,7 @@ run_install_expect() {
         set env(MCP_CONFIG_FILE) \"$MCP_CONFIG_FILE\"
         set env(TERM) \"xterm-256color\"
         set env(SKIP_SKILL_DEPS) \"1\"
+        set env(SKIP_EXTERNAL_PLUGINS) \"1\"
 
         $_EXPECT_COMMON_PROCS
 
@@ -201,6 +202,7 @@ run_add_expect() {
         set env(MCP_CONFIG_FILE) \"$MCP_CONFIG_FILE\"
         set env(TERM) \"xterm-256color\"
         set env(SKIP_SKILL_DEPS) \"1\"
+        set env(SKIP_EXTERNAL_PLUGINS) \"1\"
 
         $_EXPECT_COMMON_PROCS
 
@@ -224,6 +226,7 @@ run_update_expect() {
         set env(MCP_CONFIG_FILE) \"$MCP_CONFIG_FILE\"
         set env(TERM) \"xterm-256color\"
         set env(SKIP_SKILL_DEPS) \"1\"
+        set env(SKIP_EXTERNAL_PLUGINS) \"1\"
 
         $_EXPECT_COMMON_PROCS
 

@@ -52,6 +52,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Decision Log | Done | Content v23: Recent Decisions section ([Record 023](docs/records/023-context-quality-improvements.md)) |
 | Documentation Site | Done | Nextra in /website, GitHub Pages ([Record 024](docs/records/024-documentation-site.md)) |
 | Private Notes | Done | Content v24: `.open.md` convention, /catchup integration ([Record 025](docs/records/025-private-notes.md)) |
+| External Plugins | Done | Content v26: Install Claude plugins via installer ([Record 026](docs/records/026-external-plugins.md)) |
 
 ### Future
 
@@ -92,6 +93,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Context Quality Improvements | Decision Log (v23) | [023](docs/records/023-context-quality-improvements.md) |
 | Documentation Site | Nextra in /website, monorepo | [024](docs/records/024-documentation-site.md) |
 | Private Notes | `.open.md` convention, /catchup integration | [025](docs/records/025-private-notes.md) |
+| External Plugins | Install Claude plugins via `claude plugin` CLI | [026](docs/records/026-external-plugins.md) |
 
 ---
 

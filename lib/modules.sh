@@ -419,6 +419,11 @@ interactive_select() {
         for item in $result_items; do
             SELECTED_SKILLS+=("$item")
         done
+    elif [[ "$result_var" = "SELECTED_EXTERNAL_PLUGINS" ]]; then
+        SELECTED_EXTERNAL_PLUGINS=()
+        for item in $result_items; do
+            SELECTED_EXTERNAL_PLUGINS+=("$item")
+        done
     else
         echo "Warning: Unknown result variable '$result_var' in interactive_select" >&2
     fi
@@ -501,6 +506,18 @@ list_modules() {
     else
         for s in $installed_skills; do
             print_success "$s"
+        done
+    fi
+
+    echo ""
+    echo "External Plugins:"
+    local installed_plugins
+    installed_plugins=$(get_installed "external_plugins")
+    if [[ -z "$installed_plugins" ]]; then
+        print_info "(none)"
+    else
+        for p in $installed_plugins; do
+            print_success "$p"
         done
     fi
 
