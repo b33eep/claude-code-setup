@@ -1,0 +1,50 @@
+# /catchup
+
+Resume your work after `/clear` or a new chat session.
+
+## Usage
+
+```
+/catchup
+```
+
+## What It Does
+
+1. **Reads project README.md** - Understands project purpose and structure
+
+2. **Reads changed files** - Uses `git diff --name-only HEAD~10` to see recent changes
+
+3. **Loads relevant Records** - Checks Current Status table for in-progress work with Record references
+
+4. **Checks Recent Decisions** - Reads small decisions that survived the last `/clear`
+
+5. **Loads context skills** - Matches your Tech Stack to coding standards
+
+6. **Summarizes** - Shows what changed and what's next
+
+## Example Output
+
+```
+Project: claude-code-setup
+Tech Stack: Bash, Markdown
+
+Recent changes:
+- Added JWT authentication (3 files)
+- Updated user model
+
+Records loaded:
+- Record 015: Auth decision (in-progress work)
+
+Next step: Implement password reset (from CLAUDE.md)
+```
+
+## When to Use
+
+- After `/clear`
+- Starting a new chat session
+- Returning to a project after time away
+
+## Related
+
+- [/wrapup](/commands/wrapup) - Save status before clearing
+- [/init-project](/commands/init-project) - Set up a new project

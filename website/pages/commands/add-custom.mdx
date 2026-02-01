@@ -1,0 +1,109 @@
+# /add-custom
+
+Install custom modules from a Git repository.
+
+## Usage
+
+```
+/add-custom <git-url>
+```
+
+## Example
+
+```
+/add-custom git@company.com:team/claude-modules.git
+```
+
+## What It Does
+
+1. **Clones the repository** to `~/.claude/custom/`
+
+2. **Detects modules**
+   - MCP servers in `mcp/`
+   - Skills in `skills/`
+
+3. **Installs modules**
+   - Copies to appropriate locations
+   - Registers in `installed.json`
+
+4. **Custom overrides built-in**
+   - Your `standards-python` replaces the default one
+
+## Repository Structure
+
+Your custom module repository should follow this structure:
+
+```
+company-claude-modules/
+├── VERSION              # Version number (e.g., "1.0.0")
+├── CHANGELOG.md         # What changed
+├── mcp/
+│   └── internal-api.json
+└── skills/
+    └── company-standards/
+        └── SKILL.md
+```
+
+## Skill Format
+
+```markdown
+---
+name: standards-python
+description: Company Python standards
+type: context
+applies_to: [python, fastapi, django]
+---
+
+# Your Standards
+
+Content here...
+```
+
+## MCP Server Format
+
+```json
+{
+  "name": "internal-api",
+  "description": "Internal API MCP server",
+  "config": {
+    "type": "stdio",
+    "command": "npx",
+    "args": ["-y", "@company/mcp-internal"]
+  },
+  "requiresApiKey": false
+}
+```
+
+## For Teams
+
+Set up a company repository once:
+
+```bash
+# Create the repo
+mkdir company-claude-modules
+cd company-claude-modules
+git init
+
+# Add your standards
+mkdir -p skills/company-standards
+# Create SKILL.md with your standards
+
+# Push to company Git
+git remote add origin git@company.com:team/claude-modules.git
+git push -u origin main
+```
+
+Then every team member runs:
+
+```
+/add-custom git@company.com:team/claude-modules.git
+```
+
+## Updating Custom Modules
+
+Use `/claude-code-setup` to check for and install updates to your custom modules.
+
+## Related
+
+- [/claude-code-setup](/commands/claude-code-setup) - Update modules
+- [Creating Skills](/guides/creating-skills) - Build your own skills

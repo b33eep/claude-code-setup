@@ -1,0 +1,120 @@
+# TypeScript Standards
+
+Auto-loads for projects with TypeScript in their tech stack.
+
+## Metadata
+
+| Field | Value |
+|-------|-------|
+| Type | context |
+| Applies to | typescript, nodejs, express, nestjs, nextjs, react, vue, angular, deno, bun, zod |
+
+## Core Principles
+
+1. **Simplicity** - Simple, understandable code
+2. **Readability** - Readability over cleverness
+3. **Maintainability** - Code that's easy to maintain
+4. **Testability** - Code that's easy to test
+5. **DRY** - Don't Repeat Yourself
+
+## Naming Conventions
+
+| Element | Convention | Example |
+|---------|------------|---------|
+| Variables/Functions | camelCase | `getUserById`, `isActive` |
+| Classes/Interfaces/Types | PascalCase | `UserService`, `ApiClient` |
+| Constants | UPPER_SNAKE_CASE | `MAX_RETRY_COUNT` |
+| Files | kebab-case | `user-service.ts` |
+| Interfaces | No `I` prefix | `User` not `IUser` |
+
+## Code Style
+
+```typescript
+// Explicit types for function parameters and return values
+function getUserById(userId: string): User | undefined {
+  if (!userId) {
+    throw new Error("userId cannot be empty");
+  }
+  // implementation...
+}
+
+// Prefer interfaces for object shapes
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  age?: number;
+}
+
+// Type aliases for unions and primitives
+type UserId = string;
+type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
+```
+
+## Best Practices
+
+```typescript
+// Nullish coalescing and optional chaining
+const name = user?.profile?.name ?? "Anonymous";
+
+// Readonly for immutable data
+interface Config {
+  readonly apiUrl: string;
+  readonly maxRetries: number;
+}
+
+// as const for literal types
+const DIRECTIONS = ["north", "south", "east", "west"] as const;
+type Direction = typeof DIRECTIONS[number];
+
+// Prefer unknown over any
+function parseJson(input: string): unknown {
+  return JSON.parse(input);
+}
+```
+
+## Utility Types
+
+```typescript
+type UserUpdate = Partial<User>;           // All optional
+type UserPreview = Pick<User, "id" | "name">;  // Select properties
+type UserWithoutEmail = Omit<User, "email">;   // Exclude properties
+```
+
+## Zod for Runtime Validation
+
+```typescript
+import { z } from "zod";
+
+const UserSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string().min(1).max(100),
+  email: z.string().email(),
+});
+
+type User = z.infer<typeof UserSchema>;
+const user = UserSchema.parse(untrustedData);
+```
+
+## Recommended Tooling
+
+| Tool | Purpose |
+|------|---------|
+| `pnpm` or `bun` | Package manager |
+| `eslint` | Linting with TypeScript rules |
+| `prettier` | Code formatting |
+| `vitest` or `jest` | Testing framework |
+| `zod` | Runtime validation |
+
+## tsconfig.json
+
+```json
+{
+  "compilerOptions": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitReturns": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}
+```

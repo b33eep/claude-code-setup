@@ -1,0 +1,108 @@
+# Slidev Presentations
+
+Create professional slide decks using Slidev - a Markdown-based presentation framework.
+
+## Metadata
+
+| Field | Value |
+|-------|-------|
+| Type | command |
+| Invoked by | Asking to create a presentation |
+| Dependencies | Node.js >= 24.0.0 |
+
+## Usage
+
+Ask Claude to create a presentation:
+
+```
+Create a presentation about our Q4 results
+```
+
+Or be more specific:
+
+```
+Create a 10-slide presentation about microservices architecture
+with code examples and a Mermaid diagram
+```
+
+## What It Creates
+
+```
+presentation/
+├── slides.md          # Main presentation content
+├── package.json       # Slidev dependencies
+└── components/        # Custom Vue components (if needed)
+```
+
+## Features
+
+### Layouts
+
+17 built-in layouts including:
+- `cover` - Title slide
+- `two-cols` - Two-column layout
+- `image-right` - Content with image on right
+- `quote` - Quote highlight
+- `section` - Section divider
+
+### Code Blocks
+
+Live code editors with syntax highlighting:
+
+````markdown
+```python {1|2-3|all}
+def hello():
+    print("Hello")
+    return True
+```
+````
+
+Line highlighting with click-through animations.
+
+### Diagrams
+
+Mermaid diagrams render automatically:
+
+````markdown
+```mermaid
+graph LR
+    A[Client] --> B[API]
+    B --> C[Database]
+```
+````
+
+### Math
+
+LaTeX math expressions:
+
+```markdown
+$E = mc^2$
+
+$$
+\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
+$$
+```
+
+## Running Presentations
+
+```bash
+cd presentation
+npm install
+npm run dev
+```
+
+Opens at http://localhost:3030
+
+## Export Options
+
+```bash
+npm run export           # PDF
+npm run export -- --format pptx  # PowerPoint
+npm run export -- --format png   # PNG images
+```
+
+## Attribution
+
+Based on [Slidev](https://sli.dev) by Anthony Fu.
+
+Skill inspired by [AJBcoding/claude-skill-eval](https://github.com/AJBcoding/claude-skill-eval).

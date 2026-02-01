@@ -1,0 +1,121 @@
+# Workflow
+
+The daily workflow for using Claude Code Setup effectively.
+
+## Overview
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  SESSION START                                          │
+│                                                         │
+│  /catchup → See what changed, what's next               │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│  WORK                                                   │
+│                                                         │
+│  Implement tasks from CLAUDE.md                         │
+│  /todo → Add new todos (creates Records if complex)     │
+│  Monitor context: Ctx: 70% (via ccstatusline)           │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│  SESSION END (when context fills up)                    │
+│                                                         │
+│  /wrapup → Saves status to CLAUDE.md, commits           │
+│  /clear → Fresh start with full memory                  │
+└─────────────────────────────────────────────────────────┘
+```
+
+## Session Start
+
+### After /clear or New Chat
+
+```
+/catchup
+```
+
+Claude will:
+1. Read your project's CLAUDE.md
+2. Check recent Git changes
+3. Load relevant Records
+4. Load coding standards for your tech stack
+5. Show you what's next
+
+### First Time on a Project
+
+```
+/init-project
+```
+
+Creates the project CLAUDE.md and docs/records/ folder.
+
+## During Work
+
+### Track Important Decisions
+
+When Claude makes a significant decision, add it to Records:
+
+```
+Create a Record for why we chose JWT over sessions
+```
+
+For small decisions with a quick "why":
+
+```
+Add to Recent Decisions: pip --user to avoid PEP 668 error
+```
+
+### Add New Tasks
+
+```
+/todo Add password reset functionality
+```
+
+Claude determines if it needs a Record or just a table entry.
+
+### Monitor Context
+
+Watch the status line:
+```
+Ctx: 45% | Model: opus | Branch: main
+```
+
+At ~80%, it's time to wrap up.
+
+## Session End
+
+### Save Your Progress
+
+```
+/wrapup
+```
+
+Claude will:
+1. Update CLAUDE.md status
+2. Create/sync Records
+3. Commit changes
+
+### Clear Context
+
+```
+/clear
+```
+
+Start fresh. Next session begins with `/catchup`.
+
+## Why This Workflow?
+
+| Problem | Solution |
+|---------|----------|
+| Auto-compact loses details | You control what's saved via /wrapup |
+| "Where was I?" | /catchup shows exactly where you left off |
+| Lost decisions | Records preserve reasoning |
+| Inconsistent sessions | Same workflow every time |
+
+## Related
+
+- [Disable Auto-Compact](/getting-started/disable-autocompact) - Required setup
+- [First Session](/getting-started/first-session) - Detailed walkthrough

@@ -1,0 +1,55 @@
+# Installation
+
+## Prerequisites
+
+| Requirement | Why |
+|-------------|-----|
+| [Claude Code](https://claude.ai/download) | The CLI this setup extends |
+| macOS, Linux, or WSL | Supported platforms |
+
+**Optional:**
+- [Node.js](https://nodejs.org/) - Required for context status line
+- [Homebrew](https://brew.sh) (macOS) - For automatic jq installation
+
+## Run Installer
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/b33eep/claude-code-setup/main/quick-install.sh)
+```
+
+The installer:
+- Installs `jq` automatically (via Homebrew or binary)
+- Lets you select MCP servers, coding standards, and tools
+- Configures [ccstatusline](https://github.com/sirmalloc/ccstatusline) for context monitoring
+- Sets up commands, skills, and templates
+
+## Alternative: Clone and Run
+
+```bash
+git clone https://github.com/b33eep/claude-code-setup.git
+cd claude-code-setup
+./install.sh
+```
+
+## What Gets Installed
+
+```
+~/.claude/
+├── CLAUDE.md           # Global config (your workflow)
+├── settings.json       # Claude Code settings
+├── installed.json      # Tracks installed modules
+├── commands/           # Slash commands
+├── skills/             # Coding standards, tools
+├── templates/          # Project CLAUDE.md template
+└── custom/             # Your custom modules
+
+~/.claude.json          # MCP server configs
+```
+
+## Next Steps
+
+After installation:
+
+1. [Disable Auto-Compact](/getting-started/disable-autocompact) (required)
+2. [Set up your first project](/getting-started/first-project)
+3. [Learn the daily workflow](/getting-started/first-session)

@@ -1,0 +1,160 @@
+# Shell/Bash Standards
+
+Auto-loads for shell scripts and Bash projects.
+
+## Metadata
+
+| Field | Value |
+|-------|-------|
+| Type | context |
+| Applies to | bash, sh, shell, zsh, shellcheck, bats |
+
+## Core Principles
+
+1. **Simplicity** - Simple, understandable scripts
+2. **Readability** - Readability over cleverness
+3. **Defensiveness** - Fail early, fail loudly
+4. **ShellCheck Clean** - All scripts must pass ShellCheck
+
+## Defensive Header
+
+```bash
+#!/bin/bash
+set -euo pipefail
+# -e: Exit on error
+# -u: Error on undefined variables
+# -o pipefail: Pipe fails if any command fails
+```
+
+## Naming Conventions
+
+| Element | Convention | Example |
+|---------|------------|---------|
+| Variables | snake_case | `user_name`, `file_count` |
+| Functions | snake_case | `get_user_by_id` |
+| Constants | UPPER_SNAKE_CASE | `MAX_RETRIES` |
+| Files | kebab-case | `deploy-app.sh` |
+
+## Script Template
+
+```bash
+#!/bin/bash
+set -euo pipefail
+
+readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly SCRIPT_NAME="$(basename "${BASH_SOURCE[0]}")"
+
+cleanup() {
+    rm -f "$SCRIPT_DIR"/*.tmp 2>/dev/null || true
+}
+trap cleanup EXIT
+
+error_handler() {
+    echo "Error on line $1" >&2
+    exit 1
+}
+trap 'error_handler $LINENO' ERR
+
+main() {
+    echo "Running $SCRIPT_NAME"
+}
+
+main "$@"
+```
+
+## Best Practices
+
+```bash
+# Always quote variables
+echo "$var"                     # Good
+echo $var                       # Bad - word splitting
+
+# Use [[ ]] for conditionals
+if [[ -f "$file" ]]; then       # Good (Bash)
+if [ -f "$file" ]; then         # POSIX only
+
+# Local variables in functions
+get_user_name() {
+    local user_id=$1
+    local name
+    name=$(grep "^${user_id}:" /etc/passwd | cut -d: -f5)
+    echo "$name"
+}
+
+# Parameter expansion
+${var:-default}             # Use default if unset
+${var:?error message}       # Error if unset
+${file%%.*}                 # Remove extension
+```
+
+## File Operations
+
+```bash
+# Read file line by line
+while IFS= read -r line; do
+    echo "Line: $line"
+done < "input.txt"
+
+# Safe temp files
+temp_file=$(mktemp)
+trap 'rm -f "$temp_file"' EXIT
+
+# Process files with spaces
+find . -name "*.txt" -print0 | while IFS= read -r -d '' file; do
+    echo "Processing: $file"
+done
+```
+
+## Argument Parsing
+
+```bash
+usage() {
+    echo "Usage: $0 [-v] [-o output] [-h]"
+    exit 1
+}
+
+verbose=false
+output_file=""
+
+while getopts "vo:h" opt; do
+    case $opt in
+        v) verbose=true ;;
+        o) output_file="$OPTARG" ;;
+        h) usage ;;
+        *) usage ;;
+    esac
+done
+shift $((OPTIND - 1))
+```
+
+## Recommended Tooling
+
+| Tool | Purpose |
+|------|---------|
+| `shellcheck` | Static analysis (required) |
+| `shfmt` | Code formatting |
+| `bats-core` | Testing framework |
+
+## ShellCheck
+
+```bash
+# Run ShellCheck
+shellcheck script.sh
+
+# Disable specific warning (sparingly)
+# shellcheck disable=SC2086
+echo $UNQUOTED_VAR
+```
+
+## Production Checklist
+
+1. Defensive header (`set -euo pipefail`)
+2. Quote all variables
+3. Use local variables in functions
+4. ShellCheck clean
+5. Cleanup traps for temp files
+6. Meaningful exit codes
+7. Logging to stderr
+8. Check dependencies exist
+9. Handle signals (SIGTERM)
+10. Include `--help` option

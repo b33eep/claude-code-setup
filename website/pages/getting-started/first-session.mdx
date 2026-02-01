@@ -1,0 +1,97 @@
+# First Session Walkthrough
+
+A complete walkthrough of your first coding session with Claude Code Setup.
+
+## Start Your Session
+
+### 1. Open Claude Code in your project
+
+```bash
+cd your-project
+claude
+```
+
+### 2. Run `/catchup`
+
+If this is your first session after `/init-project`, `/catchup` will:
+- Read your project's CLAUDE.md
+- Load coding standards for your tech stack
+- Show you what's next
+
+```
+You: /catchup
+Claude: Project: Your Project
+        Tech Stack: Python, FastAPI
+        No recent changes (new project)
+        Next step: Start with the first task
+```
+
+## Work on Your Task
+
+### 3. Tell Claude what you want to build
+
+```
+You: Let's implement user authentication with JWT
+```
+
+Claude will:
+- Read relevant files to understand the codebase
+- Load Python coding standards (from your tech stack)
+- Implement the feature following your project's patterns
+
+### 4. Track important decisions
+
+When Claude makes a significant decision:
+
+```
+You: Add that to the Records table - why we chose JWT over sessions
+```
+
+This creates a permanent record that survives `/clear`.
+
+## End Your Session
+
+### 5. Watch context usage
+
+Your status line shows:
+```
+Ctx: 75% | Model: opus | Branch: main
+```
+
+At ~80%, it's time to wrap up.
+
+### 6. Run `/wrapup`
+
+```
+You: /wrapup
+Claude: Updated CLAUDE.md:
+        - JWT auth: Done
+        - Added Record 001 for auth decision
+        Committed changes.
+```
+
+### 7. Clear context
+
+```
+/clear
+```
+
+## Next Session
+
+### 8. Resume with `/catchup`
+
+```
+You: /catchup
+Claude: Recent changes:
+        - Added JWT authentication
+        - Record 001: Auth decision
+        Next step: Add password reset
+```
+
+You're back where you left off, with full context of what was decided and why.
+
+## Tips
+
+- Don't wait until context is 100% - `/wrapup` at 80%
+- Add decisions to Records as you make them, not later
+- Use `/todo` to track tasks that come up during work

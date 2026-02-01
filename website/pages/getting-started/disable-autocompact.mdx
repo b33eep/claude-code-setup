@@ -1,0 +1,45 @@
+# Disable Auto-Compact
+
+import { Callout } from 'nextra/components'
+
+<Callout type="warning">
+This is critical. Auto-compact destroys context unpredictably. This setup uses `/wrapup` then `/clear` instead.
+</Callout>
+
+## Why Disable Auto-Compact?
+
+Auto-compact summarizes your conversation when context fills up. This means:
+
+- Lost implementation details
+- Forgotten decisions and reasoning
+- Inconsistent behavior between sessions
+- No control over what gets preserved
+
+## How to Disable
+
+**Claude Code Settings** → `Cmd+,` (macOS) or `Ctrl+,` (Linux)
+
+```
+Auto-compact: false
+```
+
+## The Alternative Workflow
+
+Instead of auto-compact, use the Document & Clear workflow:
+
+1. **Work** until context fills (~80% shown in status line)
+2. **Run `/wrapup`** to save status to CLAUDE.md
+3. **Run `/clear`** to start fresh
+4. **Run `/catchup`** to resume where you left off
+
+This gives you full control over what gets preserved between sessions.
+
+## Monitoring Context Usage
+
+With [ccstatusline](https://github.com/sirmalloc/ccstatusline) installed, you'll see:
+
+```
+Ctx: 45% | Model: opus | Branch: main
+```
+
+When it hits ~80%, it's time for `/wrapup`.

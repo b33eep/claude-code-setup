@@ -1,0 +1,75 @@
+# Two CLAUDE.md Files
+
+The core concept of Claude Code Setup: two Markdown files that serve as persistent memory.
+
+## Overview
+
+| File | Location | Purpose |
+|------|----------|---------|
+| **Global** | `~/.claude/CLAUDE.md` | Your workflow, conventions, preferences |
+| **Project** | `your-project/CLAUDE.md` | Current status, tasks, next steps |
+
+Both files load automatically when you start Claude Code.
+
+## Global CLAUDE.md
+
+Located at `~/.claude/CLAUDE.md`, this file contains:
+
+- **Workflow instructions** - How to use /catchup, /wrapup, etc.
+- **Conventions** - Commit message format, code style preferences
+- **Skill loading rules** - When to load which coding standards
+- **User Instructions** - Your personal customizations (preserved during updates)
+
+This file applies to **all projects**.
+
+## Project CLAUDE.md
+
+Located in your project root, this file contains:
+
+- **Project overview** - Name, description, tech stack
+- **Current Status** - Active tasks with status and notes
+- **Records table** - Links to design decisions
+- **Recent Decisions** - Small decisions that survive /clear
+- **Development commands** - Project-specific commands
+
+This file is **project-specific**.
+
+## How They Work Together
+
+```
+~/.claude/CLAUDE.md          your-project/CLAUDE.md
+┌─────────────────────┐      ┌─────────────────────┐
+│ Workflow rules      │      │ Project: MyApp      │
+│ Conventions         │  +   │ Status: Auth done   │
+│ Skill loading       │      │ Next: Add logout    │
+│ User preferences    │      │ Records: [001, 002] │
+└─────────────────────┘      └─────────────────────┘
+           │                          │
+           └──────────┬───────────────┘
+                      ▼
+              Claude knows:
+              - HOW to work (global)
+              - WHAT to work on (project)
+```
+
+## User Instructions Section
+
+The global CLAUDE.md has a special section at the bottom:
+
+```markdown
+<!-- USER INSTRUCTIONS START -->
+Add your personal preferences here.
+This section survives updates.
+<!-- USER INSTRUCTIONS END -->
+```
+
+Put your customizations here:
+- Language preferences
+- Personal conventions
+- Tool preferences
+- Credential locations
+
+## Related
+
+- [/init-project](/commands/init-project) - Creates project CLAUDE.md
+- [Workflow](/concepts/workflow) - How the files are used

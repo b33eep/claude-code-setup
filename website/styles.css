@@ -1,0 +1,300 @@
+/* Claude Code Theme for Documentation */
+
+:root {
+  color-scheme: dark;
+}
+
+/* Claude Code Color Palette */
+html[class~="dark"],
+html {
+  --claude-bg: #1a1a1a;
+  --claude-bg-secondary: #2d2d2d;
+  --claude-bg-tertiary: #3d3d3d;
+  --claude-text: #e5e5e5;
+  --claude-text-muted: #a3a3a3;
+  --claude-accent: #d97757;
+  --claude-accent-hover: #e8956f;
+  --claude-border: #404040;
+  --claude-success: #4ade80;
+  --claude-warning: #fbbf24;
+  --claude-error: #f87171;
+  --claude-info: #60a5fa;
+}
+
+/* Override Nextra theme colors */
+html {
+  --nextra-primary-hue: 15deg;
+  --nextra-primary-saturation: 65%;
+  background-color: var(--claude-bg) !important;
+  color: var(--claude-text) !important;
+}
+
+body {
+  background-color: var(--claude-bg) !important;
+}
+
+/* Navbar */
+nav.nextra-nav-container,
+.nextra-nav-container {
+  background-color: var(--claude-bg) !important;
+  border-color: var(--claude-border) !important;
+}
+
+/* Sidebar */
+aside,
+.nextra-sidebar-container {
+  background-color: var(--claude-bg) !important;
+}
+
+.nextra-sidebar-container a {
+  color: var(--claude-text-muted) !important;
+}
+
+.nextra-sidebar-container a:hover,
+.nextra-sidebar-container a.active {
+  color: var(--claude-accent) !important;
+}
+
+/* Main content */
+main,
+article {
+  background-color: var(--claude-bg) !important;
+  color: var(--claude-text) !important;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--claude-text) !important;
+}
+
+h1 {
+  color: var(--claude-accent) !important;
+}
+
+h2 {
+  color: var(--claude-text) !important;
+  border-bottom: 1px solid var(--claude-border);
+  padding-bottom: 0.5rem;
+}
+
+h3 {
+  color: var(--claude-text-muted) !important;
+}
+
+/* Links */
+a {
+  color: var(--claude-accent) !important;
+}
+
+a:hover {
+  color: var(--claude-accent-hover) !important;
+}
+
+/* Code blocks */
+pre {
+  background-color: var(--claude-bg-secondary) !important;
+  border: 1px solid var(--claude-border) !important;
+  border-radius: 8px !important;
+}
+
+code {
+  background-color: var(--claude-bg-secondary) !important;
+  color: var(--claude-accent) !important;
+}
+
+pre code {
+  color: var(--claude-text) !important;
+}
+
+/* Inline code */
+:not(pre) > code {
+  background-color: var(--claude-bg-secondary) !important;
+  color: var(--claude-accent) !important;
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* Tables */
+table {
+  border-color: var(--claude-border) !important;
+}
+
+th {
+  background-color: var(--claude-bg-secondary) !important;
+  color: var(--claude-text) !important;
+  border-color: var(--claude-border) !important;
+  font-weight: 600;
+}
+
+td {
+  border-color: var(--claude-border) !important;
+}
+
+tr:nth-child(even) {
+  background-color: rgba(45, 45, 45, 0.5) !important;
+}
+
+/* Blockquotes */
+blockquote {
+  border-left: 3px solid var(--claude-accent) !important;
+  background-color: var(--claude-bg-secondary) !important;
+  color: var(--claude-text) !important;
+  padding: 1rem !important;
+  border-radius: 0 8px 8px 0 !important;
+}
+
+/* Callouts */
+.nextra-callout {
+  background-color: var(--claude-bg-secondary) !important;
+  border-color: var(--claude-border) !important;
+  border-radius: 8px !important;
+}
+
+.nextra-callout[data-type="info"] {
+  border-left: 3px solid var(--claude-info) !important;
+}
+
+.nextra-callout[data-type="warning"] {
+  border-left: 3px solid var(--claude-warning) !important;
+}
+
+.nextra-callout[data-type="error"] {
+  border-left: 3px solid var(--claude-error) !important;
+}
+
+/* Search */
+.nextra-search input {
+  background-color: var(--claude-bg-secondary) !important;
+  border-color: var(--claude-border) !important;
+  color: var(--claude-text) !important;
+  border-radius: 8px !important;
+}
+
+/* TOC (Table of Contents) */
+.nextra-toc a {
+  color: var(--claude-text-muted) !important;
+}
+
+.nextra-toc a:hover,
+.nextra-toc a.active {
+  color: var(--claude-accent) !important;
+}
+
+/* Hide empty feedback/edit container in TOC */
+aside.nextra-toc > nav > *:not(p):not(ul),
+aside.nextra-toc > nav > div,
+.nextra-toc-meta,
+[class*="nextra-toc"] div[class*="border"],
+[class*="nextra-toc"] div[class*="mt-8"],
+[class*="nextra-toc"] div[class*="sticky"] > div:last-child,
+aside[class*="toc"] > * > div:last-child {
+  display: none !important;
+}
+
+aside.nextra-toc div:not(:has(a)):not(:has(p)):not(:has(ul)) {
+  display: none !important;
+}
+
+aside.nextra-toc nav,
+aside.nextra-toc nav > p,
+aside.nextra-toc nav > ul,
+aside.nextra-toc nav > ul > li {
+  display: block !important;
+}
+
+/* Footer */
+footer {
+  background-color: var(--claude-bg) !important;
+  border-color: var(--claude-border) !important;
+  color: var(--claude-text-muted) !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--claude-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--claude-bg-tertiary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--claude-accent);
+}
+
+/* Selection */
+::selection {
+  background-color: var(--claude-accent);
+  color: var(--claude-bg);
+}
+
+/* Lists */
+ul, ol {
+  color: var(--claude-text);
+}
+
+li::marker {
+  color: var(--claude-accent);
+}
+
+/* Strong/Bold */
+strong, b {
+  color: var(--claude-text);
+  font-weight: 600;
+}
+
+/* Horizontal rule */
+hr {
+  border-color: var(--claude-border) !important;
+}
+
+/* Buttons */
+button {
+  background-color: var(--claude-bg-secondary) !important;
+  color: var(--claude-text) !important;
+  border-color: var(--claude-border) !important;
+  border-radius: 6px !important;
+}
+
+button:hover {
+  background-color: var(--claude-bg-tertiary) !important;
+}
+
+/* Dark mode toggle - hide it since we're always dark */
+[aria-label="Toggle Dark Mode"],
+button[title="Change theme"],
+.nextra-theme-toggle,
+[class*="theme-toggle"],
+[class*="ThemeSwitch"],
+aside > div:last-child,
+.nextra-sidebar-footer,
+nav + div[class*="fixed"],
+div[class*="bottom-0"][class*="left-0"] {
+  display: none !important;
+}
+
+body > div[class*="fixed"]:has(button) {
+  display: none !important;
+}
+
+/* Navigation arrows */
+a[class*="nextra-nav"] {
+  color: var(--claude-text-muted) !important;
+}
+
+a[class*="nextra-nav"]:hover {
+  color: var(--claude-accent) !important;
+}
+
+/* Active sidebar item background */
+.nextra-sidebar-container li.active {
+  background-color: var(--claude-bg-secondary) !important;
+  border-radius: 6px;
+}

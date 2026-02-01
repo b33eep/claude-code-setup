@@ -1,0 +1,82 @@
+# Records
+
+Design decisions, implementation plans, and feature specs that persist across sessions.
+
+## What Are Records?
+
+Records are Markdown files in `docs/records/` that document:
+
+- Architecture decisions
+- Feature specifications
+- Design documents
+- Implementation plans
+
+They start as planning docs and become permanent documentation.
+
+## When to Create a Record
+
+| Situation | Record? | Why |
+|-----------|---------|-----|
+| Feature spanning multiple sessions | Yes | Details don't belong in CLAUDE.md |
+| Architecture/design decision | Yes | "Why X instead of Y" for future reference |
+| Complex implementation plan | Yes | Steps + acceptance criteria |
+| Bug fix | No | Code comment or commit message suffices |
+| Small change | No | Commit message suffices |
+
+**Rule of thumb:** If you'd write more than 5 lines in CLAUDE.md → create a Record.
+
+## Record Format
+
+```
+docs/records/
+├── 001-authentication-design.md
+├── 002-api-refactoring.md
+└── 003-caching-strategy.md
+```
+
+Each Record follows this structure:
+
+```markdown
+# Record 001: Authentication Design
+
+**Status:** Done
+**Priority:** High
+**Date:** 2026-01-15
+
+## Problem
+
+What problem does this solve?
+
+## Solution
+
+What approach did we take?
+
+## Alternatives Considered
+
+What else was considered and why rejected?
+
+## Trade-offs
+
+Pros and cons of the chosen approach.
+```
+
+## Records vs Recent Decisions
+
+| Layer | Persistence | Example |
+|-------|-------------|---------|
+| Records | Permanent | Architecture decisions, feature specs |
+| Recent Decisions | Temporary (max 20) | "pip --user for yt-dlp" |
+| Chat | Lost after /clear | Discussion context |
+
+**Recent Decisions** are for small choices with a "why" worth remembering, but too small for a full Record.
+
+## How Records Are Used
+
+1. **During work:** Create Records when making significant decisions
+2. **/wrapup:** Syncs Records table in CLAUDE.md
+3. **/catchup:** Loads Records referenced in active work
+
+## Related
+
+- [/todo](/commands/todo) - Creates Records for complex todos
+- [Architecture](/architecture) - All project Records

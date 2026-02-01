@@ -1,0 +1,75 @@
+# /init-project
+
+Set up a new project with CLAUDE.md and folder structure.
+
+## Usage
+
+```
+/init-project
+```
+
+## What It Does
+
+1. **Analyzes project**
+   - Detects tech stack from package.json, pyproject.toml, etc.
+   - Checks if Git repository
+
+2. **Asks about sharing mode**
+   ```
+   How will you use CLAUDE.md in this project?
+
+   1) Solo - Add to .gitignore (personal workflow, not shared)
+   2) Team - Track in Git (shared context for all developers)
+   ```
+
+3. **Creates CLAUDE.md**
+   - Uses template from `~/.claude/templates/`
+   - Fills in detected project info
+   - Adds common development commands
+
+4. **Creates folder structure**
+   - Creates `docs/records/` for decision documentation
+
+5. **Updates .gitignore (Solo mode)**
+   - Adds `CLAUDE.md` to `.gitignore`
+
+6. **Git commit**
+   - Commits initial setup
+
+## Example Output
+
+```
+Created: CLAUDE.md
+Created: docs/records/
+
+Detected:
+- Tech Stack: Python, FastAPI
+- Mode: Solo (CLAUDE.md in .gitignore)
+
+Next steps:
+1. Review CLAUDE.md and adjust as needed
+2. Add your first task to Current Status
+3. Start working with /catchup
+```
+
+## Solo vs Team Mode
+
+| Mode | Who sees CLAUDE.md | Use case |
+|------|-------------------|----------|
+| **Solo** | Only you | Personal notes, experiments |
+| **Team** | Everyone | Shared status, handoffs |
+
+Choose Solo if:
+- Working alone on a project
+- Don't want to share workflow notes
+- Experimenting with different approaches
+
+Choose Team if:
+- Multiple developers on the project
+- Want shared context across the team
+- Project handoffs are common
+
+## Related
+
+- [First Project](/getting-started/first-project) - Detailed walkthrough
+- [/catchup](/commands/catchup) - Start working after setup

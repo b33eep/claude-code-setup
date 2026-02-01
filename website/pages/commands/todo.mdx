@@ -1,0 +1,69 @@
+# /todo
+
+Manage todos in your project's CLAUDE.md.
+
+## Usage
+
+```
+/todo                     # List all todos
+/todo Add user logout     # Add a simple todo
+/todo Add auth system     # Complex todo → creates a Record
+```
+
+## What It Does
+
+### Listing Todos
+
+```
+/todo
+```
+
+Shows all items from the Current Status and Future tables in CLAUDE.md.
+
+### Adding Simple Todos
+
+```
+/todo Fix typo in header
+```
+
+Adds directly to the Current Status table:
+
+```markdown
+| Task | Status | Notes |
+|------|--------|-------|
+| Fix typo in header | Pending | |
+```
+
+### Adding Complex Todos
+
+```
+/todo Implement OAuth2 authentication
+```
+
+If the todo is complex (requires design decisions, multiple steps, or spans sessions):
+
+1. Creates a Record in `docs/records/`
+2. Adds to Current Status with Record reference
+
+```markdown
+| Task | Status | Notes |
+|------|--------|-------|
+| OAuth2 auth | Pending | [Record 016](docs/records/016-oauth2-auth.md) |
+```
+
+## Simple vs Complex
+
+| Type | Example | What happens |
+|------|---------|--------------|
+| Simple | "Fix typo" | Direct to table |
+| Complex | "Add auth system" | Creates Record |
+
+Claude determines complexity based on:
+- Number of steps involved
+- Need for design decisions
+- Likely to span multiple sessions
+
+## Related
+
+- [Records](/concepts/records) - What Records are
+- [/wrapup](/commands/wrapup) - Updates todo status

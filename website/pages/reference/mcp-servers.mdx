@@ -1,0 +1,92 @@
+# MCP Servers
+
+Model Context Protocol servers available in Claude Code Setup.
+
+## Available Servers
+
+### pdf-reader
+
+Read and analyze PDF documents.
+
+| Field | Value |
+|-------|-------|
+| Requires API Key | No |
+| Package | @anthropic/mcp-pdf-reader |
+
+**Capabilities:**
+- Extract text from PDFs
+- Read specific pages
+- Analyze PDF structure
+
+### brave-search
+
+Web search via Brave Search API.
+
+| Field | Value |
+|-------|-------|
+| Requires API Key | Yes |
+| Free Tier | 2000 requests/month |
+| Get Key | [brave.com/search/api](https://brave.com/search/api/) |
+
+**Capabilities:**
+- Web search
+- News search
+- Image search
+
+### google-search
+
+Google Custom Search with advanced features.
+
+| Field | Value |
+|-------|-------|
+| Requires API Key | Yes |
+| Package | @anthropic/mcp-google-search |
+| Get Key | [Google Cloud Console](https://console.cloud.google.com/) |
+
+**Capabilities:**
+- Web search with filters
+- Content extraction
+- Research topic synthesis
+
+## Configuration
+
+MCP servers are configured in `~/.claude.json`:
+
+```json
+{
+  "mcpServers": {
+    "pdf-reader": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-pdf-reader"]
+    },
+    "brave-search": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-brave-search"],
+      "env": {
+        "BRAVE_API_KEY": "your-key-here"
+      }
+    }
+  }
+}
+```
+
+## Adding Custom MCP Servers
+
+Create a JSON file in your custom modules:
+
+```json
+{
+  "name": "my-server",
+  "description": "My custom MCP server",
+  "config": {
+    "type": "stdio",
+    "command": "npx",
+    "args": ["-y", "@my-org/mcp-server"]
+  },
+  "requiresApiKey": false
+}
+```
+
+Then use `/add-custom` to install.

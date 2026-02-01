@@ -1,0 +1,136 @@
+# Creating Skills
+
+Build your own custom skills for Claude Code Setup.
+
+## Skill Types
+
+| Type | How it loads | Example |
+|------|--------------|---------|
+| **Context** | Auto-loads based on tech stack | Coding standards |
+| **Command** | User invokes with /skill-name | Presentation creator |
+
+## Using /skill-creator
+
+The easiest way to create a skill:
+
+```
+/skill-creator
+```
+
+Claude will ask:
+1. What type of skill?
+2. What should it do?
+3. What tech stacks should trigger it?
+
+## Manual Creation
+
+### Directory Structure
+
+```
+~/.claude/custom/skills/
+└── my-skill/
+    └── SKILL.md
+```
+
+### SKILL.md Format
+
+```markdown
+---
+name: my-skill
+description: What this skill does
+type: context
+applies_to: [python, fastapi]
+---
+
+# Skill Content
+
+Instructions and standards here...
+```
+
+## Context Skill Example
+
+```markdown
+---
+name: api-standards
+description: REST API design standards
+type: context
+applies_to: [python, typescript, nodejs, fastapi, express]
+---
+
+# API Design Standards
+
+## Endpoints
+
+- Use nouns, not verbs: `/users` not `/getUsers`
+- Use plural nouns: `/users` not `/user`
+- Nest resources: `/users/{id}/orders`
+
+## HTTP Methods
+
+| Method | Purpose | Response |
+|--------|---------|----------|
+| GET | Read | 200 + data |
+| POST | Create | 201 + created resource |
+| PUT | Replace | 200 + updated resource |
+| PATCH | Update | 200 + updated resource |
+| DELETE | Delete | 204 no content |
+
+## Error Responses
+
+\`\`\`json
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Human readable message",
+    "details": [...]
+  }
+}
+\`\`\`
+```
+
+## Command Skill Example
+
+```markdown
+---
+name: create-api-spec
+description: Create OpenAPI specification
+type: command
+---
+
+# Create API Spec
+
+When invoked, create an OpenAPI 3.0 specification:
+
+1. Analyze existing routes in the codebase
+2. Generate openapi.yaml with:
+   - Info section with project details
+   - All endpoints with parameters
+   - Request/response schemas
+   - Error responses
+3. Save to docs/openapi.yaml
+```
+
+## Frontmatter Fields
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `name` | Yes | Skill identifier (kebab-case) |
+| `description` | Yes | What the skill does |
+| `type` | Yes | `context` or `command` |
+| `applies_to` | Context only | Tech stack triggers |
+
+## Overriding Built-in Skills
+
+Put your skill in `~/.claude/custom/skills/` with the same name:
+
+```
+Built-in: ~/.claude/skills/standards-python/
+Custom:   ~/.claude/custom/skills/standards-python/
+
+→ Custom wins
+```
+
+## Related
+
+- [Team Setup](/guides/team-setup) - Share skills with team
+- [Auto-Loading Skills](/concepts/skills) - How skills load
