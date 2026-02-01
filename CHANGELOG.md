@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v24**: Add Private Notes feature - `docs/notes/*.open.md` loaded by `/catchup` ([Record 025](docs/records/025-private-notes.md))
+  - Gitignored notes for sessions, research, TODOs
+  - `.open.md` suffix marks active notes
+  - Rename to `.md` to close
 - **v23**: Add Decision Log feature - "Recent Decisions" section in project CLAUDE.md ([Record 023](docs/records/023-context-quality-improvements.md))
   - Small decisions with reasoning survive `/clear`
   - Added immediately when decision is made (not at /wrapup)

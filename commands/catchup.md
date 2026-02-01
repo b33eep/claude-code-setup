@@ -24,12 +24,19 @@ After `/clear` or new chat, understand recent changes.
    - Note any decisions relevant to current work
    - These are small decisions with reasoning that survived the last `/clear`
 
-5. **Load context skills**
+5. **Read open private notes**
+   - Check for `docs/notes/*.open.md` files
+   - If found: Read them (these are active session notes)
+   - Summarize key points from open notes
+   - These contain context from previous sessions (research, strategies, TODOs)
+
+6. **Load context skills**
    - Check `Tech Stack:` in project CLAUDE.md
    - Load matching skills from `~/.claude/skills/` (see Skill Loading in global CLAUDE.md)
    - Example: Tech Stack includes "Bash" → Read `standards-shell/SKILL.md`
 
-6. **Summary**
+7. **Summary**
    - What was recently changed?
    - What Records were loaded and why?
+   - Open notes found? Summarize key points
    - What's the next step according to CLAUDE.md?

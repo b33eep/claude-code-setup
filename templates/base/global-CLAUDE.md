@@ -129,6 +129,22 @@ Records document decisions, designs, features, and implementation plans. They ke
 - `/catchup` reads Records relevant to in-progress or next-step work
 - `/todo` lists existing todos or creates Records for complex ones automatically
 
+### Private Notes (docs/notes/)
+
+Private notes for sessions, research, and personal TODOs. **Gitignored by default.**
+
+```
+docs/notes/
+├── session-2026-02-01.open.md   ← /catchup loads this
+├── session-2026-01-30.md        ← closed, ignored
+└── research-topic.open.md       ← /catchup loads this
+```
+
+**Convention:**
+- `.open.md` suffix → note is active, `/catchup` reads it
+- `.md` suffix (no `.open`) → note is closed, ignored
+- To close a note: rename from `.open.md` to `.md`
+
 ### Recent Decisions
 
 For decisions that are:

@@ -1,0 +1,85 @@
+# Private Notes
+
+Session notes, research, and personal TODOs that stay private and never get committed.
+
+## What Are Private Notes?
+
+Private notes live in `docs/notes/` and are **gitignored by default**. They're for:
+
+- Session logs
+- Research results
+- Promotion strategies
+- Personal TODOs
+- Any context that shouldn't be shared
+
+## The `.open` Convention
+
+Use the `.open.md` suffix to mark notes that should be loaded by `/catchup`:
+
+```
+docs/notes/
+├── session-2026-02-01.open.md   ← /catchup loads this
+├── session-2026-01-30.md        ← closed, ignored
+└── research-topic.open.md       ← /catchup loads this
+```
+
+**Why filename markers?**
+- Simple glob pattern: `*.open.md`
+- No content parsing needed
+- Visible in file listings
+- Easy to close: just rename
+
+## Managing Notes
+
+### Create a Note
+
+```bash
+# Create an open note (will be loaded by /catchup)
+touch docs/notes/my-research.open.md
+```
+
+### Close a Note
+
+When done with a note, remove the `.open` suffix:
+
+```bash
+mv docs/notes/session-2026-02-01.open.md docs/notes/session-2026-02-01.md
+```
+
+Closed notes stay in the folder for reference but won't be loaded.
+
+## How /catchup Uses Notes
+
+1. Globs for `docs/notes/*.open.md`
+2. Reads all matching files
+3. Summarizes key points
+4. Includes context in session start
+
+## Notes vs Records
+
+| Aspect | Private Notes | Records |
+|--------|---------------|---------|
+| **Visibility** | Private (gitignored) | Public (committed) |
+| **Purpose** | Personal context | Team documentation |
+| **Lifespan** | Temporary | Permanent |
+| **Location** | `docs/notes/` | `docs/records/` |
+
+Use **Notes** for anything you wouldn't want in version control.
+Use **Records** for decisions and designs the team should see.
+
+## Setup
+
+The `docs/notes/` directory should be in your `.gitignore`:
+
+```gitignore
+# Private notes
+docs/notes/
+```
+
+This is added automatically by `/init-project`.
+
+## Related
+
+- [/catchup](/commands/catchup) - Loads open notes
+- [Records](/concepts/records) - Public documentation
+- [Workflow](/concepts/workflow) - Session management
