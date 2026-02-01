@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v27**: Add `code-review-ai` plugin from claude-code-workflows
+  - AI-powered architectural review and code quality analysis
 - **v26**: Add External Plugins feature - install Claude plugins via installer ([Record 026](docs/records/026-external-plugins.md))
   - Uses official `claude plugin` CLI
   - Offers `document-skills` (Excel, Word, PowerPoint, PDF) from Anthropic
