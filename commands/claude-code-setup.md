@@ -157,6 +157,29 @@ Changes (custom):
 Run /catchup to reload context.
 ```
 
+### MCP with API key (manual step required):
+
+If an MCP server requires an API key, the install.sh script cannot set it non-interactively.
+Show the user how to add it manually:
+
+```
+Note: MCP "mcp-name" requires an API key.
+
+To configure manually, add to ~/.claude.json under "mcpServers":
+
+  "mcp-name": {
+    "type": "http",
+    "url": "https://...",
+    "headers": {
+      "Authorization": "Bearer YOUR_API_KEY_HERE"
+    }
+  }
+
+Then restart Claude Code.
+```
+
+To get the exact config, read the MCP JSON file from `~/.claude/custom/mcp/<name>.json` and show the user the `config` field with placeholders replaced.
+
 ### Already current, modules available to install:
 ```
 claude-code-setup status:

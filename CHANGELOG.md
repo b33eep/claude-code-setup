@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v28**: `/claude-code-setup` shows manual config hint when MCP/module requires API key
+  - Stdin consumed by menus prevents interactive API key prompts
+  - Claude now shows exact config with placeholder for user to add key manually
 - **v27**: Add `code-review-ai` plugin from claude-code-workflows
   - AI-powered architectural review and code quality analysis
 - **v26**: Add External Plugins feature - install Claude plugins via installer ([Record 026](docs/records/026-external-plugins.md))
