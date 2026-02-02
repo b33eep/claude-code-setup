@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v30**: `/claude-code-setup` inserts MCP config with placeholder instead of showing snippet
+  - Config is added directly to `~/.claude.json` with `YOUR_API_KEY_HERE`
+  - User only needs to replace one value, no copy/paste required
 - **v29**: `/claude-code-setup` supports external plugins installation
   - Discovers available plugins from `external-plugins.json`
   - Adds marketplace via `claude plugin marketplace add` if needed

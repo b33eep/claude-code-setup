@@ -193,28 +193,47 @@ Changes (custom):
 Run /catchup to reload context.
 ```
 
-### MCP with API key (manual step required):
+### MCP with API key (insert with placeholder):
 
 If an MCP server requires an API key, the install.sh script cannot set it non-interactively.
-Show the user how to add it manually:
+Instead of just showing a snippet, **insert the config directly into ~/.claude.json** with a placeholder:
 
-```
-Note: MCP "mcp-name" requires an API key.
+1. **Read the MCP config** from the JSON file:
+   ```bash
+   # For base MCP:
+   cat "$temp_dir/mcp/<name>.json"
+   # For custom MCP:
+   cat ~/.claude/custom/mcp/<name>.json
+   ```
 
-To configure manually, add to ~/.claude.json under "mcpServers":
+2. **Insert into ~/.claude.json** with placeholder (use jq or Edit tool):
+   ```bash
+   # Example: Add brave-search with placeholder
+   jq '.mcpServers["brave-search"] = {
+     "type": "stdio",
+     "command": "npx",
+     "args": ["-y", "@brave/brave-search-mcp-server"],
+     "env": {
+       "BRAVE_API_KEY": "YOUR_API_KEY_HERE"
+     }
+   }' ~/.claude.json > tmp && mv tmp ~/.claude.json
+   ```
 
-  "mcp-name": {
-    "type": "http",
-    "url": "https://...",
-    "headers": {
-      "Authorization": "Bearer YOUR_API_KEY_HERE"
-    }
-  }
+3. **Show simple instructions** to the user:
+   ```
+   MCP "brave-search" configured with placeholder.
 
-Then restart Claude Code.
-```
+   Replace YOUR_API_KEY_HERE in ~/.claude.json with your actual key.
 
-To get the exact config, read the MCP JSON file from `~/.claude/custom/mcp/<name>.json` and show the user the `config` field with placeholders replaced.
+   To get your API key:
+   1. Visit: https://brave.com/search/api/
+   2. Sign up for 'Data for AI' plan
+   3. Create an API key (free tier: 2000 queries/month)
+
+   Then restart Claude Code.
+   ```
+
+**Key point:** User only needs to replace the placeholder value, not copy/paste the entire config block.
 
 ### Already current, modules available to install:
 ```
