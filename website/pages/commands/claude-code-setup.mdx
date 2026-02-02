@@ -57,6 +57,35 @@ Custom modules:
 - internal-mcp: up to date
 ```
 
+## Modules Requiring API Keys
+
+When installing MCP servers or other modules that require an API key, the interactive prompt cannot work within Claude Code (stdin is consumed by menu interactions).
+
+In this case, Claude will:
+1. Install the module with a placeholder
+2. Show you the exact configuration with the placeholder
+3. Tell you where to get the API key
+4. Instruct you to replace the placeholder in `~/.claude.json`
+
+**Example:**
+```
+Note: MCP "brave-search" requires an API key.
+
+To configure manually, add to ~/.claude.json under "mcpServers":
+
+  "brave-search": {
+    "command": "npx",
+    "args": ["-y", "@brave/brave-search-mcp-server"],
+    "env": {
+      "BRAVE_API_KEY": "{{BRAVE_API_KEY}}"
+    }
+  }
+
+Replace {{BRAVE_API_KEY}} with your key, then restart Claude Code.
+```
+
+This applies to any module with `requiresApiKey: true` in its JSON config.
+
 ## Related
 
 - [/add-custom](/commands/add-custom) - Install custom modules
