@@ -59,32 +59,28 @@ Custom modules:
 
 ## Modules Requiring API Keys
 
-When installing MCP servers or other modules that require an API key, the interactive prompt cannot work within Claude Code (stdin is consumed by menu interactions).
+When installing MCP servers that require an API key, the interactive prompt cannot work within Claude Code (stdin is consumed by menu interactions).
 
 In this case, Claude will:
-1. Install the module with a placeholder
-2. Show you the exact configuration with the placeholder
-3. Tell you where to get the API key
-4. Instruct you to replace the placeholder in `~/.claude.json`
+1. **Insert the config directly** into `~/.claude.json` with a placeholder
+2. Tell you where to get the API key
+3. Instruct you to replace the placeholder
 
-**Example:**
+**Example output:**
 ```
-Note: MCP "brave-search" requires an API key.
+MCP "brave-search" configured with placeholder.
 
-To configure manually, add to ~/.claude.json under "mcpServers":
+Replace YOUR_API_KEY_HERE in ~/.claude.json with your actual key.
 
-  "brave-search": {
-    "command": "npx",
-    "args": ["-y", "@brave/brave-search-mcp-server"],
-    "env": {
-      "BRAVE_API_KEY": "{{BRAVE_API_KEY}}"
-    }
-  }
+To get your API key:
+1. Visit: https://brave.com/search/api/
+2. Sign up for 'Data for AI' plan
+3. Create an API key (free tier: 2000 queries/month)
 
-Replace {{BRAVE_API_KEY}} with your key, then restart Claude Code.
+Then restart Claude Code.
 ```
 
-This applies to any module with `requiresApiKey: true` in its JSON config.
+You only need to replace one value - no copy/pasting of JSON blocks required.
 
 ## External Plugins
 
