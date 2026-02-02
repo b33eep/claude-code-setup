@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v29**: `/claude-code-setup` supports external plugins installation
+  - Discovers available plugins from `external-plugins.json`
+  - Adds marketplace via `claude plugin marketplace add` if needed
+  - Installs plugins via `claude plugin install`
+  - Shows restart hint after installation
 - **v28**: `/claude-code-setup` shows manual config hint when MCP/module requires API key
   - Stdin consumed by menus prevents interactive API key prompts
   - Claude now shows exact config with placeholder for user to add key manually

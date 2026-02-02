@@ -17,7 +17,7 @@ Check status and update Claude Code Setup from within Claude.
 2. **Offers actions**
    - Upgrade base modules
    - Upgrade custom modules
-   - Install new modules (--add)
+   - Install new modules (Skills, MCP servers, External plugins)
 
 ## Example Output
 
@@ -85,6 +85,27 @@ Replace {{BRAVE_API_KEY}} with your key, then restart Claude Code.
 ```
 
 This applies to any module with `requiresApiKey: true` in its JSON config.
+
+## External Plugins
+
+External plugins (like `code-review-ai`) are installed directly via the Claude CLI:
+
+1. Claude adds the marketplace if needed (`claude plugin marketplace add`)
+2. Claude installs the plugin (`claude plugin install`)
+3. You restart Claude Code to activate
+
+**Example output:**
+```
+Installing external plugin code-review-ai...
+  Adding marketplace claude-code-workflows...
+  ✓ Marketplace claude-code-workflows added
+  Installing code-review-ai...
+  ✓ code-review-ai installed
+
+Restart Claude Code to activate the plugin.
+```
+
+This is fully automatic - you just select which plugins to install.
 
 ## Related
 

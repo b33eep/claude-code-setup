@@ -28,12 +28,19 @@ Manage your claude-code-setup installation: check status, upgrade, and install m
 
    # Available MCP servers
    ls -1 "$temp_dir/mcp/"
+
+   # Available external plugins
+   jq -r '.plugins[].id' "$temp_dir/external-plugins.json"
    ```
 
 5. **Get installed modules**
    ```bash
    jq -r '.skills[]' ~/.claude/installed.json 2>/dev/null || echo "(none)"
    jq -r '.mcp[]' ~/.claude/installed.json 2>/dev/null || echo "(none)"
+   jq -r '.external_plugins[]' ~/.claude/installed.json 2>/dev/null || echo "(none)"
+
+   # Also check what plugins are actually installed via claude CLI
+   claude plugin list 2>/dev/null || echo "(claude CLI not available)"
    ```
 
 6. **Check for new modules** and compare versions
@@ -76,6 +83,9 @@ Manage your claude-code-setup installation: check status, upgrade, and install m
      MCP Servers:
      - brave-search (Web search via Brave)
 
+     External Plugins:
+     - code-review-ai (AI-powered architectural review)
+
    What would you like to do?
    ```
 
@@ -109,13 +119,36 @@ Manage your claude-code-setup installation: check status, upgrade, and install m
 
 12. **Install new modules** (if requested)
     - Ask which specific modules to install
-    - Run install.sh --add with appropriate input:
+    - For Skills and MCP servers, run install.sh --add with appropriate input:
       ```bash
       # Example: Install skill at position 2, no MCP
       printf 'none\n2\nn\n' | "$temp_dir/install.sh" --add
       ```
 
-13. **Cleanup**
+13. **Install external plugins** (if requested)
+    External plugins CANNOT be installed via install.sh --add (stdin issues).
+    Install them directly via claude CLI:
+
+    ```bash
+    # 1. Get plugin info from external-plugins.json
+    plugin_id="code-review-ai"
+    marketplace=$(jq -r --arg id "$plugin_id" '.plugins[] | select(.id == $id) | .marketplace' "$temp_dir/external-plugins.json")
+    repo=$(jq -r --arg m "$marketplace" '.marketplaces[$m].repo' "$temp_dir/external-plugins.json")
+
+    # 2. Add marketplace (if not already registered)
+    if ! claude plugin marketplace list 2>/dev/null | grep -q "❯ $marketplace"; then
+        claude plugin marketplace add "$repo"
+    fi
+
+    # 3. Install the plugin
+    claude plugin install "$plugin_id@$marketplace"
+
+    # 4. Track in installed.json
+    jq --arg p "$plugin_id@$marketplace" '.external_plugins = ((.external_plugins // []) + [$p] | unique)' \
+       ~/.claude/installed.json > tmp && mv tmp ~/.claude/installed.json
+    ```
+
+14. **Cleanup**
     ```bash
     rm -rf "$temp_dir"
     ```
@@ -140,6 +173,9 @@ Modules available to install:
 
   MCP Servers:
   (all installed)
+
+  External Plugins:
+  - code-review-ai (AI-powered architectural review)
 ```
 
 ### After upgrade:
@@ -193,7 +229,21 @@ Modules available to install:
   MCP Servers:
   - brave-search (Web search via Brave)
 
+  External Plugins:
+  - code-review-ai (AI-powered architectural review)
+
 Would you like to install any modules?
+```
+
+### After plugin installation:
+```
+Installing external plugin code-review-ai...
+  Adding marketplace claude-code-workflows...
+  ✓ Marketplace claude-code-workflows added
+  Installing code-review-ai...
+  ✓ code-review-ai installed
+
+Restart Claude Code to activate the plugin.
 ```
 
 ### Already current, all modules installed:

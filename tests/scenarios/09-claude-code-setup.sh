@@ -59,5 +59,13 @@ assert_file_contains "$PROJECT_DIR/commands/claude-code-setup.md" "custom_versio
 assert_file_contains "$PROJECT_DIR/commands/claude-code-setup.md" "Upgrade custom" "Has upgrade custom option"
 assert_file_contains "$PROJECT_DIR/commands/claude-code-setup.md" "not configured" "Has no-custom-repo message"
 
+scenario "Command has external plugins support"
+
+assert_file_contains "$PROJECT_DIR/commands/claude-code-setup.md" "external-plugins.json" "References external-plugins.json"
+assert_file_contains "$PROJECT_DIR/commands/claude-code-setup.md" "External Plugins" "Shows External Plugins in status"
+assert_file_contains "$PROJECT_DIR/commands/claude-code-setup.md" "claude plugin marketplace" "Has marketplace add instruction"
+assert_file_contains "$PROJECT_DIR/commands/claude-code-setup.md" "claude plugin install" "Has plugin install instruction"
+assert_file_contains "$PROJECT_DIR/commands/claude-code-setup.md" "Restart Claude Code" "Has restart hint"
+
 # Print summary
 print_summary
