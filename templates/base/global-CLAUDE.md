@@ -84,8 +84,6 @@
 When starting a story/task, assess whether it needs upfront design work. This prevents mid-implementation pivots and captures decisions for future reference.
 
 **Complexity Indicators (suggest mini-design):**
-
-**Complexity Indicators (suggest mini-design):**
 - Multiple valid approaches (2+ distinct paths)
 - Library/tool choice needed
 - Architecture impact (3+ files across modules)
@@ -165,7 +163,7 @@ Records document decisions, designs, features, and implementation plans. They ke
 **Keeping Records in sync:**
 - `/wrapup` scans `docs/records/` and adds missing entries to the Records table in project CLAUDE.md
 - `/catchup` reads Records relevant to in-progress or next-step work
-- `/todo` lists existing todos or creates Records for complex ones automatically
+- `/todo` lists existing todos or adds new ones to Future table (for complex features, use `/design`)
 
 ### Private Notes (docs/notes/)
 

@@ -1,9 +1,9 @@
 export default {
-  catchup: '/catchup',
-  wrapup: '/wrapup',
+  'catchup': '/catchup',
+  'wrapup': '/wrapup',
   'init-project': '/init-project',
   'claude-code-setup': '/claude-code-setup',
   'add-custom': '/add-custom',
-  todo: '/todo',
-  design: '/design'
+  'todo': '/todo',
+  'design': '/design'
 }
