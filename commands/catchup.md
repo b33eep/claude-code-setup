@@ -17,6 +17,8 @@ After `/clear` or new chat, understand recent changes.
    - Check Current Status and Future tables in project CLAUDE.md
    - If work is in progress or a next step references a Record → Read that Record
    - Example: Status shows "OAuth2 | In Progress | [Record 019]" → Read `docs/records/019-oauth2-auth.md`
+   - Also check for incomplete designs: `grep -l "^Designing" docs/records/*.md`
+   - If found: Load these Records (user may want to continue /design workflow)
    - Only load Records relevant to current/next work, not all
 
 4. **Check Recent Decisions**

@@ -1,14 +1,22 @@
 # /todo
 
-Manage todos in your project's CLAUDE.md.
+Quick capture for your project's backlog. For structured planning, use [/design](/commands/design).
 
 ## Usage
 
 ```
-/todo                     # List all todos
-/todo Add user logout     # Add a simple todo
-/todo Add auth system     # Complex todo → creates a Record
+/todo                          # List all todos
+/todo Fix typo in README       # Add simple todo
+/todo Add notification system  # Complex → suggests /design
 ```
+
+## /todo vs /design
+
+| | /todo | /design |
+|--|-------|---------|
+| Purpose | Quick capture | Structured planning |
+| Output | Future table row | Record with Stories |
+| Use when | "Remember this" | "Plan how to build this" |
 
 ## What It Does
 
@@ -18,7 +26,7 @@ Manage todos in your project's CLAUDE.md.
 /todo
 ```
 
-Shows all items from the Current Status and Future tables in CLAUDE.md.
+Shows all items from the Future table in CLAUDE.md.
 
 ### Adding Simple Todos
 
@@ -26,44 +34,45 @@ Shows all items from the Current Status and Future tables in CLAUDE.md.
 /todo Fix typo in header
 ```
 
-Adds directly to the Current Status table:
+Adds directly to the Future table:
 
 ```markdown
-| Task | Status | Notes |
-|------|--------|-------|
-| Fix typo in header | Pending | |
+| Todo | Priority | Problem | Solution |
+|------|----------|---------|----------|
+| Fix typo in header | Low | Typo in heading | Fix spelling |
 ```
 
-### Adding Complex Todos
+### Complex Items
 
 ```
-/todo Implement OAuth2 authentication
+/todo Add OAuth2 authentication
 ```
 
-If the todo is complex (requires design decisions, multiple steps, or spans sessions):
+If the item looks complex (architecture decision, multiple parts, needs design):
 
-1. Creates a Record in `docs/records/`
-2. Adds to Current Status with Record reference
+```
+This looks like it needs proper design.
 
-```markdown
-| Task | Status | Notes |
-|------|--------|-------|
-| OAuth2 auth | Pending | [Record 016](docs/records/016-oauth2-auth.md) |
+Consider using: /design "Add OAuth2 authentication"
+
+Or add as simple reminder anyway? [Yes / No]
 ```
 
-## Simple vs Complex
+- **Yes**: Adds to Future table as a reminder
+- **No**: Suggests running /design instead
 
-| Type | Example | What happens |
-|------|---------|--------------|
-| Simple | "Fix typo" | Direct to table |
-| Complex | "Add auth system" | Creates Record |
+## When to Use Which
 
-Claude determines complexity based on:
-- Number of steps involved
-- Need for design decisions
-- Likely to span multiple sessions
+| Situation | Command |
+|-----------|---------|
+| "Fix the typo on line 5" | /todo |
+| "Remember to update docs" | /todo |
+| "Add user authentication" | /design |
+| "Implement caching layer" | /design |
+| "Refactor the API" | /design |
 
 ## Related
 
+- [/design](/commands/design) - Structured feature design
 - [Records](/concepts/records) - What Records are
-- [/wrapup](/commands/wrapup) - Updates todo status
+- [/wrapup](/commands/wrapup) - Updates status at session end

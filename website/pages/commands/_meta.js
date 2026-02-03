@@ -4,5 +4,6 @@ export default {
   'init-project': '/init-project',
   'claude-code-setup': '/claude-code-setup',
   'add-custom': '/add-custom',
-  todo: '/todo'
+  todo: '/todo',
+  design: '/design'
 }

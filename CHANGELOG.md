@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v35**: Add `/design` command for structured feature design ([Record 030](docs/records/030-design-command.md))
+  - 5-step workflow: Problem → Options → Solution → Stories → Finalize
+  - Creates Record immediately, updates incrementally
+  - Supports `--continue` for resuming and `--review` for feedback
 - **v34**: Fix update notification hook to show message to user
   - Use `systemMessage` JSON output format for user-visible notifications
 - **v33**: Add update notification hook ([Record 028](docs/records/028-update-notifications.md))

@@ -1,13 +1,26 @@
-# Todo: Manage Project Todos
+# Todo: Quick Capture for Backlog
 
-List or add todos in the project CLAUDE.md Future table. Keeps CLAUDE.md lean - complex todos get a Record.
+Quick capture tool for the Future table. For structured planning, use `/design`.
+
+```
+/todo = CAPTURE (quick backlog entry)
+/design = PLAN (structured design with Record)
+```
+
+## Usage
+
+```
+/todo                          # List all todos
+/todo Fix typo in README       # Add simple todo
+/todo Add notification system  # Complex → hint to use /design
+```
 
 ## Tasks
 
 ### Prerequisites
 
-- If no project CLAUDE.md found: Tell the user to run `/init-project` first
-- If no `### Future` section or table exists: Create it with the standard header:
+- If no project CLAUDE.md found: Tell user to run `/init-project` first
+- If no `### Future` section exists: Create it with standard header:
   ```markdown
   ### Future
 
@@ -26,52 +39,52 @@ List or add todos in the project CLAUDE.md Future table. Keeps CLAUDE.md lean - 
 
 1. Read project CLAUDE.md
 2. Find the `### Future` section and its table
-3. **Check for duplicates**: If a similar todo already exists in the Future table, inform the user and ask whether to update the existing entry or add a new one
-4. Assess the todo:
+3. **Check for duplicates**: If similar todo exists, ask whether to update or add new
+4. **Assess complexity**:
 
-   **Simple** (bug fix, small change, config tweak):
-   - Append row to Future table
-   - Fill in Priority, Problem, Solution inline
-   - Example: `| Fix login timeout | Low | Login fails after 30s | Increase timeout |`
+   **Simple** (just add to table):
+   - Bug fix, typo, small change
+   - Config tweak
+   - Single file change
+   - Clear solution, no design needed
 
-   **Complex** (feature, architecture, multi-session, needs spec/plan):
-   - Create a Record in `docs/records/` with problem, spec, and plan
-   - Append row to Future table with link to Record
-   - Example: `| Add caching layer | Medium | API too slow | [Record 019](docs/records/019-caching.md) |`
+   **Complex** (hint to use /design):
+   - Feature with multiple parts
+   - Needs spec or design decisions
+   - Architecture decision
+   - Multiple sessions likely
+   - Unsure how to implement
 
-5. **If unsure** whether simple or complex: Ask the user
-6. Confirm what was added
+5. **If simple**: Add row to Future table
+   ```markdown
+   | Fix login timeout | Low | Login fails after 30s | Increase timeout |
+   ```
 
-## Lifecycle
+6. **If complex**: Do NOT create a Record. Instead:
+   ```
+   This looks like it needs proper design (multiple parts, architecture decision).
 
-`/todo` only manages the **Future** table. When work begins on a todo:
-- Move the row from Future to the **Current Status** table with status "In Progress"
-- This transition happens naturally during implementation, not via `/todo`
-- `/wrapup` updates the Current Status table at session end
+   Consider using: /design "Add notification system"
 
-## Decision: Simple vs Complex
+   Or add as simple reminder anyway? [Yes / No]
+   ```
+   - If user says Yes: Add to Future table as reminder
+   - If user says No: Suggest running /design
 
-| Indicator | → Simple | → Complex |
-|-----------|----------|-----------|
-| One-liner fix | x | |
-| Needs spec or design | | x |
-| Multiple sessions | | x |
-| Architecture decision | | x |
-| Single file change | x | |
-| Would write >5 lines in CLAUDE.md | | x |
+7. Confirm what was added
 
-## Record Format (for complex todos)
+## Complexity Indicators
 
-Scan `docs/records/` for the highest existing number and increment. Follow existing naming:
-
-```
-docs/records/{NNN}-{short-title}.md
-```
-
-Content should include:
-- Problem statement
-- Proposed solution / spec
-- Implementation plan (if applicable)
+| Indicator | Simple | → Use /design |
+|-----------|--------|---------------|
+| One-liner fix | ✓ | |
+| Single file change | ✓ | |
+| Clear solution | ✓ | |
+| Feature with multiple parts | | ✓ |
+| Needs design decisions | | ✓ |
+| Architecture decision | | ✓ |
+| Multiple sessions likely | | ✓ |
+| Unsure how to implement | | ✓ |
 
 ## Priority Guidelines
 
@@ -81,20 +94,42 @@ Content should include:
 | Medium | Next planned feature, important improvement |
 | Low | Nice to have, future idea |
 
+## Lifecycle
+
+`/todo` only manages the **Future** table:
+- Add items as quick reminders
+- When work begins: Move to Current Status table manually
+- `/wrapup` updates Current Status at session end
+
+## /todo vs /design
+
+| Aspect | /todo | /design |
+|--------|-------|---------|
+| Purpose | Quick capture | Structured planning |
+| Output | Future table row | Record with Stories |
+| Use when | "Remember this for later" | "Plan how to build this" |
+| Complexity | Simple items | Complex features |
+| Design decisions | No | Yes (Options → Solution) |
+
 ## Examples
 
 ```
 User: /todo Fix typo in README header
-→ Appends: | Fix typo in README header | Low | Typo in main heading | Fix spelling |
+→ Added to Future: | Fix typo in README | Low | Typo in heading | Fix spelling |
 
 User: /todo Add OAuth2 authentication
-→ Creates Record 019 with spec
-→ Appends: | Add OAuth2 authentication | Medium | No auth system | [Record 019](docs/records/019-oauth2-auth.md) |
+→ This looks like it needs proper design (architecture decision, multiple parts).
+
+  Consider using: /design "Add OAuth2 authentication"
+
+  Or add as simple reminder anyway? [Yes / No]
+
+User: No
+→ Run: /design "Add OAuth2 authentication"
 
 User: /todo
-→ Lists:
-  Open todos:
+→ Open todos:
   | Todo | Priority | Problem | Solution |
   |------|----------|---------|----------|
-  | /do-review command | Low | Unclear when to trigger code review | Create command + refine global prompt |
+  | Fix typo in README | Low | Typo in heading | Fix spelling |
 ```
