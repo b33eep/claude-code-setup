@@ -21,7 +21,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Custom Modules | Done | ~/.claude/custom/ for user modules |
 | Solo/Team Mode | Done | /init-project asks for .gitignore preference |
 | Install Script | Done | --add, --update, --list, --yes flags, ShellCheck compliant |
-| Records | Done | 28 Records (000-027) |
+| Records | Done | 29 Records (000-028) |
 | Open Source Release | Done | Published to b33eep/claude-code-setup |
 | GitHub Actions E2E | Done | Full test coverage |
 | Open Source Polish | Done | SECURITY.md, CONTRIBUTING.md, CHANGELOG.md, templates |
@@ -61,6 +61,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 |------|----------|---------|----------|
 | /do-review command | Low | Unclear when to trigger code review, easy to forget | Create command + refine global prompt guidance |
 | Docker Matrix Tests | Low | deps.json install commands not tested on real distros | GitHub Actions with Docker matrix ([Record 022](docs/records/022-docker-matrix-tests.md)) |
+| Update Notifications | Medium | Users don't know when new versions available | SessionStart hook ([Record 028](docs/records/028-update-notifications.md)) |
 
 ---
 
@@ -96,6 +97,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Private Notes | `.open.md` convention, /catchup integration | [025](docs/records/025-private-notes.md) |
 | External Plugins | Install Claude plugins via `claude plugin` CLI | [026](docs/records/026-external-plugins.md) |
 | Uninstall/Remove Modules | `--remove` Flag + `/claude-code-setup remove` | [027](docs/records/027-uninstall-modules.md) |
+| Update Notifications | SessionStart hook with version check | [028](docs/records/028-update-notifications.md) |
 
 ---
 
@@ -118,7 +120,7 @@ claude-code-setup/
 ├── mcp/
 ├── commands/
 ├── skills/
-└── docs/records/000-025-*.md
+└── docs/records/000-028-*.md
 ```
 
 ---
