@@ -98,6 +98,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | External Plugins | Install Claude plugins via `claude plugin` CLI | [026](docs/records/026-external-plugins.md) |
 | Uninstall/Remove Modules | `--remove` Flag + `/claude-code-setup remove` | [027](docs/records/027-uninstall-modules.md) |
 | Update Notifications | SessionStart hook with version check | [028](docs/records/028-update-notifications.md) |
+| Documentation User Perspective | Reference → Features, user-facing names | [029](docs/records/029-documentation-user-perspective.md) |
 
 ---
 
@@ -175,7 +176,7 @@ When changing commands, skills, or features:
 
 **What needs docs updates:**
 - New/changed commands → `website/pages/commands/`
-- New/changed skills → `website/pages/reference/skills/`
+- New/changed skills → `website/pages/features/skills/`
 - New concepts → `website/pages/concepts/`
 - Workflow changes → `website/pages/guides/`
 
