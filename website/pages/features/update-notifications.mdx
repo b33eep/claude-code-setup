@@ -1,23 +1,17 @@
-# Hooks
+# Update Notifications
 
-Claude Code supports hooks that run shell commands in response to events. Claude Code Setup uses hooks to provide update notifications at session start.
+Get notified automatically when updates are available - no manual checking required.
 
-## What are Hooks?
+## How it Works
 
-Hooks are shell commands that execute automatically when certain events occur in Claude Code. They run outside of Claude's permission system, making them useful for background tasks that shouldn't interrupt the workflow.
-
-## Update Notification Hook
-
-Claude Code Setup installs a `SessionStart` hook that checks for available updates.
-
-### How it Works
-
-At session start (`startup` or after `/clear`), the hook:
+At session start (new session or after `/clear`), Claude Code Setup automatically:
 
 1. **Checks base repo** - Compares your installed version with the latest on GitHub
 2. **Checks custom repo** - If you have a custom modules repo, checks for new commits
 
-### Output Examples
+This runs silently in the background via Claude Code's hook system.
+
+## Output Examples
 
 When an update is available:
 ```
@@ -76,7 +70,7 @@ The update check script is located at `~/.claude/hooks/check-update.sh`.
 - **Fast** - ~100-200ms total (curl with 2s timeout)
 - **Privacy-aware** - Only fetches a single VERSION file from GitHub raw (no API calls)
 
-## Disabling Hooks
+## Disabling Update Notifications
 
 To disable the update notification:
 

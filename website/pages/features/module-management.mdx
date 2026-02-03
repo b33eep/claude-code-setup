@@ -1,8 +1,12 @@
-# Install Options
+# Module Management
 
-Command-line options for the install script.
+Add, update, remove, and list installed modules (skills, MCP servers, plugins).
 
-## Basic Usage
+## From Within Claude
+
+Use `/claude-code-setup` to manage modules interactively during a session.
+
+## From Terminal
 
 ```bash
 ./install.sh [options]
@@ -131,3 +135,42 @@ After initial install, update from within Claude:
 ```
 
 This preserves your User Instructions section.
+
+## Reducing Permission Prompts
+
+When running `/claude-code-setup`, Claude Code's sandbox prompts for permission on each command (`git clone`, `curl`, `jq`, etc.).
+
+### Recommended: Run from Terminal
+
+Run updates from terminal instead of within Claude - no permission prompts:
+
+```bash
+./install.sh --update
+```
+
+This is the simplest solution and works reliably.
+
+### Alternative: Allow Rules (Limited)
+
+import { Callout } from 'nextra/components'
+
+You can add permission rules to `~/.claude/settings.json`, but due to a [known limitation](https://github.com/anthropics/claude-code/issues/5503) in Claude Code, rules only work for simple commands:
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -fsSL:*)",
+      "Bash(jq -r:*)",
+      "Bash(rm -rf /tmp/claude-setup-:*)",
+      "Read(~/.claude/**)"
+    ]
+  }
+}
+```
+
+<Callout type="warning">
+**Limitation:** Rules with special characters (`$`, `[[`, `=`) at the command start don't work reliably. Commands like `temp_dir=$(...)` or `if [[ ...` will still prompt for permission.
+</Callout>
+
+For a prompt-free experience, use `./install.sh --update` from terminal instead.
