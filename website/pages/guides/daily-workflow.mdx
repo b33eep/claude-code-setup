@@ -12,7 +12,8 @@ A practical guide to working with Claude Code Setup. Sessions typically last 30-
          ▼
 ┌─────────────────┐
 │     Work        │  ← Implement, decide, document
-│  (30-90 min)    │
+│  (30-90 min)    │     /todo for quick capture
+│                 │     /design for complex features
 └────────┬────────┘
          │
          ▼
@@ -77,9 +78,17 @@ Add to Recent Decisions: Using bcrypt with cost=12 for password hashing
 
 ### Add Tasks That Come Up
 
+**Quick reminders:**
 ```
 /todo Add rate limiting to auth endpoints
 ```
+
+**Complex features** (need design):
+```
+/design "Add user authentication"
+```
+
+Use [/design](/commands/design) when the task has multiple parts, needs architecture decisions, or you're unsure how to implement it. Designs survive `/clear` - resume anytime with `/design --continue`.
 
 ### Watch Context
 

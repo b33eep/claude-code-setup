@@ -56,6 +56,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Uninstall/Remove Modules | Done | Content v28: `--remove` flag, option in `/claude-code-setup` ([Record 027](docs/records/027-uninstall-modules.md)) |
 | Update Notifications | Done | Content v33: SessionStart hook ([Record 028](docs/records/028-update-notifications.md)) |
 | Documentation User Perspective | Done | Reference → Features, permission rules docs ([Record 029](docs/records/029-documentation-user-perspective.md), [PR #34](https://github.com/b33eep/claude-code-setup/pull/34)) |
+| /design Command | Done | Content v35: Structured 5-step design workflow ([Record 030](docs/records/030-design-command.md)) |
 
 ### Future
 
@@ -100,6 +101,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Uninstall/Remove Modules | `--remove` Flag + `/claude-code-setup remove` | [027](docs/records/027-uninstall-modules.md) |
 | Update Notifications | SessionStart hook with version check | [028](docs/records/028-update-notifications.md) |
 | Documentation User Perspective | Reference → Features, user-facing names | [029](docs/records/029-documentation-user-perspective.md) |
+| /design Command | Structured 5-step design workflow | [030](docs/records/030-design-command.md) |
 
 ---
 
@@ -122,7 +124,7 @@ claude-code-setup/
 ├── mcp/
 ├── commands/
 ├── skills/
-└── docs/records/000-028-*.md
+└── docs/records/000-030-*.md
 ```
 
 ---

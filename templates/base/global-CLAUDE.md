@@ -79,6 +79,44 @@
 
 > **Note:** `/wrapup` handles updating CLAUDE.md and committing changes.
 
+### Before Implementing: Complexity Check
+
+When starting a story/task, assess whether it needs upfront design work. This prevents mid-implementation pivots and captures decisions for future reference.
+
+**Complexity Indicators (suggest mini-design):**
+
+**Complexity Indicators (suggest mini-design):**
+- Multiple valid approaches (2+ distinct paths)
+- Library/tool choice needed
+- Architecture impact (3+ files across modules)
+- New external dependency
+
+**Simple (proceed directly):**
+- Straightforward CRUD/UI change
+- Clear single approach
+- Well-defined acceptance criteria
+
+**If complex:**
+```
+This story has implementation choices:
+- Option A vs Option B
+- Library choice: X vs Y
+
+Quick mini-design? [Yes / Just implement it]
+```
+
+**If "Yes":** Brief Options → Decision discussion, then implement.
+**If "Just implement it":** Proceed with Claude's best judgment.
+
+**After implementation**, append notes to the story/Record:
+```markdown
+**Implementation Notes:**
+- Considered: [Option A] vs [Option B]
+- Chose: [Option] because [reason]
+```
+
+This preserves context for future sessions and code reviews.
+
 ---
 
 ## File Structure: What Goes Where?

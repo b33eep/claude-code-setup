@@ -1,0 +1,252 @@
+# /design
+
+Structured feature design workflow. Works through Problem → Options → Solution → Stories → Finalize.
+
+## Usage
+
+```
+/design "Feature name"     # Start new design
+/design --continue         # Resume incomplete design
+/design --review           # Get feedback (requires code-review-ai)
+```
+
+## When to Use
+
+| Use /design when... | Use /todo when... |
+|---------------------|-------------------|
+| Feature has multiple parts | Just need a reminder |
+| Unsure how to implement | Quick idea for later |
+| Need to evaluate options | Simple task |
+| Architecture decision | - |
+
+## The 5 Steps
+
+### 1. Problem
+
+Claude asks:
+- What problem are we solving?
+- Why does it need to be solved?
+- What happens if we do nothing?
+
+**After this step:** Record is created with Problem section.
+
+### 2. Options (Conditional)
+
+If multiple approaches exist, you evaluate:
+- Option A with pros/cons
+- Option B with pros/cons
+- Decision and reasoning
+
+**Skipped if:** Single obvious approach.
+
+### 3. Solution
+
+Define the high-level approach:
+- How will we implement this?
+- Architecture decisions
+- Key technical choices
+
+### 4. User Stories
+
+Break into implementable pieces:
+- Value-driven prioritization
+- Risky/difficult stories early
+- Each with acceptance criteria
+
+### 5. Finalize
+
+- Record status → "Designed"
+- CLAUDE.md updated with feature status
+- Ready to implement
+
+## Example Session
+
+```
+You: /design "Add user notifications"
+
+Claude: Let's design: Add user notifications
+
+First, let's understand the problem.
+- What problem are we solving?
+- Why does it need to be solved?
+
+You: Users miss important updates because there's no
+     notification system. They have to manually check.
+
+Claude: Record 031 created. Problem captured.
+
+What approaches have you considered?
+
+You: Could do email, in-app, or push notifications.
+
+Claude: Let's evaluate those options...
+...
+
+Claude: Design complete! Record 031 created.
+
+Stories ready for implementation:
+1. Email notifications (High)
+2. In-app notifications (High)
+3. Notification preferences (Medium)
+
+Start implementing with: "Let's implement Story 1"
+```
+
+## Resume After /clear
+
+Incomplete designs are detected automatically when you run `/design` or `/design --continue`:
+
+```
+You: /design
+
+Claude: Found incomplete design: "Add user notifications" (Record 031)
+
+        Progress:
+        ✓ Step 1: Problem - defined
+        ✓ Step 2: Options - evaluated
+        → Step 3: Solution - current step
+          Step 4: Stories
+          Step 5: Finalize
+
+        Continue from Step 3? [Yes / Start over / Cancel]
+
+You: Yes
+
+Claude: Let's define the solution. How will we implement this?
+```
+
+**Choices:**
+- **Yes** - Resume from current step
+- **Start over** - Clear Record, restart from Step 1
+- **Cancel** - Exit without changes (resume later)
+
+### Multiple Incomplete Designs
+
+If you have multiple designs in progress:
+
+```
+You: /design --continue
+
+Claude: Found 2 incomplete designs:
+
+        1. Record 031: Add notifications (Step 3)
+        2. Record 032: Implement caching (Step 2)
+
+        Which design to continue? [1/2]
+```
+
+### Works Across Sessions
+
+Your design progress is saved in the Record file. Even after `/clear`, `/design` will find and offer to resume where you left off.
+
+## Get a Review
+
+Request feedback at any point during design:
+
+```
+You: /design --review
+
+Claude: Reviewing design for "Add user notifications"...
+        Current state: Solution defined (Step 3 complete)
+        Remaining: Stories, Finalize
+
+        [invokes code-review-ai:architect-review]
+
+Feedback:
+- Problem statement is clear and well-motivated
+- Consider adding error handling story
+- Priority ordering looks good
+
+        Continue design workflow? [Yes / No]
+
+You: Yes
+
+Claude: Let's continue with Step 4: User Stories...
+```
+
+Feedback is shown but **not stored** in the Record. You incorporate suggestions manually.
+
+Requires the [code-review-ai plugin](/features/external-plugins/code-review-ai).
+
+## Implementing Stories
+
+After design is complete, start implementing stories. Claude assesses complexity:
+
+**Simple stories** → Implement directly
+
+**Complex stories** (library choice, multiple approaches) → Mini-design first:
+
+```
+You: Let's implement Story 1
+
+Claude: This story has implementation choices:
+        - SendGrid vs AWS SES vs Resend
+
+        Quick mini-design? [Yes / Just implement it]
+```
+
+Implementation decisions are saved to the Record:
+
+```markdown
+**Implementation Notes:**
+- Considered: SendGrid vs AWS SES vs Resend
+- Chose: Resend because simple API, good free tier
+```
+
+This preserves context for future sessions and code reviews.
+
+## Tips
+
+- **Start with the problem** - A clear problem statement makes everything else easier
+- **Don't over-design** - Skip Options step if there's only one viable approach
+- **Stories should be independent** - Each story can be implemented and tested alone
+- **High-risk stories first** - Fail fast on the hard parts
+- **Review early** - Use `--review` before finalizing, not after
+- **Resume freely** - Design survives `/clear`, continue anytime with `/design`
+
+## Output: Record Format
+
+```markdown
+# Record 031: User Notifications
+
+## Status
+Designed
+
+## Problem
+Users miss important updates...
+
+## Options Considered
+### Option A: Email
+- Pros: Universal, works offline
+- Cons: Can be slow, spam filters
+
+### Option B: In-app
+...
+
+### Decision
+Both email and in-app because...
+
+## Solution
+[High-level architecture]
+
+## User Stories
+
+### Story 1: Email notifications
+**As a** user
+**I want** email notifications
+**So that** I never miss updates
+
+**Acceptance Criteria:**
+- [ ] User can enable/disable
+- [ ] Emails include unsubscribe link
+- [ ] Throttled to max 10/day
+
+**Priority:** High
+**Status:** Pending
+```
+
+## Related
+
+- [/todo](/commands/todo) - Quick task capture
+- [Records](/concepts/records) - Design persistence
+- [code-review-ai](/features/external-plugins/code-review-ai) - Design review
