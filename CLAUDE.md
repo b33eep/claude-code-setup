@@ -21,7 +21,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Custom Modules | Done | ~/.claude/custom/ for user modules |
 | Solo/Team Mode | Done | /init-project asks for .gitignore preference |
 | Install Script | Done | --add, --update, --list, --yes flags, ShellCheck compliant |
-| Records | Done | 29 Records (000-028) |
+| Records | Done | 30 Records (000-029) |
 | Open Source Release | Done | Published to b33eep/claude-code-setup |
 | GitHub Actions E2E | Done | Full test coverage |
 | Open Source Polish | Done | SECURITY.md, CONTRIBUTING.md, CHANGELOG.md, templates |
@@ -55,6 +55,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | External Plugins | Done | Content v26: Install Claude plugins via installer ([Record 026](docs/records/026-external-plugins.md)) |
 | Uninstall/Remove Modules | Done | Content v28: `--remove` flag, option in `/claude-code-setup` ([Record 027](docs/records/027-uninstall-modules.md)) |
 | Update Notifications | Done | Content v33: SessionStart hook ([Record 028](docs/records/028-update-notifications.md)) |
+| Documentation User Perspective | Done | Reference → Features, permission rules docs ([Record 029](docs/records/029-documentation-user-perspective.md), [PR #34](https://github.com/b33eep/claude-code-setup/pull/34)) |
 
 ### Future
 
