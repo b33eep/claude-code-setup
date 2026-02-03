@@ -238,6 +238,57 @@ run_update_expect() {
     " 2>&1
 }
 
+# Run install.sh --remove with expect
+run_remove_expect() {
+    local expect_body=$1
+    local project_dir=${2:-$PROJECT_DIR}
+
+    expect -c "
+        set timeout 30
+        set env(HOME) \"$TEST_DIR\"
+        set env(CLAUDE_DIR) \"$CLAUDE_DIR\"
+        set env(MCP_CONFIG_FILE) \"$MCP_CONFIG_FILE\"
+        set env(TERM) \"xterm-256color\"
+        set env(SKIP_SKILL_DEPS) \"1\"
+        set env(SKIP_EXTERNAL_PLUGINS) \"1\"
+
+        # Additional procs for remove
+        proc toggle_remove {num} {
+            expect {
+                -re {Toggle \(1-\d+\)} { send \"\$num\\n\"; sleep 0.1 }
+                timeout { puts \"TIMEOUT at remove toggle\"; exit 1 }
+            }
+        }
+
+        proc confirm_remove {} {
+            expect {
+                -re {Toggle \(1-\d+\)} { send \"\\n\"; sleep 0.1 }
+                timeout { puts \"TIMEOUT at remove confirm\"; exit 1 }
+            }
+        }
+
+        proc accept_remove {} {
+            expect {
+                {Remove these modules?} { send \"y\\n\"; sleep 0.1 }
+                timeout { puts \"TIMEOUT at accept remove\"; exit 1 }
+            }
+        }
+
+        proc decline_remove {} {
+            expect {
+                {Remove these modules?} { send \"n\\n\"; sleep 0.1 }
+                timeout { puts \"TIMEOUT at decline remove\"; exit 1 }
+            }
+        }
+
+        spawn $project_dir/install.sh --remove
+
+        $expect_body
+
+        expect eof
+    " 2>&1
+}
+
 # ============================================
 # SHA256 HELPER
 # ============================================

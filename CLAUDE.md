@@ -21,7 +21,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Custom Modules | Done | ~/.claude/custom/ for user modules |
 | Solo/Team Mode | Done | /init-project asks for .gitignore preference |
 | Install Script | Done | --add, --update, --list, --yes flags, ShellCheck compliant |
-| Records | Done | 27 Records (000-026) |
+| Records | Done | 28 Records (000-027) |
 | Open Source Release | Done | Published to b33eep/claude-code-setup |
 | GitHub Actions E2E | Done | Full test coverage |
 | Open Source Polish | Done | SECURITY.md, CONTRIBUTING.md, CHANGELOG.md, templates |
@@ -53,6 +53,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Documentation Site | Done | Nextra in /website, GitHub Pages ([Record 024](docs/records/024-documentation-site.md)) |
 | Private Notes | Done | Content v24: `.open.md` convention, /catchup integration ([Record 025](docs/records/025-private-notes.md)) |
 | External Plugins | Done | Content v26: Install Claude plugins via installer ([Record 026](docs/records/026-external-plugins.md)) |
+| Uninstall/Remove Modules | Done | Content v28: `--remove` flag, option in `/claude-code-setup` ([Record 027](docs/records/027-uninstall-modules.md)) |
 
 ### Future
 
@@ -94,6 +95,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Documentation Site | Nextra in /website, monorepo | [024](docs/records/024-documentation-site.md) |
 | Private Notes | `.open.md` convention, /catchup integration | [025](docs/records/025-private-notes.md) |
 | External Plugins | Install Claude plugins via `claude plugin` CLI | [026](docs/records/026-external-plugins.md) |
+| Uninstall/Remove Modules | `--remove` Flag + `/claude-code-setup remove` | [027](docs/records/027-uninstall-modules.md) |
 
 ---
 
