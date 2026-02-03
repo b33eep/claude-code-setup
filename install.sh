@@ -38,6 +38,8 @@ source "$SCRIPT_DIR/lib/update.sh"
 source "$SCRIPT_DIR/lib/external-plugins.sh"
 # shellcheck source=lib/uninstall.sh
 source "$SCRIPT_DIR/lib/uninstall.sh"
+# shellcheck source=lib/hooks.sh
+source "$SCRIPT_DIR/lib/hooks.sh"
 
 # Cleanup handler for temp files and interrupts
 cleanup() {
@@ -203,6 +205,10 @@ do_install() {
     # Configure status line
     print_header "Status Line"
     configure_statusline
+
+    # Configure hooks
+    print_header "Hooks"
+    configure_hooks
 
     # Done
     print_header "Installation Complete"

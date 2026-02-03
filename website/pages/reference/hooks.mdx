@@ -1,0 +1,94 @@
+# Hooks
+
+Claude Code supports hooks that run shell commands in response to events. Claude Code Setup uses hooks to provide update notifications at session start.
+
+## What are Hooks?
+
+Hooks are shell commands that execute automatically when certain events occur in Claude Code. They run outside of Claude's permission system, making them useful for background tasks that shouldn't interrupt the workflow.
+
+## Update Notification Hook
+
+Claude Code Setup installs a `SessionStart` hook that checks for available updates.
+
+### How it Works
+
+At session start (`startup` or after `/clear`), the hook:
+
+1. **Checks base repo** - Compares your installed version with the latest on GitHub
+2. **Checks custom repo** - If you have a custom modules repo, checks for new commits
+
+### Output Examples
+
+When an update is available:
+```
+Update available: v28 -> v29 (run /claude-code-setup)
+```
+
+When custom modules have updates:
+```
+Custom modules update available (run /claude-code-setup)
+```
+
+When everything is up to date: no output (silent).
+
+### Configuration
+
+The hook is configured in `~/.claude/settings.json`:
+
+```json
+{
+  "hooks": {
+    "SessionStart": [{
+      "matcher": "startup|clear",
+      "hooks": [{
+        "type": "command",
+        "command": "~/.claude/hooks/check-update.sh"
+      }]
+    }]
+  }
+}
+```
+
+### Matchers
+
+| Matcher | When it Runs |
+|---------|--------------|
+| `startup` | New session started |
+| `clear` | After `/clear` command |
+| `resume` | Session resumed |
+| `compact` | After context compaction |
+
+The update notification uses `startup|clear` to check once per session without being too frequent.
+
+## Hook Script
+
+The update check script is located at `~/.claude/hooks/check-update.sh`.
+
+### Requirements
+
+- `jq` - JSON parsing (installed automatically)
+- `curl` - HTTP requests for version check
+- `git` - For custom repo checks (optional)
+
+### Behavior
+
+- **Fail-silent** - On network errors or missing dependencies, exits quietly
+- **Fast** - ~100-200ms total (curl with 2s timeout)
+- **Privacy-aware** - Only fetches a single VERSION file from GitHub raw (no API calls)
+
+## Disabling Hooks
+
+To disable the update notification:
+
+1. Edit `~/.claude/settings.json`
+2. Remove or comment out the `hooks` section
+
+Or remove just the check-update hook while keeping other hooks:
+
+```json
+{
+  "hooks": {
+    "SessionStart": []
+  }
+}
+```
