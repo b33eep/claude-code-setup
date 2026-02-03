@@ -54,6 +54,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Private Notes | Done | Content v24: `.open.md` convention, /catchup integration ([Record 025](docs/records/025-private-notes.md)) |
 | External Plugins | Done | Content v26: Install Claude plugins via installer ([Record 026](docs/records/026-external-plugins.md)) |
 | Uninstall/Remove Modules | Done | Content v28: `--remove` flag, option in `/claude-code-setup` ([Record 027](docs/records/027-uninstall-modules.md)) |
+| Update Notifications | Done | Content v33: SessionStart hook ([Record 028](docs/records/028-update-notifications.md)) |
 
 ### Future
 
@@ -61,7 +62,6 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 |------|----------|---------|----------|
 | /do-review command | Low | Unclear when to trigger code review, easy to forget | Create command + refine global prompt guidance |
 | Docker Matrix Tests | Low | deps.json install commands not tested on real distros | GitHub Actions with Docker matrix ([Record 022](docs/records/022-docker-matrix-tests.md)) |
-| Update Notifications | Medium | Users don't know when new versions available | SessionStart hook ([Record 028](docs/records/028-update-notifications.md)) |
 
 ---
 

@@ -118,6 +118,10 @@ do_update() {
         fi
     done < <(get_installed "skills")
 
+    # Configure hooks (for users updating from pre-v33)
+    print_header "Hooks"
+    configure_hooks
+
     # Update content version
     set_installed_content_version "$available_v"
 
