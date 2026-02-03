@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v34**: Fix update notification hook to show message to user
+  - Use `systemMessage` JSON output format for user-visible notifications
 - **v33**: Add update notification hook ([Record 028](docs/records/028-update-notifications.md))
   - SessionStart hook checks for available updates at session start
   - Compares installed version with latest on GitHub
