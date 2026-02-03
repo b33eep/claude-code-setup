@@ -46,6 +46,25 @@ Update all installed modules to latest versions.
 
 Equivalent to running `/claude-code-setup` from within Claude.
 
+### --remove
+
+Remove installed modules interactively.
+
+```bash
+./install.sh --remove
+```
+
+Shows a toggle selector for all installed modules:
+- MCP servers
+- Skills
+- External plugins
+
+Select modules to remove, then confirm. Removal:
+- Removes MCP entries from `~/.claude.json`
+- Deletes skill directories from `~/.claude/skills/`
+- Runs `claude plugin remove` for external plugins
+- Updates `installed.json` tracking
+
 ### --list
 
 Show what's currently installed.

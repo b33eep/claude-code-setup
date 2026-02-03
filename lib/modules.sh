@@ -5,6 +5,7 @@
 # Global arrays for module selection (used across functions)
 SELECTED_MCP=()
 SELECTED_SKILLS=()
+SELECTED_REMOVE=()
 
 # ============================================
 # INTERACTIVE TOGGLE SELECTION
@@ -423,6 +424,11 @@ interactive_select() {
         SELECTED_EXTERNAL_PLUGINS=()
         for item in $result_items; do
             SELECTED_EXTERNAL_PLUGINS+=("$item")
+        done
+    elif [[ "$result_var" = "SELECTED_REMOVE" ]]; then
+        SELECTED_REMOVE=()
+        for item in $result_items; do
+            SELECTED_REMOVE+=("$item")
         done
     else
         echo "Warning: Unknown result variable '$result_var' in interactive_select" >&2

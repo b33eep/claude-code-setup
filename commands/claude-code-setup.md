@@ -95,6 +95,7 @@ Manage your claude-code-setup installation: check status, upgrade, and install m
    - "Upgrade base" (if base update available)
    - "Upgrade custom" (if custom update available)
    - "Install modules" (if uninstalled modules exist)
+   - "Remove modules" (if modules are installed)
    - "Nothing"
 
    Combine options as appropriate (e.g., "Upgrade base + custom + install modules")
@@ -148,7 +149,20 @@ Manage your claude-code-setup installation: check status, upgrade, and install m
        ~/.claude/installed.json > tmp && mv tmp ~/.claude/installed.json
     ```
 
-14. **Cleanup**
+14. **Remove modules** (if requested)
+    - Show installed modules from `~/.claude/installed.json`
+    - Ask which specific modules to remove
+    - Run install.sh --remove:
+      ```bash
+      "$temp_dir/install.sh" --remove
+      ```
+    - Or remove manually:
+      - MCP: Remove from `~/.claude.json` using jq
+      - Skills: Remove directory from `~/.claude/skills/`
+      - Plugins: Run `claude plugin remove <name>`
+      - Update `installed.json` accordingly
+
+15. **Cleanup**
     ```bash
     rm -rf "$temp_dir"
     ```

@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v31**: Add `--remove` flag to uninstall modules ([Record 027](docs/records/027-uninstall-modules.md))
+  - Remove MCP servers, skills, and external plugins
+  - Interactive toggle selection (same UX as installation)
+  - Added to `/claude-code-setup` command options
 - **v30**: `/claude-code-setup` inserts MCP config with placeholder instead of showing snippet
   - Config is added directly to `~/.claude.json` with `YOUR_API_KEY_HERE`
   - User only needs to replace one value, no copy/paste required

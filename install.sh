@@ -36,6 +36,8 @@ source "$SCRIPT_DIR/lib/statusline.sh"
 source "$SCRIPT_DIR/lib/update.sh"
 # shellcheck source=lib/external-plugins.sh
 source "$SCRIPT_DIR/lib/external-plugins.sh"
+# shellcheck source=lib/uninstall.sh
+source "$SCRIPT_DIR/lib/uninstall.sh"
 
 # Cleanup handler for temp files and interrupts
 cleanup() {
@@ -56,6 +58,7 @@ show_usage() {
     echo "Options:"
     echo "  (none)      Initial installation with interactive wizard"
     echo "  --add       Add more modules to existing installation"
+    echo "  --remove    Remove installed modules"
     echo "  --update    Update all installed modules"
     echo "  --yes, -y   Skip confirmation prompts (for --update)"
     echo "  --list      Show installed and available modules"
@@ -64,6 +67,7 @@ show_usage() {
     echo ""
     echo "Examples:"
     echo "  ./install.sh --update --yes   Non-interactive update"
+    echo "  ./install.sh --remove         Remove installed modules"
     echo ""
     echo "Custom Modules:"
     echo "  Place custom modules in ~/.claude/custom/"
@@ -255,6 +259,9 @@ main() {
             --update|-u)
                 action="update"
                 ;;
+            --remove|-r)
+                action="remove"
+                ;;
             --yes|-y)
                 YES_MODE=true
                 ;;
@@ -278,6 +285,9 @@ main() {
             ;;
         "update")
             do_update
+            ;;
+        "remove")
+            do_remove
             ;;
         "")
             if [[ -f "$INSTALLED_FILE" ]]; then

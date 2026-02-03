@@ -16,7 +16,7 @@
 [![macOS](https://img.shields.io/badge/platform-macOS-blue.svg)](https://www.apple.com/macos/)
 [![Linux](https://img.shields.io/badge/platform-Linux-blue.svg)](https://www.linux.org/)
 [![WSL](https://img.shields.io/badge/platform-WSL-blue.svg)](https://docs.microsoft.com/en-us/windows/wsl/)
-[![Content v30](https://img.shields.io/badge/content-v30-blue.svg)](CHANGELOG.md)
+[![Content v31](https://img.shields.io/badge/content-v31-blue.svg)](CHANGELOG.md)
 
 **Persistent memory for Claude Code via Markdown files.**
 
@@ -74,7 +74,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/b33eep/claude-code-setup/mai
 | `/wrapup` | Save status before /clear |
 | `/init-project` | Set up new project |
 | `/todo` | Manage todos |
-| `/claude-code-setup` | Update modules |
+| `/claude-code-setup` | Update and manage modules |
 
 ### Skills (Auto-Loading)
 
