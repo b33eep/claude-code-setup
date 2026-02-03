@@ -290,7 +290,6 @@ Designing | Designed | In Progress | Done
 
 **Priority:** High | Medium | Low
 **Status:** Pending | In Progress | Done
-**Updated:** -
 
 ### Story 2: [Title]
 ...
@@ -310,7 +309,11 @@ docs/records/
 → Next: 031-{feature-slug}.md
 ```
 
-Slug: lowercase, hyphens, max 30 chars. Example: "Add OAuth2 Authentication" → `031-oauth2-authentication.md`
+Slug: lowercase, hyphens, max 30 chars. Truncate long names to key terms.
+
+Examples:
+- "Add OAuth2 Authentication" → `031-oauth2-authentication.md`
+- "Add comprehensive user notification system with multi-channel support" → `031-user-notifications.md`
 
 ---
 
@@ -341,7 +344,8 @@ When resuming, determine current step by checking which sections exist in the Re
 | Problem + Options + Decision | Step 3 (Solution) | Options complete |
 | Problem + Solution (no Options) | Step 4 (Stories) | Options was skipped |
 | Problem + Options + Decision + Solution | Step 4 (Stories) | |
-| Above + User Stories | Step 5 (Finalize) | |
+| Problem + Solution + User Stories (no Options) | Step 5 (Finalize) | Options skipped, stories done |
+| Problem + Options + Decision + Solution + User Stories | Step 5 (Finalize) | All sections complete |
 
 **Key rule:** If Solution exists but Options does not → Options was intentionally skipped (single obvious approach). Skip to Step 4.
 
@@ -456,8 +460,8 @@ Overwrite with new design? [Yes / No]
 ## Integration with Other Commands
 
 ### /catchup
-- Loads Records with Status "Designing" or "In Progress"
-- User sees where to continue
+- Loads Records with Status "Designing", "Designed", or "In Progress"
+- User sees where to continue (design or implementation)
 
 ### /wrapup
 - Updates story status in Record if implementation happened

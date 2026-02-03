@@ -270,7 +270,6 @@ Designing | Designed | In Progress | Done
 
 **Priority:** High | Medium | Low
 **Status:** Pending | In Progress | Done
-**Updated:** -
 
 ### Story 2: [Title]
 ...
