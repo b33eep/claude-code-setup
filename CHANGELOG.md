@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v32**: Add restart warning after upgrade/changes
+  - Tools (Read, Bash, etc.) may not work until Claude Code restart
+  - Warning shown after `/claude-code-setup` upgrades, module installs, and removals
 - **v31**: Add `--remove` flag to uninstall modules ([Record 027](docs/records/027-uninstall-modules.md))
   - Remove MCP servers, skills, and external plugins
   - Interactive toggle selection (same UX as installation)

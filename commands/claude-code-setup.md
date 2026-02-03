@@ -204,7 +204,9 @@ Changes (base):
 Changes (custom):
 - v2: Add standards-kotlin skill
 
-Run /catchup to reload context.
+⚠️  IMPORTANT: Restart Claude Code now.
+    Tools (Read, Bash, etc.) may not work until restart.
+    After restart, run /catchup to reload context.
 ```
 
 ### MCP with API key (insert with placeholder):
@@ -244,7 +246,8 @@ Instead of just showing a snippet, **insert the config directly into ~/.claude.j
    2. Sign up for 'Data for AI' plan
    3. Create an API key (free tier: 2000 queries/month)
 
-   Then restart Claude Code.
+   ⚠️  IMPORTANT: Restart Claude Code now.
+       Tools (Read, Bash, etc.) may not work until restart.
    ```
 
 **Key point:** User only needs to replace the placeholder value, not copy/paste the entire config block.
@@ -276,7 +279,9 @@ Installing external plugin code-review-ai...
   Installing code-review-ai...
   ✓ code-review-ai installed
 
-Restart Claude Code to activate the plugin.
+⚠️  IMPORTANT: Restart Claude Code now.
+    Tools (Read, Bash, etc.) may not work until restart.
+    After restart, run /catchup to reload context.
 ```
 
 ### Already current, all modules installed:

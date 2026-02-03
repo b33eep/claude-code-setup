@@ -257,6 +257,7 @@ do_remove() {
     echo ""
     echo "Removed ${#SELECTED_REMOVE[@]} module(s)."
     echo ""
-    echo "Note: Restart Claude Code for changes to take effect."
+    echo "⚠️  IMPORTANT: Restart Claude Code now."
+    echo "   Tools (Read, Bash, etc.) may not work until restart."
     echo ""
 }

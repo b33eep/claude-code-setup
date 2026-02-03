@@ -123,6 +123,9 @@ do_update() {
 
     echo ""
     print_success "Update complete! (v$available_v)"
+    echo ""
+    echo "⚠️  IMPORTANT: Restart Claude Code now."
+    echo "   Tools (Read, Bash, etc.) may not work until restart."
 
     # Check for new modules (skip in non-interactive mode)
     if [[ "$YES_MODE" = "false" ]]; then
