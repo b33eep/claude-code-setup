@@ -17,8 +17,8 @@ export default {
   guides: {
     title: 'Guides'
   },
-  reference: {
-    title: 'Reference'
+  features: {
+    title: 'Features'
   },
   architecture: {
     title: 'Records'

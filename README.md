@@ -118,7 +118,7 @@ Install Claude plugins via the installer:
 - [Getting Started](https://b33eep.github.io/claude-code-setup/getting-started/installation)
 - [Core Concepts](https://b33eep.github.io/claude-code-setup/concepts/two-claude-files)
 - [Commands Reference](https://b33eep.github.io/claude-code-setup/commands/catchup)
-- [Skills Reference](https://b33eep.github.io/claude-code-setup/reference/skills)
+- [Skills](https://b33eep.github.io/claude-code-setup/features/skills)
 - [Session Workflow](https://b33eep.github.io/claude-code-setup/guides/daily-workflow)
 - [Team Setup](https://b33eep.github.io/claude-code-setup/guides/team-setup)
 

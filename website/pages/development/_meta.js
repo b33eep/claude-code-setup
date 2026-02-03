@@ -1,4 +1,5 @@
 export default {
+  'file-structure': 'File Structure',
   contributing: 'Contributing',
   testing: 'Testing',
   security: 'Security',
