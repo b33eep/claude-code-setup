@@ -11,7 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **v37**: Add `standards-java` skill for Java enterprise applications ([Record 031](docs/records/031-java-developer-skill.md))
   - Core Java standards: naming, modern features, code organization
-  - Modern Java 17+ features: records, sealed classes, pattern matching, text blocks, switch expressions
+  - Java 17 features: records, sealed classes, pattern matching, text blocks, switch expressions
+  - Java 21 features: virtual threads, sequenced collections, record patterns, pattern matching for switch
+  - Java 25 features: flexible main methods, scoped values, gatherers, primitive pattern matching (preview)
+  - Recommends latest LTS (Java 21/25) for new projects
   - Testing fundamentals: JUnit 5, Mockito
   - Build tool awareness: Maven and Gradle
   - Production best practices and recommended tooling

@@ -30,9 +30,13 @@ Auto-loads for projects with Java in their tech stack.
 | Packages | lowercase.dot.separated | `com.example.service` |
 | Test Classes | ClassNameTest | `UserServiceTest` |
 
-## Modern Java Features (Java 17+)
+## Modern Java Features
 
-### Records (Immutable Data)
+> **Recommended:** Use the latest LTS for new projects (currently Java 21 or Java 25).
+
+### Java 17 Features
+
+#### Records (Immutable Data)
 ```java
 public record User(String id, String name, String email) {
     // Compact constructor for validation
@@ -44,7 +48,7 @@ public record User(String id, String name, String email) {
 }
 ```
 
-### Sealed Classes
+#### Sealed Classes
 ```java
 public sealed interface Result<T> permits Success, Failure {}
 
@@ -52,7 +56,7 @@ public record Success<T>(T value) implements Result<T> {}
 public record Failure<T>(String error) implements Result<T> {}
 ```
 
-### Pattern Matching
+#### Pattern Matching
 ```java
 // Pattern matching with instanceof
 if (obj instanceof String s) {
@@ -70,7 +74,7 @@ public String formatValue(Object obj) {
 }
 ```
 
-### Text Blocks
+#### Text Blocks
 ```java
 String json = """
     {
@@ -252,3 +256,79 @@ Framework-specific extensions are planned:
 - **standards-quarkus** - Quarkus-specific reactive patterns
 
 These will be separate skills that can be installed alongside standards-java.
+
+### Java 21 Features
+
+#### Virtual Threads
+```java
+// Virtual threads - lightweight, millions possible
+try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+    for (int i = 0; i < 10000; i++) {
+        executor.submit(() -> fetchData());
+    }
+}
+
+// Start virtual thread directly
+Thread.startVirtualThread(() -> {
+    // Task code
+});
+```
+
+#### Sequenced Collections
+```java
+// Get first and last elements
+List<String> list = List.of("a", "b", "c");
+String first = list.getFirst();  // "a"
+String last = list.getLast();    // "c"
+
+// Reversed view
+List<String> reversed = list.reversed();
+```
+
+#### Record Patterns
+```java
+record Point(int x, int y) {}
+
+// Deconstruct records in patterns
+if (obj instanceof Point(int x, int y)) {
+    System.out.println("x: " + x + ", y: " + y);
+}
+
+// In switch
+static String describe(Object obj) {
+    return switch (obj) {
+        case Point(int x, int y) -> "Point at (" + x + ", " + y + ")";
+        default -> "Unknown shape";
+    };
+}
+```
+
+### Java 25 Features
+
+#### Flexible Main Methods
+```java
+// Simple main - no boilerplate
+void main() {
+    System.out.println("Hello World");
+}
+```
+
+#### Scoped Values
+```java
+// Alternative to ThreadLocal - automatically cleaned up
+public static final ScopedValue<User> CURRENT_USER = ScopedValue.newInstance();
+
+ScopedValue.runWhere(CURRENT_USER, user, () -> {
+    User currentUser = CURRENT_USER.get();
+    processRequest(currentUser);
+    // Value automatically cleared when block exits
+});
+```
+
+#### Gatherers (Custom Stream Operations)
+```java
+// Custom intermediate stream operations
+Stream.of(1, 2, 3, 4, 5)
+    .gather(Gatherers.windowFixed(2))  // [[1,2], [3,4], [5]]
+    .toList();
+```

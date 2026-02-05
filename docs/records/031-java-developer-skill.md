@@ -126,7 +126,7 @@ Create a context skill following the established pattern of standards-python, st
 
 - **No MCP Server initially**: Standards skill provides guidance without external dependencies. If documentation search or dependency analysis becomes critical, consider adding MCP later.
 - **No framework specifics**: Spring, Jakarta EE, Quarkus patterns belong in separate extension skills
-- **Focus on modern Java**: Target Java 17+ LTS with backward compatibility notes
+- **Focus on modern Java**: Recommend latest LTS (Java 21/25), document features available since Java 17+
 - **Practical examples**: Include code snippets for each section (similar to standards-shell)
 - **Tool integration guidance**: Reference tools but don't require them
 
@@ -172,7 +172,11 @@ applies_to: [java, maven, gradle, junit, spring, jakarta, quarkus]
 - [x] Include YAML front matter: name, description, type: context, applies_to: [java, maven, gradle, junit, spring, jakarta, quarkus]
 - [x] Core Principles section (readability, maintainability, SOLID, DRY)
 - [x] Naming Conventions section (classes, methods, packages, constants, variables with examples)
-- [x] Modern Java Features section (records, sealed classes, pattern matching, text blocks, switch expressions)
+- [x] Modern Java Features section organized by version:
+  - Java 17: records, sealed classes, pattern matching, text blocks, switch expressions
+  - Java 21: virtual threads, sequenced collections, record patterns, pattern matching for switch
+  - Java 25: flexible main methods, scoped values, gatherers, primitive pattern matching (preview)
+- [x] Note recommending latest LTS (Java 21/25) for new projects
 - [x] Code Organization section (package structure, visibility, SOLID principles)
 - [x] Exception Handling section (checked vs unchecked, try-with-resources, custom exceptions)
 - [x] Collections & Streams API section (List/Set/Map usage, Stream best practices)
@@ -189,7 +193,12 @@ applies_to: [java, maven, gradle, junit, spring, jakarta, quarkus]
 - Created comprehensive 630-line skill file following standards-python/typescript/shell pattern
 - Added YAML front matter with extended applies_to list (included mockito, testcontainers, hibernate, jpa)
 - Structured with clear sections: Core Principles, Naming, Project Structure (Maven/Gradle), Modern Java Features
-- Modern Java Features section covers Java 17+ with practical examples: records, sealed classes, pattern matching, text blocks, switch expressions
+- Modern Java Features section organized by Java version (17, 21, 25):
+  - Java 17: records, sealed classes, pattern matching, text blocks, switch expressions
+  - Java 21: virtual threads, sequenced collections, record patterns, pattern matching for switch (finalized)
+  - Java 25: flexible main methods, scoped values, gatherers, primitive pattern matching (preview)
+- Added recommendation to use latest LTS (Java 21/25) for new projects
+- All features include practical code examples
 - Code Organization includes SOLID principles with concrete examples (SRP, DIP)
 - Exception handling: checked vs unchecked guidance, try-with-resources, custom exception hierarchies
 - Collections & Streams: when to use List/Set/Map, stream best practices, immutable collections with List.of/Set.of/Map.of

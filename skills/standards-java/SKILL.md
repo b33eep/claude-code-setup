@@ -87,9 +87,13 @@ myproject/
 └── README.md
 ```
 
-## Modern Java Features (Java 17+)
+## Modern Java Features
 
-### Records (Immutable Data)
+> **Recommended:** Use the latest LTS for new projects (currently Java 21 or Java 25).
+
+### Java 17 Features
+
+#### Records (Immutable Data)
 ```java
 // Replace verbose POJOs with records
 public record User(String id, String name, String email) {
@@ -111,7 +115,7 @@ var user = new User("1", "John Doe", "john@example.com");
 System.out.println(user.name()); // Auto-generated accessor
 ```
 
-### Sealed Classes (Restricted Hierarchies)
+#### Sealed Classes (Restricted Hierarchies)
 ```java
 // Define closed set of subclasses
 public sealed interface Result<T>
@@ -131,7 +135,7 @@ public <T> void handleResult(Result<T> result) {
 }
 ```
 
-### Pattern Matching (instanceof)
+#### Pattern Matching (instanceof)
 ```java
 // Old way
 if (obj instanceof String) {
@@ -155,7 +159,7 @@ public String formatValue(Object obj) {
 }
 ```
 
-### Text Blocks (Multi-line Strings)
+#### Text Blocks (Multi-line Strings)
 ```java
 // Old way
 String json = "{\n" +
@@ -172,7 +176,7 @@ String json = """
     """;
 ```
 
-### Switch Expressions
+#### Switch Expressions
 ```java
 // Old switch statement
 String result;
@@ -195,6 +199,224 @@ String result = switch (day) {
     case SATURDAY, SUNDAY -> "Weekend";
     default -> "Unknown";
 };
+```
+
+### Java 21 Features
+
+#### Virtual Threads
+```java
+// Traditional platform threads - expensive, limited scalability
+try (var executor = Executors.newFixedThreadPool(100)) {
+    for (int i = 0; i < 10000; i++) {
+        executor.submit(() -> fetchData());
+    }
+}
+
+// Virtual threads - lightweight, millions possible
+try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+    for (int i = 0; i < 10000; i++) {
+        executor.submit(() -> fetchData());
+    }
+}
+
+// Start virtual thread directly
+Thread.startVirtualThread(() -> {
+    // Task code
+});
+
+// Structured concurrency (preview in Java 21)
+try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+    Future<String> user = scope.fork(() -> fetchUser(id));
+    Future<List<Order>> orders = scope.fork(() -> fetchOrders(id));
+
+    scope.join();           // Wait for all tasks
+    scope.throwIfFailed();  // Throw if any failed
+
+    return new UserDetails(user.resultNow(), orders.resultNow());
+}
+```
+
+#### Sequenced Collections
+```java
+// New interfaces: SequencedCollection, SequencedSet, SequencedMap
+
+// Get first and last elements
+List<String> list = List.of("a", "b", "c");
+String first = list.getFirst();  // "a"
+String last = list.getLast();    // "c"
+
+// Reversed view (not a copy!)
+List<String> reversed = list.reversed();
+
+// Works with Set
+LinkedHashSet<String> set = new LinkedHashSet<>(List.of("a", "b", "c"));
+set.addFirst("z");  // z, a, b, c
+set.addLast("x");   // z, a, b, c, x
+
+// Works with Map
+LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
+map.putFirst("first", 1);
+map.putLast("last", 99);
+```
+
+#### Pattern Matching for switch (finalized)
+```java
+// Pattern matching with null handling
+String formatted = switch (obj) {
+    case null -> "null";
+    case Integer i -> "Number: " + i;
+    case String s -> "Text: " + s;
+    case List<?> list -> "List of " + list.size() + " items";
+    default -> "Unknown";
+};
+
+// Guard patterns
+String category = switch (value) {
+    case Integer i when i < 0 -> "Negative";
+    case Integer i when i == 0 -> "Zero";
+    case Integer i -> "Positive";
+    default -> "Not a number";
+};
+```
+
+#### Record Patterns (finalized)
+```java
+record Point(int x, int y) {}
+record Circle(Point center, int radius) {}
+
+// Deconstruct records in patterns
+static void printPoint(Object obj) {
+    if (obj instanceof Point(int x, int y)) {
+        System.out.println("x: " + x + ", y: " + y);
+    }
+}
+
+// Nested deconstruction
+static void printCircle(Object obj) {
+    if (obj instanceof Circle(Point(int x, int y), int r)) {
+        System.out.println("Circle at (" + x + ", " + y + ") with radius " + r);
+    }
+}
+
+// In switch
+static String describe(Object obj) {
+    return switch (obj) {
+        case Point(int x, int y) -> "Point at (" + x + ", " + y + ")";
+        case Circle(Point(int x, int y), int r) ->
+            "Circle at (" + x + ", " + y + ") radius " + r;
+        default -> "Unknown shape";
+    };
+}
+```
+
+### Java 25 Features
+
+#### Flexible Main Methods
+```java
+// No longer need public static void main(String[] args)
+
+// Simple main - for beginners and scripts
+void main() {
+    System.out.println("Hello World");
+}
+
+// With arguments (if needed)
+void main(String[] args) {
+    System.out.println("Args: " + Arrays.toString(args));
+}
+
+// Instance main (access to instance fields/methods)
+class App {
+    private String message = "Hello";
+
+    void main() {
+        System.out.println(message);  // Access instance field
+        greet();                       // Call instance method
+    }
+
+    void greet() {
+        System.out.println("Welcome");
+    }
+}
+```
+
+#### Scoped Values (Alternative to ThreadLocal)
+```java
+// ThreadLocal (old way) - must be cleaned up manually
+private static final ThreadLocal<User> CURRENT_USER = new ThreadLocal<>();
+
+// Scoped Values (new way) - automatically cleaned up
+public static final ScopedValue<User> CURRENT_USER = ScopedValue.newInstance();
+
+// Set scoped value (automatically reverted when block exits)
+ScopedValue.runWhere(CURRENT_USER, user, () -> {
+    // Value is available here
+    User currentUser = CURRENT_USER.get();
+    processRequest(currentUser);
+    // Value automatically cleared when block exits
+});
+
+// Inherited by virtual threads
+try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+    ScopedValue.runWhere(CURRENT_USER, user, () -> {
+        executor.submit(() -> {
+            // Virtual thread inherits scoped value
+            User u = CURRENT_USER.get();
+            handleTask(u);
+        });
+    });
+}
+```
+
+#### Primitive Pattern Matching (Preview)
+```java
+// Pattern matching now works with primitives
+
+static String classify(int value) {
+    return switch (value) {
+        case 0 -> "zero";
+        case int i when i > 0 -> "positive";
+        case int i when i < 0 -> "negative";
+    };
+}
+
+// Type patterns for primitives
+Object obj = 42;
+if (obj instanceof int i) {
+    System.out.println("Integer: " + i);
+}
+```
+
+#### Gatherers (Custom Stream Operations)
+```java
+// Create custom intermediate stream operations
+
+// Built-in gatherers
+Stream.of(1, 2, 3, 4, 5)
+    .gather(Gatherers.windowFixed(2))  // [[1,2], [3,4], [5]]
+    .toList();
+
+Stream.of(1, 2, 3, 4, 5)
+    .gather(Gatherers.windowSliding(2))  // [[1,2], [2,3], [3,4], [4,5]]
+    .toList();
+
+// Custom gatherer example (simplified)
+var sumAndCount = Gatherer.of(
+    () -> new long[2],  // [sum, count]
+    (state, element, downstream) -> {
+        state[0] += element;
+        state[1]++;
+        return true;
+    },
+    (state, downstream) -> {
+        downstream.push(state[0] / (double) state[1]);
+    }
+);
+
+double average = Stream.of(1, 2, 3, 4, 5)
+    .gather(sumAndCount)
+    .findFirst()
+    .orElse(0.0);
 ```
 
 ## Code Organization
