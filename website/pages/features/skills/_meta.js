@@ -1,5 +1,6 @@
 export default {
   index: 'Overview',
+  'standards-java': 'Java',
   'standards-python': 'Python',
   'standards-typescript': 'TypeScript',
   'standards-javascript': 'JavaScript',

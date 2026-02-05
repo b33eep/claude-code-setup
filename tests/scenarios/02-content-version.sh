@@ -136,7 +136,7 @@ run_update_expect '
     # MCP selection - deselect all
     deselect_all_mcp
     # Skills selection - keep only standards-python (#4)
-    select_only_skill 4
+    select_only_skill 5
 ' > /dev/null
 
 # Verify skill was installed

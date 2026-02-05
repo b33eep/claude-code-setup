@@ -22,8 +22,8 @@ run_install_expect '
     # Keep pdf-reader (pre-selected)
     confirm_mcp
 
-    # Select only standards-python (#4 of 7 available)
-    select_only_skill 4
+    # Select only standards-python (#5 of 8 available)
+    select_only_skill 5
 
     # Decline status line
     decline_statusline
@@ -95,7 +95,7 @@ run_add_expect '
     confirm_mcp
 
     # Select standards-shell (#5 of 6 available)
-    select_only_skill 5
+    select_only_skill 6
 
     # Decline status line
     decline_statusline
