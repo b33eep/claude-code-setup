@@ -23,7 +23,7 @@ run_install_expect '
     confirm_mcp
 
     # Select only standards-python (#5 of 8 available)
-    select_only_skill 5
+    select_only_skill 6
 
     # Decline status line
     decline_statusline
@@ -94,8 +94,8 @@ run_add_expect '
     # No MCP
     confirm_mcp
 
-    # Select standards-shell (#5 of 6 available)
-    select_only_skill 6
+    # Select standards-shell (#7 of 9 available)
+    select_only_skill 7
 
     # Decline status line
     decline_statusline

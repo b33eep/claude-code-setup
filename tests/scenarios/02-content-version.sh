@@ -122,8 +122,8 @@ scenario "Update can install new modules"
 jq '.content_version = 0' "$INSTALLED_FILE" > "$INSTALLED_FILE.tmp" && mv "$INSTALLED_FILE.tmp" "$INSTALLED_FILE"
 
 # Accept update and install only standards-python
-# Skill order (alphabetical): 1=create-slidev, 2=skill-creator, 3=standards-javascript,
-#                             4=standards-python, 5=standards-shell, 6=standards-typescript
+# Skill order (alphabetical): 1=create-slidev, 2=skill-creator, 3=standards-java,
+#   4=standards-javascript, 5=standards-kotlin, 6=standards-python, 7=standards-shell, 8=standards-typescript
 run_update_expect '
     expect {
         {Proceed?} { send "y\r" }
@@ -135,8 +135,8 @@ run_update_expect '
     }
     # MCP selection - deselect all
     deselect_all_mcp
-    # Skills selection - keep only standards-python (#4)
-    select_only_skill 5
+    # Skills selection - keep only standards-python (#6)
+    select_only_skill 6
 ' > /dev/null
 
 # Verify skill was installed

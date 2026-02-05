@@ -19,17 +19,17 @@ scenario "Fresh install with pdf-reader and standards-python"
 
 # Run install with expect:
 # - MCP: confirm defaults (pdf-reader pre-selected)
-# - Skills: select only standards-python (skill #4 in alphabetical order)
+# - Skills: select only standards-python (skill #6 in alphabetical order)
 # - Accept status line
 #
-# Skill order (alphabetical): 1=create-slidev, 2=skill-creator, 3=standards-javascript,
-#                             4=standards-python, 5=standards-shell, 6=standards-typescript
+# Skill order (alphabetical): 1=create-slidev, 2=skill-creator, 3=standards-java,
+#   4=standards-javascript, 5=standards-kotlin, 6=standards-python, 7=standards-shell, 8=standards-typescript
 run_install_expect '
     # MCP: pdf-reader is pre-selected, just confirm
     confirm_mcp
 
-    # Skills: all pre-selected, use dynamic helper to keep only #5 (standards-python)
-    select_only_skill 5
+    # Skills: all pre-selected, use dynamic helper to keep only #6 (standards-python)
+    select_only_skill 6
 
     # Accept status line
     accept_statusline

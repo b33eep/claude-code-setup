@@ -35,14 +35,14 @@ assert_file_exists "$INSTALLED_FILE" "installed.json exists"
 scenario "Add skill via --add"
 
 # Add standards-typescript only
-# Skill order (alphabetical, 6 available): 1=create-slidev, 2=skill-creator,
-#   3=standards-javascript, 4=standards-python, 5=standards-shell, 6=standards-typescript
+# Skill order (alphabetical, 9 available): 1=create-slidev, 2=skill-creator, 3=standards-java,
+#   4=standards-javascript, 5=standards-kotlin, 6=standards-python, 7=standards-shell, 8=standards-typescript, 9=youtube-transcript
 run_add_expect '
     # No MCP - deselect all
     deselect_all_mcp
 
-    # Select only standards-typescript (#6)
-    select_only_skill 7
+    # Select only standards-typescript (#8)
+    select_only_skill 8
 
     # Decline status line (not configured in initial install)
     decline_statusline
@@ -54,14 +54,14 @@ assert_json_exists "$INSTALLED_FILE" '.skills[] | select(. == "standards-typescr
 scenario "Add standards-shell skill"
 
 # Add standards-shell only
-# After previous install, standards-typescript is installed, so 5 skills remain:
-# 1=create-slidev, 2=skill-creator, 3=standards-javascript, 4=standards-python, 5=standards-shell
+# After previous install, standards-typescript is installed, so 8 skills remain:
+# 1=create-slidev, 2=skill-creator, 3=standards-java, 4=standards-javascript, 5=standards-kotlin, 6=standards-python, 7=standards-shell, 8=youtube-transcript
 run_add_expect '
     # No MCP - deselect all
     deselect_all_mcp
 
-    # Select only standards-shell (#5 of remaining 5)
-    select_only_skill 6
+    # Select only standards-shell (#7 of remaining 8)
+    select_only_skill 7
 
     # Decline status line
     decline_statusline

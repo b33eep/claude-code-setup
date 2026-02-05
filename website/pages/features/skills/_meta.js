@@ -1,6 +1,7 @@
 export default {
   index: 'Overview',
   'standards-java': 'Java',
+  'standards-kotlin': 'Kotlin',
   'standards-python': 'Python',
   'standards-typescript': 'TypeScript',
   'standards-javascript': 'JavaScript',
