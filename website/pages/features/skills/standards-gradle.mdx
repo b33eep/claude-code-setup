@@ -1,0 +1,257 @@
+# Gradle Standards
+
+Auto-loads when editing `.gradle.kts` files (Kotlin DSL). Comprehensive guidance for Gradle 9 LTS.
+
+## Metadata
+
+| Field | Value |
+|-------|-------|
+| Type | context |
+| Applies to | gradle |
+| Version | Gradle 9 LTS (9.3+) |
+
+## Core Principles
+
+1. **Declarative over Imperative** - Describe what you want, not how to achieve it
+2. **Type-Safe Configuration** - Use Kotlin DSL for type safety and IDE support
+3. **Lazy Configuration** - Use Providers API to defer configuration until needed
+4. **Build Cache Friendly** - Write tasks that support build caching
+5. **Configuration Cache Compatible** - Ensure builds work with configuration cache
+
+## What's Included
+
+This skill provides three major sections:
+
+### Section 1: Project Configuration (~70%)
+
+Common scenarios for configuring Gradle projects:
+
+- **Build Script Basics** - Structure, organization, repository configuration
+- **Dependency Management** - Configurations, version catalogs, BOM/platform dependencies
+- **Plugin Configuration** - Application, extension configuration, common plugins
+- **Multi-Module Projects** - Convention plugins, cross-module dependencies, buildSrc
+- **Gradle 9 Features** - Configuration cache, build cache, test suites, toolchains
+
+### Section 2: Plugin/Task Development (~30%)
+
+Advanced topics for building custom plugins and tasks:
+
+- **Custom Tasks** - Lazy registration, input/output annotations, task dependencies
+- **Extension API** - Creating configurable plugins with Property<T>
+- **Providers API** - Lazy configuration, connecting providers, avoiding eager evaluation
+- **Gradle Caching** - Build cache and configuration cache compatibility
+- **Custom Plugins** - Plugin<Project> implementation, buildSrc, convention plugins
+- **Build Logic Reuse** - buildSrc vs included builds vs composite builds
+
+### Groovy → Kotlin DSL Migration Guide
+
+Comprehensive conversion guide for migrating legacy Groovy DSL scripts:
+
+- Side-by-side syntax comparisons
+- Plugin application conversion
+- Dependency declaration differences
+- 12 common migration gotchas with solutions
+
+## Build Script Basics
+
+### Structure
+```kotlin
+// build.gradle.kts organization
+plugins {
+    java
+    application
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("com.google.guava:guava:33.0.0-jre")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+tasks.test {
+    useJUnitPlatform()
+}
+```
+
+## Dependency Management
+
+### Version Catalogs (Recommended)
+
+**gradle/libs.versions.toml:**
+```toml
+[versions]
+guava = "33.0.0-jre"
+junit = "5.10.2"
+
+[libraries]
+guava = { module = "com.google.guava:guava", version.ref = "guava" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
+
+[bundles]
+testing = ["junit-jupiter", "mockito-core"]
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "2.0.0" }
+```
+
+**build.gradle.kts:**
+```kotlin
+plugins {
+    alias(libs.plugins.kotlin.jvm)
+}
+
+dependencies {
+    implementation(libs.guava)
+    testImplementation(libs.bundles.testing)
+}
+```
+
+## Custom Tasks
+
+### Cache-Compatible Tasks
+```kotlin
+abstract class ProcessFilesTask : DefaultTask() {
+    @get:InputDirectory
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    abstract val inputDir: DirectoryProperty
+
+    @get:OutputDirectory
+    abstract val outputDir: DirectoryProperty
+
+    @get:Input
+    abstract val processMode: Property<String>
+
+    @TaskAction
+    fun process() {
+        val output = outputDir.get().asFile
+        output.mkdirs()
+
+        inputFiles.forEach { file ->
+            val processed = output.resolve(file.name)
+            processed.writeText(file.readText().uppercase())
+        }
+    }
+}
+
+// Register task
+tasks.register<ProcessFilesTask>("processFiles") {
+    inputDir = layout.projectDirectory.dir("src/data")
+    outputDir = layout.buildDirectory.dir("processed")
+    processMode = "uppercase"
+}
+```
+
+## Providers API
+
+### Lazy Configuration
+```kotlin
+// GOOD: Provider for lazy evaluation
+val messageProvider: Provider<String> = providers.gradleProperty("message")
+
+tasks.register("printMessage") {
+    doLast {
+        println(messageProvider.get())  // Evaluated at execution time
+    }
+}
+
+// BAD: Eager evaluation
+// val message = project.findProperty("message")  // Configuration time!
+```
+
+## Gradle 9 Features
+
+### Configuration Cache
+**Enable in gradle.properties:**
+```properties
+org.gradle.configuration-cache=true
+```
+
+**Benefits:**
+- Up to 90% faster builds (no configuration phase)
+- Second builds reuse cached configuration
+
+### Build Cache
+```properties
+org.gradle.caching=true
+```
+
+**Remote build cache:**
+```kotlin
+buildCache {
+    remote<HttpBuildCache> {
+        url = uri("https://cache.example.com/")
+        isPush = System.getenv("CI") == "true"
+    }
+}
+```
+
+## Migration from Groovy DSL
+
+### Basic Syntax Changes
+
+| Groovy DSL | Kotlin DSL |
+|------------|------------|
+| `'single quotes'` | `"double quotes"` |
+| `implementation 'lib'` | `implementation("lib")` |
+| `task myTask { }` | `tasks.register("myTask") { }` |
+| `ext.myProp = 'value'` | `extra["myProp"] = "value"` |
+
+### Plugin Application
+```groovy
+// Groovy (old)
+apply plugin: 'java'
+buildscript {
+    dependencies {
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.0'
+    }
+}
+```
+
+```kotlin
+// Kotlin (modern)
+plugins {
+    java
+    kotlin("jvm") version "2.0.0"
+}
+```
+
+## Test Project
+
+A working test project is included at `skills/standards-gradle/test-project/`:
+
+- **build.gradle.kts** - Complete examples of all patterns
+- **buildSrc/** - Custom plugin examples
+- **README.md** - Validation instructions
+- **Gradle 9.3.1** - Latest LTS version
+
+Use this project to validate code examples before including them in builds.
+
+## When to Use
+
+This skill complements other skills:
+
+- **With standards-java** - Java project configuration + Gradle build configuration
+- **With standards-kotlin** - Kotlin language features + Kotlin DSL build scripts
+- **Standalone** - For Gradle-only configuration (any JVM language)
+
+## Related Skills
+
+- [Java Standards](/features/skills/standards-java) - Java language and enterprise patterns
+- [Kotlin Standards](/features/skills/standards-kotlin) - Kotlin language features (coming soon)
+
+## References
+
+- [Gradle Official Documentation](https://docs.gradle.org/)
+- [Kotlin DSL Primer](https://docs.gradle.org/current/userguide/kotlin_dsl.html)
+- [Configuration Cache](https://docs.gradle.org/current/userguide/configuration_cache.html)
+- [Build Cache](https://docs.gradle.org/current/userguide/build_cache.html)

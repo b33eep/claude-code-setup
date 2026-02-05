@@ -1,5 +1,6 @@
 export default {
   index: 'Overview',
+  'standards-gradle': 'Gradle',
   'standards-java': 'Java',
   'standards-kotlin': 'Kotlin',
   'standards-python': 'Python',

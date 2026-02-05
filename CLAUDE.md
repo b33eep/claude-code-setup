@@ -59,6 +59,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | /design Command | Done | Content v35: Structured 5-step design workflow ([Record 030](docs/records/030-design-command.md)) |
 | Java Developer Skill | Done | Content v37: standards-java skill ([Record 031](docs/records/031-java-developer-skill.md)) |
 | Kotlin Standards Skill | Done | Content v38: standards-kotlin skill ([Record 032](docs/records/032-kotlin-standards-skill.md)) |
+| Gradle Standards Skill | Done | Content v39: standards-gradle skill ([Record 033](docs/records/033-gradle-standards-skill.md)) |
 
 ### Future
 
@@ -106,6 +107,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | /design Command | Structured 5-step design workflow | [030](docs/records/030-design-command.md) |
 | Java Developer Skill | Core Java standards + framework extensions | [031](docs/records/031-java-developer-skill.md) |
 | Kotlin Standards Skill | Core Kotlin + framework extensions (Android, Spring, Ktor later) | [032](docs/records/032-kotlin-standards-skill.md) |
+| Gradle Standards Skill | Gradle 9 Kotlin DSL: project config + plugin development | [033](docs/records/033-gradle-standards-skill.md) |
 
 ---
 

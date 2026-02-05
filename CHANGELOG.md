@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v40**: Add `standards-gradle` skill for Gradle 9 Kotlin DSL ([Record 033](docs/records/033-gradle-standards-skill.md))
+  - Comprehensive Gradle build tool guidance (~4,344 lines)
+  - Section 1: Project Configuration (build scripts, dependencies, plugins, multi-module, Gradle 9 features, **Gradle Build Phases**)
+  - Section 2: Plugin/Task Development (custom tasks, extensions, providers API, caching, custom plugins)
+  - Groovy → Kotlin DSL Migration Guide (syntax differences, conversion patterns, 12 common gotchas)
 - **v38**: Add `standards-kotlin` skill for modern Kotlin applications ([Record 032](docs/records/032-kotlin-standards-skill.md))
   - Core Kotlin standards: naming, coroutines, flows, null safety
   - Modern Kotlin 2.3.0 (LTS) features: K2 compiler, data classes, sealed classes

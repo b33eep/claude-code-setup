@@ -16,7 +16,7 @@
 [![macOS](https://img.shields.io/badge/platform-macOS-blue.svg)](https://www.apple.com/macos/)
 [![Linux](https://img.shields.io/badge/platform-Linux-blue.svg)](https://www.linux.org/)
 [![WSL](https://img.shields.io/badge/platform-WSL-blue.svg)](https://docs.microsoft.com/en-us/windows/wsl/)
-[![Content v38](https://img.shields.io/badge/content-v38-blue.svg)](CHANGELOG.md)
+[![Content v40](https://img.shields.io/badge/content-v40-blue.svg)](CHANGELOG.md)
 
 **Persistent memory for Claude Code via Markdown files.**
 
@@ -82,6 +82,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/b33eep/claude-code-setup/mai
 
 | Skill | Tech Stack |
 |-------|------------|
+| Gradle | gradle |
 | Java | java, maven, gradle, spring, junit |
 | JavaScript | javascript, nodejs, express |
 | Kotlin | kotlin, gradle, maven, kotlinx-coroutines |

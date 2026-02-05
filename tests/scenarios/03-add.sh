@@ -35,14 +35,14 @@ assert_file_exists "$INSTALLED_FILE" "installed.json exists"
 scenario "Add skill via --add"
 
 # Add standards-typescript only
-# Skill order (alphabetical, 9 available): 1=create-slidev, 2=skill-creator, 3=standards-java,
-#   4=standards-javascript, 5=standards-kotlin, 6=standards-python, 7=standards-shell, 8=standards-typescript, 9=youtube-transcript
+# Skill order (alphabetical, 10 available): 1=create-slidev, 2=skill-creator, 3=standards-gradle,
+#   4=standards-java, 5=standards-javascript, 6=standards-kotlin, 7=standards-python, 8=standards-shell, 9=standards-typescript, 10=youtube-transcript
 run_add_expect '
     # No MCP - deselect all
     deselect_all_mcp
 
-    # Select only standards-typescript (#8)
-    select_only_skill 8
+    # Select only standards-typescript (#9)
+    select_only_skill 9
 
     # Decline status line (not configured in initial install)
     decline_statusline
@@ -54,14 +54,14 @@ assert_json_exists "$INSTALLED_FILE" '.skills[] | select(. == "standards-typescr
 scenario "Add standards-shell skill"
 
 # Add standards-shell only
-# After previous install, standards-typescript is installed, so 8 skills remain:
-# 1=create-slidev, 2=skill-creator, 3=standards-java, 4=standards-javascript, 5=standards-kotlin, 6=standards-python, 7=standards-shell, 8=youtube-transcript
+# After previous install, standards-typescript is installed, so 9 skills remain:
+# 1=create-slidev, 2=skill-creator, 3=standards-gradle, 4=standards-java, 5=standards-javascript, 6=standards-kotlin, 7=standards-python, 8=standards-shell, 9=youtube-transcript
 run_add_expect '
     # No MCP - deselect all
     deselect_all_mcp
 
-    # Select only standards-shell (#7 of remaining 8)
-    select_only_skill 7
+    # Select only standards-shell (#8 of remaining 9)
+    select_only_skill 8
 
     # Decline status line
     decline_statusline
@@ -87,7 +87,7 @@ run_add_expect '
     # pdf-reader is pre-selected, just confirm
     confirm_mcp
 
-    # No skills - deselect all (4 remaining after previous installs)
+    # No skills - deselect all (8 remaining after previous installs: standards-typescript, standards-shell)
     deselect_all_skills
 
     # Decline status line
@@ -107,7 +107,7 @@ run_add_expect '
     toggle_mcp 1
     confirm_mcp
 
-    # No skills - deselect all (4 remaining)
+    # No skills - deselect all (8 remaining after previous installs)
     deselect_all_skills
 
     # Enter API key for brave-search
