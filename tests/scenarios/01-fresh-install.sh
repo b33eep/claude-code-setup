@@ -28,8 +28,8 @@ run_install_expect '
     # MCP: pdf-reader is pre-selected, just confirm
     confirm_mcp
 
-    # Skills: all pre-selected, use dynamic helper to keep only #4 (standards-python)
-    select_only_skill 4
+    # Skills: all pre-selected, use dynamic helper to keep only #5 (standards-python)
+    select_only_skill 5
 
     # Accept status line
     accept_statusline

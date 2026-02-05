@@ -16,7 +16,7 @@
 [![macOS](https://img.shields.io/badge/platform-macOS-blue.svg)](https://www.apple.com/macos/)
 [![Linux](https://img.shields.io/badge/platform-Linux-blue.svg)](https://www.linux.org/)
 [![WSL](https://img.shields.io/badge/platform-WSL-blue.svg)](https://docs.microsoft.com/en-us/windows/wsl/)
-[![Content v36](https://img.shields.io/badge/content-v36-blue.svg)](CHANGELOG.md)
+[![Content v37](https://img.shields.io/badge/content-v37-blue.svg)](CHANGELOG.md)
 
 **Persistent memory for Claude Code via Markdown files.**
 
@@ -80,10 +80,11 @@ bash <(curl -fsSL https://raw.githubusercontent.com/b33eep/claude-code-setup/mai
 
 | Skill | Tech Stack |
 |-------|------------|
-| Python | python, fastapi, django, flask |
-| TypeScript | typescript, react, nextjs, vue |
+| Java | java, maven, gradle, spring, junit |
 | JavaScript | javascript, nodejs, express |
+| Python | python, fastapi, django, flask |
 | Shell | bash, sh, zsh |
+| TypeScript | typescript, react, nextjs, vue |
 
 ### Tool Skills
 

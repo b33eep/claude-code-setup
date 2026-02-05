@@ -1,0 +1,254 @@
+# Java Standards
+
+Auto-loads for projects with Java in their tech stack.
+
+## Metadata
+
+| Field | Value |
+|-------|-------|
+| Type | context |
+| Applies to | java, maven, gradle, junit, spring, jakarta, quarkus, mockito, testcontainers, hibernate, jpa |
+
+## Core Principles
+
+1. **Simplicity** - Simple, understandable code
+2. **Readability** - Readability over cleverness
+3. **Maintainability** - Code that's easy to maintain
+4. **Testability** - Code that's easy to test
+5. **SOLID** - Follow SOLID principles for object-oriented design
+6. **DRY** - Don't Repeat Yourself
+
+## Naming Conventions
+
+| Element | Convention | Example |
+|---------|------------|---------|
+| Classes | PascalCase | `UserService`, `OrderRepository` |
+| Interfaces | PascalCase | `UserRepository`, `PaymentProcessor` |
+| Methods | camelCase | `getUserById`, `calculateTotal` |
+| Variables | camelCase | `firstName`, `totalAmount` |
+| Constants | UPPER_SNAKE_CASE | `MAX_RETRY_COUNT`, `DEFAULT_TIMEOUT` |
+| Packages | lowercase.dot.separated | `com.example.service` |
+| Test Classes | ClassNameTest | `UserServiceTest` |
+
+## Modern Java Features (Java 17+)
+
+### Records (Immutable Data)
+```java
+public record User(String id, String name, String email) {
+    // Compact constructor for validation
+    public User {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Name cannot be blank");
+        }
+    }
+}
+```
+
+### Sealed Classes
+```java
+public sealed interface Result<T> permits Success, Failure {}
+
+public record Success<T>(T value) implements Result<T> {}
+public record Failure<T>(String error) implements Result<T> {}
+```
+
+### Pattern Matching
+```java
+// Pattern matching with instanceof
+if (obj instanceof String s) {
+    System.out.println(s.toUpperCase());
+}
+
+// Pattern matching in switch
+public String formatValue(Object obj) {
+    return switch (obj) {
+        case Integer i -> "Number: " + i;
+        case String s -> "Text: " + s;
+        case null -> "null";
+        default -> "Unknown: " + obj;
+    };
+}
+```
+
+### Text Blocks
+```java
+String json = """
+    {
+      "name": "John",
+      "age": 30
+    }
+    """;
+```
+
+## Code Organization
+
+```java
+// Use the most restrictive visibility possible
+public class UserService {
+    private final UserRepository repository;  // private
+
+    public UserService(UserRepository repository) {  // public API
+        this.repository = repository;
+    }
+
+    public User findById(String id) {  // public API
+        return validateAndFetch(id);
+    }
+
+    private User validateAndFetch(String id) {  // private internal
+        if (id == null || id.isBlank()) {
+            throw new IllegalArgumentException("ID cannot be blank");
+        }
+        return repository.findById(id)
+            .orElseThrow(() -> new UserNotFoundException(id));
+    }
+}
+```
+
+## Exception Handling
+
+```java
+// Prefer unchecked exceptions for programming errors
+public class InvalidUserIdException extends RuntimeException {
+    public InvalidUserIdException(String userId) {
+        super("Invalid user ID: " + userId);
+    }
+}
+
+// Try-with-resources for automatic cleanup
+try (BufferedReader reader = new BufferedReader(new FileReader("file.txt"))) {
+    String line = reader.readLine();
+    // reader automatically closed
+} catch (IOException e) {
+    throw new UncheckedIOException(e);
+}
+```
+
+## Collections & Streams
+
+```java
+// When to use which collection
+List<String> names = new ArrayList<>();  // ordered, allows duplicates
+Set<String> uniqueNames = new HashSet<>();  // no duplicates
+Map<String, User> userById = new HashMap<>();  // key-value pairs
+
+// Stream operations
+List<String> activeUserNames = users.stream()
+    .filter(User::isActive)
+    .map(User::name)
+    .toList();
+
+// Group by
+Map<String, List<User>> usersByRole = users.stream()
+    .collect(Collectors.groupingBy(User::role));
+```
+
+## Optional & Null Handling
+
+```java
+// Use Optional for return values when absence is expected
+public Optional<User> findUserById(String id) {
+    return repository.findById(id);
+}
+
+// Chain operations
+String userName = userService.findUserById(id)
+    .map(User::name)
+    .map(String::toUpperCase)
+    .orElse("UNKNOWN");
+
+// Null safety
+String result = Objects.requireNonNullElse(value, "default");
+boolean equals = Objects.equals(a, b);  // null-safe
+```
+
+## Testing
+
+```java
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+class UserServiceTest {
+    private UserService service;
+    private UserRepository repository;
+
+    @BeforeEach
+    void setUp() {
+        repository = new InMemoryUserRepository();
+        service = new UserService(repository);
+    }
+
+    @Test
+    void shouldReturnUserWhenIdExists() {
+        // Given
+        var user = new User("1", "John", "john@example.com");
+        repository.save(user);
+
+        // When
+        var result = service.findById("1");
+
+        // Then
+        assertTrue(result.isPresent());
+        assertEquals("John", result.get().name());
+    }
+}
+```
+
+## Build Tools
+
+### Maven (pom.xml)
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
+```
+
+### Gradle (build.gradle.kts)
+```kotlin
+dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    testImplementation("org.junit.jupiter:junit-jupiter")
+}
+```
+
+## Recommended Tooling
+
+| Tool | Purpose |
+|------|---------|
+| `maven` or `gradle` | Build automation |
+| `junit-jupiter` | Testing framework (JUnit 5) |
+| `mockito` | Mocking framework |
+| `checkstyle` | Code style checking |
+| `spotbugs` | Static bug detection |
+| `jacoco` | Code coverage |
+
+## Production Checklist
+
+1. Immutability - Prefer records and final fields
+2. Dependency Injection - Constructor injection
+3. Fail Fast - Validate inputs immediately
+4. Resource Management - Use try-with-resources
+5. Optional for Return Types - Signal absence without null
+6. Modern Java - Use records, sealed classes, pattern matching
+7. Minimal Checked Exceptions - Prefer unchecked
+8. Descriptive Names - Methods explain intent
+9. Single Responsibility - Classes do one thing
+10. Logging - Use SLF4J, appropriate levels
+
+## Future Extensions
+
+Framework-specific extensions are planned:
+
+- **standards-spring** - Spring Boot, dependency injection, REST controllers
+- **standards-jakartaee** - CDI, JAX-RS, JPA patterns
+- **standards-quarkus** - Quarkus-specific reactive patterns
+
+These will be separate skills that can be installed alongside standards-java.

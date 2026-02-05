@@ -57,6 +57,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Update Notifications | Done | Content v36: SessionStart hook, VERSION-based custom check ([Record 028](docs/records/028-update-notifications.md)) |
 | Documentation User Perspective | Done | Reference → Features, permission rules docs ([Record 029](docs/records/029-documentation-user-perspective.md), [PR #34](https://github.com/b33eep/claude-code-setup/pull/34)) |
 | /design Command | Done | Content v35: Structured 5-step design workflow ([Record 030](docs/records/030-design-command.md)) |
+| Java Developer Skill | Done | Content v37: standards-java skill ([Record 031](docs/records/031-java-developer-skill.md)) |
 
 ### Future
 
@@ -102,6 +103,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Update Notifications | SessionStart hook with version check | [028](docs/records/028-update-notifications.md) |
 | Documentation User Perspective | Reference → Features, user-facing names | [029](docs/records/029-documentation-user-perspective.md) |
 | /design Command | Structured 5-step design workflow | [030](docs/records/030-design-command.md) |
+| Java Developer Skill | Core Java standards + framework extensions | [031](docs/records/031-java-developer-skill.md) |
 
 ---
 

@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Content Versions
+
+- **v37**: Add `standards-java` skill for Java enterprise applications ([Record 031](docs/records/031-java-developer-skill.md))
+  - Core Java standards: naming, modern features, code organization
+  - Modern Java 17+ features: records, sealed classes, pattern matching, text blocks, switch expressions
+  - Testing fundamentals: JUnit 5, Mockito
+  - Build tool awareness: Maven and Gradle
+  - Production best practices and recommended tooling
+  - Future extensions planned: standards-spring, standards-jakartaee, standards-quarkus
+
 ### Security
 
 - Remove `eval` from deps.json dependency check ([PR #22](https://github.com/b33eep/claude-code-setup/pull/22))

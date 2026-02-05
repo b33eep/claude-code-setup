@@ -42,7 +42,7 @@ run_add_expect '
     deselect_all_mcp
 
     # Select only standards-typescript (#6)
-    select_only_skill 6
+    select_only_skill 7
 
     # Decline status line (not configured in initial install)
     decline_statusline
@@ -61,7 +61,7 @@ run_add_expect '
     deselect_all_mcp
 
     # Select only standards-shell (#5 of remaining 5)
-    select_only_skill 5
+    select_only_skill 6
 
     # Decline status line
     decline_statusline
