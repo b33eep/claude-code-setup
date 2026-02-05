@@ -284,7 +284,8 @@ After reading project CLAUDE.md, load skills matching the `Tech Stack:` field:
 
 ### 2. Before Writing/Editing Code (Task-Based)
 
-**BEFORE writing or editing a file**, load the matching skill - even if not in Tech Stack:
+**BEFORE writing or editing a file**, load the matching skill - even if not in Tech Stack.
+Only load skills that are installed (exist in `~/.claude/skills/`). Skip silently if not installed.
 
 | File Extension | Skill to Load |
 |----------------|---------------|
@@ -292,6 +293,8 @@ After reading project CLAUDE.md, load skills matching the `Tech Stack:` field:
 | `.js`, `.mjs`, `.cjs` | `~/.claude/skills/standards-javascript/SKILL.md` |
 | `.ts`, `.tsx`, `.jsx` | `~/.claude/skills/standards-typescript/SKILL.md` |
 | `.sh`, `.bash`, or Bash scripts | `~/.claude/skills/standards-shell/SKILL.md` |
+| `.java` | `~/.claude/skills/standards-java/SKILL.md` |
+| `.kt`, `.kts` | `~/.claude/skills/standards-kotlin/SKILL.md` |
 
 **Example:** Project has `Tech Stack: Python` but user asks for a shell script test.
 → Load `standards-shell` BEFORE writing the `.sh` file.
