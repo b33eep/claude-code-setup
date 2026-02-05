@@ -1,0 +1,19 @@
+[versions]
+guava = "33.0.0-jre"
+junit = "5.10.2"
+lombok = "1.18.30"
+h2 = "2.2.224"
+shadow = "8.1.1"
+
+[libraries]
+guava = { module = "com.google.guava:guava", version.ref = "guava" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+h2 = { module = "com.h2database:h2", version.ref = "h2" }
+
+[bundles]
+testing = ["junit-jupiter"]
+
+[plugins]
+shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }

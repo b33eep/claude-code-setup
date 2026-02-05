@@ -295,6 +295,7 @@ Only load skills that are installed (exist in `~/.claude/skills/`). Skip silentl
 | `.sh`, `.bash`, or Bash scripts | `~/.claude/skills/standards-shell/SKILL.md` |
 | `.java` | `~/.claude/skills/standards-java/SKILL.md` |
 | `.kt`, `.kts` | `~/.claude/skills/standards-kotlin/SKILL.md` |
+| `.gradle.kts`, `.gradle` | `~/.claude/skills/standards-gradle/SKILL.md` |
 
 **Example:** Project has `Tech Stack: Python` but user asks for a shell script test.
 → Load `standards-shell` BEFORE writing the `.sh` file.
