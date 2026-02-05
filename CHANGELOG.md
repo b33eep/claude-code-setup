@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v38**: Add `standards-kotlin` skill for modern Kotlin applications ([Record 032](docs/records/032-kotlin-standards-skill.md))
+  - Core Kotlin standards: naming, coroutines, flows, null safety
+  - Modern Kotlin 2.3.0 (LTS) features: K2 compiler, data classes, sealed classes
+  - Kotlin 2.0+ features: inline value classes, smart casts
+  - Kotlin 2.2+ features: context receivers (experimental)
+  - Kotlin 2.3 features: explicit backing fields, UUID API (experimental)
+  - Coroutines & structured concurrency patterns
+  - Flow API: StateFlow, SharedFlow, operators, best practices
+  - Testing with JUnit 5, kotlin.test, Mockk, coroutines testing
+  - Build tools: Gradle Kotlin DSL (recommended), Maven
+  - Recommended tooling: ktlint, detekt, kotlinx-serialization
+  - Future extensions planned: standards-android, standards-spring-kotlin, standards-ktor, standards-kmp
 - **v37**: Add `standards-java` skill for Java enterprise applications ([Record 031](docs/records/031-java-developer-skill.md))
   - Core Java standards: naming, modern features, code organization
   - Java 17 features: records, sealed classes, pattern matching, text blocks, switch expressions

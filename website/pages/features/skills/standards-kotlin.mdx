@@ -1,0 +1,572 @@
+# Kotlin Standards
+
+Auto-loads for projects with Kotlin in their tech stack.
+
+## Metadata
+
+| Field | Value |
+|-------|-------|
+| Type | context |
+| Applies to | kotlin, gradle, maven, junit, kotest, kotlinx-coroutines, ktor, spring, mockk, testcontainers |
+
+## Core Principles
+
+1. **Explicitness** - Explicit code over implicit magic
+2. **Readability** - Readable code over clever tricks
+3. **Null Safety** - Embrace Kotlin's null safety system
+4. **Immutability** - Prefer `val` over `var`, immutable collections
+5. **Expressiveness** - Use Kotlin's expressive features (data classes, sealed classes)
+6. **DRY** - Don't Repeat Yourself - but keep it simple
+
+## Naming Conventions
+
+| Element | Convention | Example |
+|---------|------------|---------|
+| Classes | PascalCase | `UserService`, `OrderRepository` |
+| Interfaces | PascalCase | `UserRepository`, `PaymentProcessor` |
+| Functions | camelCase | `getUserById`, `calculateTotal` |
+| Properties | camelCase | `firstName`, `totalAmount` |
+| Constants | UPPER_SNAKE_CASE | `MAX_RETRY_COUNT`, `DEFAULT_TIMEOUT` |
+| Packages | lowercase.dot.separated | `com.example.service` |
+| Files | PascalCase.kt | `UserService.kt` |
+| Test Functions | backtick names | `` `should return user when id exists` `` |
+
+## Modern Kotlin Features
+
+> **Recommended:** Use Kotlin 2.3.0 (latest LTS) for new projects with K2 compiler enabled by default.
+
+### K2 Compiler (Stable since 2.0)
+
+The K2 compiler brings significant performance improvements:
+- Faster compilation (up to 2x)
+- Better smart casts
+- Improved type inference
+- Enabled by default in Kotlin 2.3.0
+
+### Data Classes
+
+Immutable data holders with automatic `equals`, `hashCode`, `toString`, `copy`, and `componentN` functions.
+
+```kotlin
+data class User(
+    val id: String,
+    val name: String,
+    val email: String,
+    val age: Int
+)
+
+// Usage
+val user = User("1", "John Doe", "john@example.com", 30)
+
+// Copy with changes
+val updatedUser = user.copy(age = 31)
+
+// Destructuring
+val (id, name, email, age) = user
+println("User: $name ($email)")
+```
+
+### Sealed Classes/Interfaces
+
+Type-safe state modeling with exhaustive `when` expressions.
+
+```kotlin
+sealed interface Result<out T> {
+    data class Success<T>(val data: T) : Result<T>
+    data class Error(val message: String, val cause: Throwable? = null) : Result<Nothing>
+    data object Loading : Result<Nothing>
+}
+
+// Exhaustive when - compiler ensures all cases handled
+fun <T> handleResult(result: Result<T>) {
+    when (result) {
+        is Result.Success -> println("Success: ${result.data}")
+        is Result.Error -> println("Error: ${result.message}")
+        Result.Loading -> println("Loading...")
+        // No else needed - compiler knows all cases
+    }
+}
+```
+
+### Inline Value Classes
+
+Zero-cost wrappers for type-safe primitives without runtime overhead.
+
+```kotlin
+@JvmInline
+value class UserId(val value: String)
+
+@JvmInline
+value class Email(val value: String) {
+    init {
+        require(value.contains("@")) { "Invalid email" }
+    }
+}
+
+// Usage - type-safe, no runtime cost
+fun getUserById(id: UserId): User = TODO()
+val userId = UserId("123")
+```
+
+### Explicit Backing Fields (Experimental, 2.3)
+
+Simplifies backing property pattern:
+
+```kotlin
+// Before
+private val _users = MutableStateFlow<List<User>>(emptyList())
+val users: StateFlow<List<User>> = _users
+
+// After (with -Xexplicit-backing-fields)
+val users: StateFlow<List<User>> field = MutableStateFlow(emptyList())
+```
+
+## Coroutines & Structured Concurrency
+
+Always use structured concurrency - never use `GlobalScope`.
+
+```kotlin
+// GOOD - Structured concurrency
+suspend fun fetchUserData(userId: String): UserData = coroutineScope {
+    val userDeferred = async { fetchUser(userId) }
+    val ordersDeferred = async { fetchOrders(userId) }
+
+    UserData(
+        user = userDeferred.await(),
+        orders = ordersDeferred.await()
+    )
+}
+
+// BAD - GlobalScope leaks
+fun fetchUserDataBad(userId: String) {
+    GlobalScope.launch {  // Don't use GlobalScope!
+        // ...
+    }
+}
+```
+
+### Dispatchers
+
+```kotlin
+// Dispatchers.Default - CPU-intensive work
+withContext(Dispatchers.Default) {
+    processLargeDataset(data)
+}
+
+// Dispatchers.IO - I/O operations (network, disk)
+withContext(Dispatchers.IO) {
+    apiClient.fetchData()
+}
+
+// Dispatchers.Main - UI updates (Android/Desktop)
+withContext(Dispatchers.Main) {
+    updateUI(data)
+}
+```
+
+### launch vs async
+
+```kotlin
+// launch - fire and forget, returns Job
+fun processInBackground() = coroutineScope {
+    launch {
+        sendNotification()
+    }
+}
+
+// async - returns Deferred<T>, await for result
+suspend fun fetchMultipleResources() = coroutineScope {
+    val users = async { fetchUsers() }
+    val orders = async { fetchOrders() }
+
+    CombinedData(
+        users = users.await(),
+        orders = orders.await()
+    )
+}
+```
+
+## Flow API
+
+### StateFlow vs SharedFlow
+
+```kotlin
+// StateFlow - single value, always has current value, conflates updates
+class UserViewModel {
+    private val _userName = MutableStateFlow("")
+    val userName: StateFlow<String> = _userName.asStateFlow()
+
+    fun updateUserName(name: String) {
+        _userName.value = name
+    }
+}
+
+// SharedFlow - event stream, can replay, doesn't conflate
+class EventBus {
+    private val _events = MutableSharedFlow<Event>(
+        replay = 0,
+        extraBufferCapacity = 64
+    )
+    val events: SharedFlow<Event> = _events.asSharedFlow()
+
+    suspend fun emit(event: Event) {
+        _events.emit(event)
+    }
+}
+```
+
+### Flow Operators
+
+```kotlin
+// Transform flows
+val userNames: Flow<String> = users
+    .map { it.name }
+    .filter { it.isNotEmpty() }
+    .distinctUntilChanged()
+
+// Combine flows
+val combinedData = combine(users, orders) { users, orders ->
+    CombinedData(users, orders)
+}
+
+// FlatMap variants
+val allOrders: Flow<Order> = users
+    .flatMapConcat { user -> fetchOrders(user.id) }  // Sequential
+```
+
+### Flow Collection
+
+```kotlin
+// Collect in coroutine
+lifecycleScope.launch {
+    userViewModel.userName.collect { name ->
+        updateUI(name)
+    }
+}
+
+// collectLatest - cancel previous collection on new emission
+lifecycleScope.launch {
+    searchQuery.collectLatest { query ->
+        val results = searchRepository.search(query)
+        updateResults(results)
+    }
+}
+```
+
+## Null Safety
+
+```kotlin
+// Safe call (?.) - returns null if receiver is null
+val length: Int? = name?.length
+
+// Elvis operator (?:) - default value
+val length: Int = name?.length ?: 0
+
+// !! operator - throws NPE if null (use sparingly!)
+val length: Int = name!!.length  // Only if 100% sure not null
+
+// let for null checks
+name?.let { n ->
+    println("Name: $n")
+}
+```
+
+### lateinit vs lazy
+
+```kotlin
+// lateinit - non-null var, initialized later (must be var)
+class MyClass {
+    lateinit var repository: Repository
+
+    fun init(repo: Repository) {
+        repository = repo
+    }
+}
+
+// lazy - initialized on first access (must be val)
+class MyClass {
+    val expensiveValue: String by lazy {
+        computeExpensiveValue()
+    }
+}
+```
+
+## Scope Functions
+
+Kotlin provides five scope functions: `let`, `run`, `with`, `apply`, `also`.
+
+| Function | Object Ref | Return | Use Case |
+|----------|-----------|--------|----------|
+| `let` | `it` | Lambda result | Null checks, transformations |
+| `apply` | `this` | Context object | Object initialization |
+| `also` | `it` | Context object | Side effects |
+| `run` | `this` | Lambda result | Computations |
+| `with` | `this` | Lambda result | Group calls on object |
+
+### Common Patterns
+
+```kotlin
+// let - null checks
+user?.let { println("User: ${it.name}") }
+
+// apply - object initialization (returns object)
+val user = User().apply {
+    name = "John"
+    email = "john@example.com"
+}
+
+// also - side effects (returns object)
+val list = getList().also {
+    log("Size: ${it.size}")
+}
+
+// run - computations (returns result)
+val result = run {
+    val x = compute()
+    x * 2
+}
+
+// with - group calls (returns result)
+with(canvas) {
+    drawCircle(x, y, radius)
+    drawLine(x1, y1, x2, y2)
+}
+```
+
+## Collections & Sequences
+
+```kotlin
+// Prefer immutable collections
+val users: List<User> = listOf(user1, user2, user3)
+
+// Sequence for lazy evaluation on large collections
+val result = users.asSequence()
+    .filter { it.age > 18 }
+    .map { it.name }
+    .take(10)
+    .toList()  // Terminal operation
+
+// Prefer 0..<n for ranges (Kotlin 1.7+)
+for (i in 0..<n) { }  // Clearer than 0 until n
+```
+
+## String Templates
+
+Use string templates instead of concatenation:
+
+```kotlin
+// Simple variable
+val message = "Hello, $name!"
+
+// Expression with braces
+val message = "User has ${children.size} children"
+
+// Multiline with trimIndent()
+val json = """
+{
+    "name": "$name",
+    "age": $age
+}
+""".trimIndent()
+```
+
+## Extension Functions
+
+Add functionality without inheritance:
+
+```kotlin
+// String extension
+fun String.isValidEmail(): Boolean {
+    return contains("@") && contains(".")
+}
+
+// Usage
+if (email.isValidEmail()) { }
+
+// Collection extension
+fun List<User>.activeUsers() = filter { it.isActive }
+
+// Extension property
+val String.lastChar: Char?
+    get() = lastOrNull()
+```
+
+**Best practices:**
+- Restrict visibility (prefer `private`/`internal`)
+- Place in same file as class (if you own it)
+- Don't overuse - prefer member functions when appropriate
+
+## Formatting & Code Style
+
+```kotlin
+// 4 spaces indentation
+// Braces: Java-style (opening at line end)
+if (condition) {
+    doSomething()
+}
+
+// Space around binary operators
+val sum = a + b
+
+// NO space for range
+for (i in 0..10) { }
+
+// Trailing commas encouraged
+val list = listOf(
+    "apple",
+    "banana",  // trailing comma
+)
+
+// Expression bodies preferred
+fun double(x: Int) = x * 2
+
+// Named arguments for clarity
+drawSquare(x = 10, y = 10, width = 100, height = 100)
+```
+
+## Testing
+
+### JUnit 5 + kotlin.test
+
+```kotlin
+import kotlin.test.*
+import org.junit.jupiter.api.*
+
+class UserServiceTest {
+    private lateinit var userService: UserService
+
+    @BeforeEach
+    fun setup() {
+        userService = UserService(InMemoryUserRepository())
+    }
+
+    @Test
+    fun `should return user when id exists`() {
+        // Given
+        val user = User("1", "John", "john@example.com", 30)
+
+        // When
+        val result = userService.findById("1")
+
+        // Then
+        assertNotNull(result)
+        assertEquals("John", result.name)
+    }
+}
+```
+
+### Mockk for Mocking
+
+```kotlin
+import io.mockk.*
+import kotlin.test.*
+
+class UserServiceTest {
+    private val repository = mockk<UserRepository>()
+    private val userService = UserService(repository)
+
+    @Test
+    fun `should call repository when finding user`() {
+        // Given
+        val user = User("1", "John", "john@example.com", 30)
+        every { repository.findById("1") } returns user
+
+        // When
+        val result = userService.findById("1")
+
+        // Then
+        verify { repository.findById("1") }
+        assertEquals("John", result?.name)
+    }
+}
+```
+
+### Coroutines Testing
+
+```kotlin
+import kotlinx.coroutines.test.*
+import kotlin.test.*
+
+class UserViewModelTest {
+    @Test
+    fun `should fetch user on init`() = runTest {
+        // Given
+        val repository = FakeUserRepository()
+        val viewModel = UserViewModel(repository)
+
+        // When
+        advanceUntilIdle()
+
+        // Then
+        assertEquals(UserState.Success(user), viewModel.state.value)
+    }
+}
+```
+
+## Build Tools
+
+### Gradle Kotlin DSL (Recommended)
+
+```kotlin
+// build.gradle.kts
+plugins {
+    kotlin("jvm") version "2.3.10"
+}
+
+dependencies {
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
+
+    // Testing
+    testImplementation(kotlin("test"))
+    testImplementation("io.mockk:mockk:1.13.8")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0")
+}
+
+kotlin {
+    jvmToolchain(21)
+}
+```
+
+## Recommended Tooling
+
+| Tool | Purpose |
+|------|---------|
+| `gradle` | Build automation (Kotlin DSL recommended) |
+| `kotlin-test` / `junit-jupiter` | Testing framework |
+| `mockk` | Mocking library (Kotlin-native) |
+| `ktlint` | Code formatting & linting |
+| `detekt` | Static code analysis |
+| `kotlinx-coroutines-test` | Coroutines testing |
+| `kotlinx-serialization` | JSON/protobuf serialization |
+| `kotest` | Alternative testing framework (BDD-style) |
+
+## Production Checklist
+
+- ✓ Use `val` over `var` (immutability)
+- ✓ Embrace null safety (avoid `!!`)
+- ✓ Sealed classes for state modeling
+- ✓ Structured concurrency (no `GlobalScope`)
+- ✓ StateFlow/SharedFlow for reactive state
+- ✓ Data classes for DTOs
+- ✓ Inline value classes for type safety
+- ✓ Explicit over implicit code
+- ✓ Early returns to reduce nesting
+- ✓ Descriptive naming
+- ✓ Test coroutines with `runTest`
+- ✓ Use ktlint + detekt in CI
+
+## Future Extensions
+
+Planned framework-specific extension skills:
+
+- **standards-android** - Jetpack Compose, ViewModels, Room, Hilt/Koin DI
+- **standards-spring-kotlin** - Spring Boot with Kotlin, WebFlux, R2DBC
+- **standards-ktor** - Ktor Server/Client patterns, routing, plugins
+- **standards-kmp** - Kotlin Multiplatform, expect/actual, common code
+
+## References
+
+- [Kotlin Language Spec](https://kotlinlang.org/spec/)
+- [Kotlin Coding Conventions](https://kotlinlang.org/docs/coding-conventions.html)
+- [Kotlin Coroutines Guide](https://kotlinlang.org/docs/coroutines-guide.html)

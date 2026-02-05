@@ -41,7 +41,7 @@ run_install_expect '
     confirm_mcp
 
     # Skills: keep only standards-python (#4)
-    select_only_skill 5
+    select_only_skill 6
 
     # Decline status line
     decline_statusline
