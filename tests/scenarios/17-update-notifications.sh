@@ -67,39 +67,46 @@ fi
 
 scenario "Custom repo update available - shows notification"
 
-# Reset base to up-to-date
-echo '{"content_version": 9999}' > "$INSTALLED_FILE"
+# Reset base to up-to-date, set custom_version to 1
+echo '{"content_version": 9999, "custom_version": 1}' > "$INSTALLED_FILE"
 
 # Create mock custom repo with .git directory
 mkdir -p "$CLAUDE_DIR/custom/.git"
 
-# Mock git to return different hashes
+# Mock git to return higher VERSION from remote
 cat > "$TEST_DIR/bin/git" << 'MOCKEOF'
 #!/bin/bash
-if [[ "$*" == *"rev-parse HEAD"* ]]; then
-    echo "aaaa1111aaaa1111aaaa1111aaaa1111aaaa1111"
-elif [[ "$*" == *"ls-remote"* ]]; then
-    printf "bbbb2222bbbb2222bbbb2222bbbb2222bbbb2222\tHEAD\n"
+if [[ "$*" == *"fetch"* ]]; then
+    exit 0
+elif [[ "$*" == *"show origin/main:VERSION"* ]]; then
+    echo "99"
+elif [[ "$*" == *"show origin/master:VERSION"* ]]; then
+    echo "99"
 fi
 MOCKEOF
 chmod +x "$TEST_DIR/bin/git"
 
 output=$(PATH="$TEST_DIR/bin:$PATH" HOME="$TEST_DIR" bash "$PROJECT_DIR/hooks/check-update.sh" 2>&1) || true
-if [[ "$output" == *"Custom"* && "$output" == *"update available"* ]]; then
-    pass "Custom update available -> shows hint"
+if [[ "$output" == *"Custom"* && "$output" == *"update available"* && "$output" == *"v1"* && "$output" == *"v99"* ]]; then
+    pass "Custom update available -> shows hint with versions"
 else
     fail "Custom update available -> shows hint (got: $output)"
 fi
 
 scenario "Custom repo up-to-date - no notification"
 
-# Mock git to return same hash for both local and remote
+# Set custom_version same as remote will return
+echo '{"content_version": 9999, "custom_version": 99}' > "$INSTALLED_FILE"
+
+# Mock git to return same VERSION
 cat > "$TEST_DIR/bin/git" << 'MOCKEOF'
 #!/bin/bash
-if [[ "$*" == *"rev-parse HEAD"* ]]; then
-    echo "aaaa1111aaaa1111aaaa1111aaaa1111aaaa1111"
-elif [[ "$*" == *"ls-remote"* ]]; then
-    printf "aaaa1111aaaa1111aaaa1111aaaa1111aaaa1111\tHEAD\n"
+if [[ "$*" == *"fetch"* ]]; then
+    exit 0
+elif [[ "$*" == *"show origin/main:VERSION"* ]]; then
+    echo "99"
+elif [[ "$*" == *"show origin/master:VERSION"* ]]; then
+    echo "99"
 fi
 MOCKEOF
 chmod +x "$TEST_DIR/bin/git"

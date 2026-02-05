@@ -7,16 +7,16 @@ configure_hooks() {
     local claude_settings="$CLAUDE_DIR/settings.json"
     local hook_script="$CLAUDE_DIR/hooks/check-update.sh"
 
-    # Check if hook already configured
+    # Always update hook script (may contain bug fixes)
+    mkdir -p "$CLAUDE_DIR/hooks"
+    cp "$SCRIPT_DIR/hooks/check-update.sh" "$hook_script"
+    chmod +x "$hook_script"
+
+    # Check if hook already configured in settings.json
     if [[ -f "$claude_settings" ]] && jq -e '.hooks.SessionStart' "$claude_settings" > /dev/null 2>&1; then
         print_info "Hooks already configured"
         return 0
     fi
-
-    # Copy hook script
-    mkdir -p "$CLAUDE_DIR/hooks"
-    cp "$SCRIPT_DIR/hooks/check-update.sh" "$hook_script"
-    chmod +x "$hook_script"
 
     # Ensure settings.json exists
     if [[ -f "$claude_settings" ]]; then

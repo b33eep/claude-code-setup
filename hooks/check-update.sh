@@ -20,12 +20,20 @@ if [[ -n "$local_ver" ]]; then
     fi
 fi
 
-# === Custom repo check (git ls-remote, no fetch needed) ===
+# === Custom repo check (VERSION-based, like base repo) ===
 custom_dir="$HOME/.claude/custom"
 if [[ -d "$custom_dir/.git" ]]; then
-    local_hash=$(git -C "$custom_dir" rev-parse HEAD 2>/dev/null) || true
-    remote_hash=$(git -C "$custom_dir" ls-remote --quiet origin HEAD 2>/dev/null | cut -f1) || true
-    if [[ -n "$local_hash" && -n "$remote_hash" && "$local_hash" != "$remote_hash" ]]; then
-        echo "{\"systemMessage\": \"Custom modules update available (run /claude-code-setup)\"}"
+    local_custom_ver=$(jq -r '.custom_version // empty' "$installed_json" 2>/dev/null) || true
+    if [[ -n "$local_custom_ver" ]]; then
+        # Fetch to get latest refs, then read VERSION from remote branch
+        git -C "$custom_dir" fetch --quiet origin 2>/dev/null || true
+        remote_custom_ver=$(git -C "$custom_dir" show origin/main:VERSION 2>/dev/null) || true
+        # Fallback to master if main doesn't exist
+        if [[ -z "$remote_custom_ver" ]]; then
+            remote_custom_ver=$(git -C "$custom_dir" show origin/master:VERSION 2>/dev/null) || true
+        fi
+        if [[ -n "$remote_custom_ver" && "$remote_custom_ver" =~ ^[0-9]+$ && "$remote_custom_ver" -gt "$local_custom_ver" ]]; then
+            echo "{\"systemMessage\": \"Custom modules update available: v$local_custom_ver -> v$remote_custom_ver (run /claude-code-setup)\"}"
+        fi
     fi
 fi

@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v36**: Fix custom repo update notification to use VERSION instead of git hash
+  - Custom repo now compared via VERSION file (like base repo)
+  - Prevents false notifications on refactoring commits without version bump
 - **v35**: Add `/design` command for structured feature design ([Record 030](docs/records/030-design-command.md))
   - 5-step workflow: Problem → Options → Solution → Stories → Finalize
   - Creates Record immediately, updates incrementally
