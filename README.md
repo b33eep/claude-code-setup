@@ -70,10 +70,12 @@ bash <(curl -fsSL https://raw.githubusercontent.com/b33eep/claude-code-setup/mai
 
 | Command | Description |
 |---------|-------------|
+| `/init-project` | Set up new project |
 | `/catchup` | Resume after /clear |
 | `/wrapup` | Save status before /clear |
-| `/init-project` | Set up new project |
 | `/todo` | Manage todos |
+| `/design` | Structured feature design |
+| `/add-custom` | Add custom modules |
 | `/claude-code-setup` | Update and manage modules |
 
 ### Skills (Auto-Loading)
@@ -92,6 +94,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/b33eep/claude-code-setup/mai
 |-------|-------------|
 | YouTube Transcript | Download transcripts with frame extraction |
 | Slidev Presentations | Create Markdown slide decks |
+| Skill Creator | Create custom skills |
 
 ### MCP Servers
 
@@ -133,6 +136,10 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.
 
 - [ccstatusline](https://github.com/sirmalloc/ccstatusline) by sirmalloc
 - [claude-skill-eval](https://github.com/AJBcoding/claude-skill-eval) by AJBcoding
+
+## Contributors
+
+- [@cheorges](https://github.com/cheorges)
 
 ## License
 
