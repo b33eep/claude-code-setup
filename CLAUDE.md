@@ -54,7 +54,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Private Notes | Done | Content v24: `.open.md` convention, /catchup integration ([Record 025](docs/records/025-private-notes.md)) |
 | External Plugins | Done | Content v26: Install Claude plugins via installer ([Record 026](docs/records/026-external-plugins.md)) |
 | Uninstall/Remove Modules | Done | Content v28: `--remove` flag, option in `/claude-code-setup` ([Record 027](docs/records/027-uninstall-modules.md)) |
-| Update Notifications | Done | Content v33: SessionStart hook ([Record 028](docs/records/028-update-notifications.md)) |
+| Update Notifications | Done | Content v36: SessionStart hook, VERSION-based custom check ([Record 028](docs/records/028-update-notifications.md)) |
 | Documentation User Perspective | Done | Reference → Features, permission rules docs ([Record 029](docs/records/029-documentation-user-perspective.md), [PR #34](https://github.com/b33eep/claude-code-setup/pull/34)) |
 | /design Command | Done | Content v35: Structured 5-step design workflow ([Record 030](docs/records/030-design-command.md)) |
 
