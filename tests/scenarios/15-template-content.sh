@@ -52,6 +52,12 @@ assert_file_contains "$GLOBAL_TEMPLATE" "Max 20 entries" "Documents max entries"
 assert_file_contains "$GLOBAL_TEMPLATE" "Graduating to Records" "Documents when to graduate to Record"
 assert_file_contains "$GLOBAL_TEMPLATE" "Obvious why" "Has negative example for obvious decisions"
 
+# Workflow improvements (v41)
+assert_file_contains "$GLOBAL_TEMPLATE" "### After User Corrections" "Has correction persistence trigger"
+assert_file_contains "$GLOBAL_TEMPLATE" "Project facts and constraints" "Has correction routing list"
+assert_file_contains "$GLOBAL_TEMPLATE" "### Signs to Re-Plan" "Has re-plan signs"
+assert_file_contains "$GLOBAL_TEMPLATE" "Third workaround for the same problem" "Has specific re-plan trigger"
+
 # MCP and Skills
 assert_file_contains "$GLOBAL_TEMPLATE" "## MCP Servers" "Has MCP Servers section"
 assert_file_contains "$GLOBAL_TEMPLATE" "## Skills" "Has Skills section"

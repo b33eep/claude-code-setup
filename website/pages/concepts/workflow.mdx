@@ -76,6 +76,26 @@ Add to Recent Decisions: pip --user to avoid PEP 668 error
 
 Claude determines if it needs a Record or just a table entry.
 
+### Corrections Are Saved Automatically
+
+When you correct Claude or share project knowledge, it persists the learning so it survives `/clear`:
+
+| Correction type | Saved to |
+|---|---|
+| Project facts ("API expects ISO-8601") | Recent Decisions |
+| Preferences ("I prefer German commits") | User Instructions |
+| Session context ("Bug is in Auth module") | Private Note |
+
+### Signs to Re-Plan
+
+Claude watches for signals that the current approach isn't working:
+
+- Third workaround for the same problem
+- A discovery that invalidates an earlier assumption
+- Scope growing significantly beyond the original task
+
+When these occur, Claude stops and reassesses rather than pushing through with workarounds.
+
 ### Monitor Context
 
 Watch the status line:

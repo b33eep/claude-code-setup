@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v41**: Add correction persistence trigger and re-plan signs to workflow ([Record 034](docs/records/034-workflow-improvements.md))
+  - Correction trigger: routes user corrections to appropriate persistence layer (Recent Decisions, User Instructions, or Private Note)
+  - Re-plan signs: concrete signals for when to stop and reassess approach (third workaround, invalidated assumption, scope creep)
 - **v40**: Add `standards-gradle` skill for Gradle 9 Kotlin DSL ([Record 033](docs/records/033-gradle-standards-skill.md))
   - Comprehensive Gradle build tool guidance (~4,344 lines)
   - Section 1: Project Configuration (build scripts, dependencies, plugins, multi-module, Gradle 9 features, **Gradle Build Phases**)
