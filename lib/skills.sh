@@ -133,14 +133,14 @@ replace_marker_section() {
     local end_marker="<!-- ${marker_name} END -->"
     local tmp_before tmp_after tmp_result
 
+    # Validate both markers exist in the file
+    if ! grep -q "$start_marker" "$file" || ! grep -q "$end_marker" "$file"; then
+        return 1
+    fi
+
     tmp_before=$(mktemp)
     tmp_after=$(mktemp)
     tmp_result=$(mktemp)
-
-    # Ensure cleanup on any failure
-    _cleanup_marker_temps() {
-        rm -f "$tmp_before" "$tmp_after" "$tmp_result" 2>/dev/null || true
-    }
 
     # Extract everything before start marker
     awk -v marker="$start_marker" '$0 == marker {exit} {print}' "$file" > "$tmp_before"
@@ -155,7 +155,7 @@ replace_marker_section() {
         echo "$end_marker"
         cat "$tmp_after"
     } > "$tmp_result"; then
-        _cleanup_marker_temps
+        rm -f "$tmp_before" "$tmp_after" "$tmp_result" 2>/dev/null || true
         return 1
     fi
 

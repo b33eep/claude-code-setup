@@ -74,12 +74,6 @@ do_update() {
         print_success "$filename"
     done
 
-    # Rebuild CLAUDE.md
-    print_header "Rebuilding CLAUDE.md"
-
-    build_claude_md
-    print_success "CLAUDE.md rebuilt"
-
     # Update project template
     mkdir -p "$CLAUDE_DIR/templates"
     cp "$SCRIPT_DIR/templates/project-CLAUDE.md" "$CLAUDE_DIR/templates/CLAUDE.template.md"
@@ -117,6 +111,11 @@ do_update() {
             print_warning "$display_name (source not found, skipped)"
         fi
     done < <(get_installed "skills")
+
+    # Rebuild CLAUDE.md with dynamic tables (after skills are updated)
+    print_header "Rebuilding CLAUDE.md"
+    build_claude_md
+    print_success "CLAUDE.md rebuilt"
 
     # Configure hooks (for users updating from pre-v33)
     print_header "Hooks"
@@ -175,8 +174,10 @@ do_update() {
                             print_success "Installed $skill"
                         fi
                     done
+                fi
 
-                    # Rebuild CLAUDE.md with new skills
+                # Rebuild CLAUDE.md with new modules
+                if [[ ${#SELECTED_MCP[@]} -gt 0 ]] || [[ ${#SELECTED_SKILLS[@]} -gt 0 ]]; then
                     build_claude_md
                 fi
             fi
