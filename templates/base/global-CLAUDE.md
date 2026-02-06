@@ -115,6 +115,23 @@ Quick mini-design? [Yes / Just implement it]
 
 This preserves context for future sessions and code reviews.
 
+### Signs to Re-Plan
+
+Stop and reassess your approach when:
+- Third workaround for the same problem
+- A discovery invalidates an earlier assumption
+- Scope is growing significantly beyond the original task
+
+### After User Corrections
+
+When the user corrects a mistake or shares project knowledge that should survive `/clear`,
+persist it to the appropriate location:
+- Project facts and constraints → Recent Decisions
+- Personal preferences → User Instructions (global CLAUDE.md)
+- Session-specific context → Private Note
+
+Mention briefly: "Noted in [location]."
+
 ---
 
 ## File Structure: What Goes Where?
