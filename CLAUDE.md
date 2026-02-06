@@ -61,6 +61,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Kotlin Standards Skill | Done | Content v38: standards-kotlin skill ([Record 032](docs/records/032-kotlin-standards-skill.md)) |
 | Gradle Standards Skill | Done | Content v39: standards-gradle skill ([Record 033](docs/records/033-gradle-standards-skill.md)) |
 | Workflow Improvements | Done | Content v41: Correction trigger + re-plan signs ([Record 034](docs/records/034-workflow-improvements.md)) |
+| Dynamic CLAUDE.md Tables | Designed | Dynamic table generation for module install/remove ([Record 035](docs/records/035-dynamic-claude-md-tables.md)) |
 
 ### Future
 
@@ -110,6 +111,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Kotlin Standards Skill | Core Kotlin + framework extensions (Android, Spring, Ktor later) | [032](docs/records/032-kotlin-standards-skill.md) |
 | Gradle Standards Skill | Gradle 9 Kotlin DSL: project config + plugin development | [033](docs/records/033-gradle-standards-skill.md) |
 | Workflow Improvements | Correction trigger + re-plan signs | [034](docs/records/034-workflow-improvements.md) |
+| Dynamic CLAUDE.md Tables | Dynamic table generation for install/remove | [035](docs/records/035-dynamic-claude-md-tables.md) |
 
 ---
 
