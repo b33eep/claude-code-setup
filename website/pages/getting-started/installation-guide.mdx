@@ -1,0 +1,313 @@
+# Installation Walkthrough
+
+import { Callout, Steps } from 'nextra/components'
+
+This guide walks you through every step of the installation wizard and explains what each option does. If you just want the quick version, see the [Installation](/getting-started/installation) page.
+
+## Before You Start
+
+Make sure you have [Claude Code](https://claude.ai/download) installed and working. You should be able to run `claude` in your terminal.
+
+| Requirement | Status | Notes |
+|-------------|--------|-------|
+| Claude Code | Required | The CLI tool this setup extends |
+| macOS, Linux, or WSL | Required | All three platforms are supported |
+| Node.js | Optional | Needed for the context status line (recommended) |
+
+<Callout type="info">
+Don't have Node.js? The installer works fine without it - you'll just skip the status line step. You can always add it later.
+</Callout>
+
+## Running the Installer
+
+<Steps>
+
+### Start the installer
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/b33eep/claude-code-setup/main/quick-install.sh)
+```
+
+Or clone and run locally:
+
+```bash
+git clone https://github.com/b33eep/claude-code-setup.git
+cd claude-code-setup
+./install.sh
+```
+
+### Dependencies check
+
+The installer starts by detecting your operating system and ensuring it has what it needs:
+
+```
+Claude Code Setup Installer
+============================
+
+Dependencies
+- OS: macOS (Homebrew)
++ jq installed
+```
+
+**What's happening:** The installer detects your OS (macOS, Ubuntu, Arch, Fedora, etc.) and installs `jq` if needed. `jq` is a small JSON processing tool that the installer uses internally to manage configuration files. You don't need to interact with `jq` yourself.
+
+### Select MCP Servers
+
+```
+Select Modules
+
+MCP Servers (toggle with number, Enter to confirm):
+
+  ❯ ◉ pdf-reader - Read and analyze PDF documents
+    ○ google-search - Web search via Google Custom Search API
+    ○ brave-search - Web search via Brave Search API
+
+  ↑↓ navigate  ⎵ toggle  ⏎ confirm
+```
+
+**What are MCP servers?** MCP (Model Context Protocol) servers extend Claude with additional tools for tasks like reading PDFs or searching the web. Each server adds a specific capability.
+
+**How to use this screen:** Use arrow keys (↑↓) to move between options, press Space to toggle an option on/off, and press Enter to confirm your selection.
+
+Here's what each option does:
+
+| Server | Pre-selected | API Key | What it does |
+|--------|:---:|:---:|--------------|
+| **pdf-reader** | Yes | No | Lets Claude read and analyze PDF files directly. Great for working with documentation, specs, or reports. |
+| **google-search** | No | Yes | Lets Claude search the web during your session. Useful for looking up documentation, finding solutions, or researching libraries. |
+| **brave-search** | No | Yes | Alternative to Google Search. Same purpose, different provider. You can only pick one search engine. |
+
+<Callout>
+**Recommendation:** Start with just **pdf-reader** (the default). You can always add a search engine later by running `./install.sh --add` or `/claude-code-setup` inside Claude Code.
+</Callout>
+
+**If you select a search engine**, the installer will ask for API keys during the installation step. For Google Search, you'll need to:
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/) and enable the Custom Search API
+2. Create a Google API key
+3. Create a Custom Search Engine ID at [Programmable Search Engine](https://programmablesearchengine.google.com/)
+
+Both have free tiers that are sufficient for typical usage.
+
+### Select Skills
+
+```
+Skills (toggle with number, Enter to confirm):
+
+  ❯ ◉ create-slidev-presentation
+    ◉ skill-creator
+    ◉ standards-gradle
+    ◉ standards-java
+    ◉ standards-javascript
+    ◉ standards-kotlin
+    ◉ standards-python
+    ◉ standards-shell
+    ◉ standards-typescript
+    ◉ youtube-transcript
+
+  ↑↓ navigate  ⎵ toggle  ⏎ confirm
+```
+
+**What are skills?** Skills teach Claude coding standards and give it specialized tools. There are two types:
+
+**Context skills** load automatically when relevant. If your project uses Python, the Python skill loads when Claude writes `.py` files. You never need to think about them - they just work.
+
+| Skill | Languages/Frameworks |
+|-------|---------------------|
+| standards-python | Python, FastAPI, Django, Flask |
+| standards-javascript | JavaScript, Node.js |
+| standards-typescript | TypeScript, React, Next.js |
+| standards-shell | Bash, Shell scripts |
+| standards-java | Java |
+| standards-kotlin | Kotlin, Android |
+| standards-gradle | Gradle build files |
+
+**Command skills** are invoked explicitly with a slash command:
+
+| Skill | Command | What it does |
+|-------|---------|--------------|
+| skill-creator | `/skill-creator` | Helps you create your own custom skills |
+| create-slidev-presentation | `/create-slidev-presentation` | Creates presentation slides using Slidev |
+| youtube-transcript | `/youtube-transcript` | Downloads YouTube video transcripts with frame extraction |
+
+<Callout>
+**Recommendation:** Keep all skills selected (the default). They take up minimal space and only activate when relevant to your project. There's no downside to having them all installed.
+</Callout>
+
+### Select External Plugins
+
+<Callout type="info">
+This step only appears if the `claude` CLI is available on your system. If you don't see it, that's fine - you can add plugins later.
+</Callout>
+
+```
+External Plugins (via Claude CLI):
+
+  ❯ ○ document-skills - Excel, Word, PowerPoint, PDF creation/editing
+    ◉ code-review-ai - AI-powered architectural review and code quality analysis (recommended)
+
+  ↑↓ navigate  ⎵ toggle  ⏎ confirm
+```
+
+**What are external plugins?** These are third-party Claude plugins that add specialized capabilities. They're installed via Claude's built-in plugin system.
+
+| Plugin | Pre-selected | What it does |
+|--------|:---:|--------------|
+| **code-review-ai** | Yes | Adds an AI architect that reviews your code changes for quality, patterns, and potential issues. Integrates into the development workflow. |
+| **document-skills** | No | Lets Claude create and edit Excel, Word, PowerPoint, and PDF files. Useful if you work with office documents. |
+
+<Callout>
+**Recommendation:** Keep **code-review-ai** selected. It's part of the recommended development workflow: write code, then get an automated review before committing.
+</Callout>
+
+### Installation
+
+After confirming your selections, the installer sets everything up:
+
+```
+Installing Commands
++ init-project.md
++ wrapup.md
++ catchup.md
++ claude-code-setup.md
++ todo.md
++ design.md
++ add-custom.md
++ Project template installed
+
+Installing MCP Servers
+
+  Installing pdf-reader...
++ pdf-reader configured
+
+Installing Skills
++ standards-python installed
++ standards-javascript installed
++ standards-typescript installed
++ standards-shell installed
++ standards-java installed
++ standards-kotlin installed
++ standards-gradle installed
++ create-slidev-presentation installed
++ skill-creator installed
++ youtube-transcript installed
+
+Building CLAUDE.md
++ CLAUDE.md created
+```
+
+**What's happening:**
+- **Commands** are slash commands you'll use in Claude Code (`/init-project`, `/wrapup`, `/catchup`, etc.)
+- **MCP servers** get configured in `~/.claude.json` so Claude can use them
+- **Skills** are copied to `~/.claude/skills/` where Claude reads them automatically
+- **CLAUDE.md** is the global configuration file that defines your workflow. It's the core of the setup.
+
+If you selected an MCP server that requires API keys (like Google Search), you'll be prompted to enter them during this step:
+
+```
+Installing MCP Servers
+
+  Installing google-search...
+
+  Setup instructions:
+    1. Visit: https://console.cloud.google.com/
+    2. Enable Custom Search API
+    3. Create API key and Custom Search Engine ID
+
+  Enter your Google API key: AIza...
+  Enter your Custom Search Engine ID: ...
++ google-search configured
+```
+
+### Status Line
+
+```
+Status Line
+
+ccstatusline shows context usage in the status bar (e.g., Ctx: 21.9%)
+Useful to know when to run /wrapup
+
+Enable context status line? (Y/n):
+```
+
+**What is this?** The status line shows useful information at the bottom of your Claude Code session:
+
+```
+opus | 1.2k | 128k | Ctx: 21.9% | main | +2
+```
+
+| Segment | Meaning |
+|---------|---------|
+| `opus` | Current Claude model |
+| `1.2k` | Tokens used in this session |
+| `128k` | Maximum context window |
+| `Ctx: 21.9%` | How full your context is |
+| `main` | Current git branch |
+| `+2` | Uncommitted changes |
+
+**Why it matters:** The context percentage tells you when it's time to save your work. When it reaches ~80%, run `/wrapup` to document your progress, then `/clear` to start fresh. This prevents Claude from losing track of important decisions.
+
+<Callout>
+**Recommendation:** Press Enter or type `Y` to enable it. If you don't have Node.js installed, this step is skipped automatically.
+</Callout>
+
+### Update Notifications
+
+```
+Hooks
++ Update notification hook enabled
+```
+
+The installer automatically configures a hook that checks for updates when you start a new Claude Code session. If a newer version of claude-code-setup is available, you'll see a notification suggesting to run `/claude-code-setup` to update.
+
+This step requires no input from you.
+
+### Done!
+
+```
+Installation Complete
+
+Installed to:
+  ~/.claude/CLAUDE.md
+  ~/.claude/commands/
+  ~/.claude/skills/
+  ~/.claude/settings.json (user settings)
+  ~/.claude.json (MCP configuration)
+
+Next steps:
+  1. New project: Run /init-project to set up CLAUDE.md
+  2. After session: Run /wrapup to document and commit
+```
+
+</Steps>
+
+## What Was Installed
+
+Here's a quick overview of what the installer created:
+
+| Path | Purpose |
+|------|---------|
+| `~/.claude/CLAUDE.md` | Your global workflow configuration. Claude reads this at every session start. |
+| `~/.claude/commands/` | Slash commands (`/init-project`, `/wrapup`, `/catchup`, etc.) |
+| `~/.claude/skills/` | Coding standards and tools that Claude loads automatically |
+| `~/.claude/settings.json` | Claude Code settings (status line, hooks) |
+| `~/.claude/installed.json` | Tracks what modules you've installed (used for updates) |
+| `~/.claude/templates/` | Project CLAUDE.md template for `/init-project` |
+| `~/.claude/hooks/` | Update notification hook (checks for new versions) |
+| `~/.claude.json` | MCP server configurations |
+
+## Next Steps
+
+1. **[Disable Auto-Compact](/getting-started/disable-autocompact)** - Critical first step
+2. **[Set up your first project](/getting-started/first-project)** - Run `/init-project` in a project
+3. **[Learn the daily workflow](/getting-started/first-session)** - Your first coding session
+
+## Managing Your Installation Later
+
+| Task | Command |
+|------|---------|
+| Add more modules | `./install.sh --add` or `/claude-code-setup` in Claude |
+| Update everything | `./install.sh --update` |
+| Remove modules | `./install.sh --remove` |
+| See what's installed | `./install.sh --list` |
+
+See [Module Management](/features/module-management) for details.
