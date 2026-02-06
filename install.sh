@@ -160,12 +160,6 @@ do_install() {
         print_success "$filename"
     done
 
-    # Build CLAUDE.md
-    print_header "Building CLAUDE.md"
-
-    build_claude_md
-    print_success "CLAUDE.md created"
-
     # Install project template
     cp "$SCRIPT_DIR/templates/project-CLAUDE.md" "$CLAUDE_DIR/templates/CLAUDE.template.md"
     print_success "Project template installed"
@@ -201,6 +195,11 @@ do_install() {
 
     # Install external plugins
     install_external_plugins
+
+    # Build CLAUDE.md with dynamic tables (after all modules are installed)
+    print_header "Building CLAUDE.md"
+    build_claude_md
+    print_success "CLAUDE.md created"
 
     # Configure status line
     print_header "Status Line"

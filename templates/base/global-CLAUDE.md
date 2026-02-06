@@ -232,6 +232,7 @@ For decisions that are:
 
 Available MCP servers for extended functionality (configured during install):
 
+<!-- MCP_TABLE START -->
 | Server | Description |
 |--------|-------------|
 | `pdf-reader` | Read and analyze PDF documents |
@@ -239,6 +240,7 @@ Available MCP servers for extended functionality (configured during install):
 | `google-search` | Web search via Google Custom Search API |
 
 > **Note:** Run `./install.sh --list` to see installed servers.
+<!-- MCP_TABLE END -->
 
 ### Web Search Preference
 
@@ -263,6 +265,7 @@ When MCP search tools (`google-search` or `brave-search`) are installed, **prefe
 
 Available skills for specialized tasks (`~/.claude/skills/`):
 
+<!-- SKILLS_TABLE START -->
 | Skill | Type | Description |
 |-------|------|-------------|
 | `create-slidev-presentation` | command | Create/edit Slidev presentations |
@@ -276,6 +279,7 @@ Available skills for specialized tasks (`~/.claude/skills/`):
 - `context`: Auto-loaded based on Tech Stack AND task
 
 > **Note:** Run `./install.sh --list` to see installed skills.
+<!-- SKILLS_TABLE END -->
 
 ---
 
@@ -304,6 +308,7 @@ After reading project CLAUDE.md, load skills matching the `Tech Stack:` field:
 **BEFORE writing or editing a file**, load the matching skill - even if not in Tech Stack.
 Only load skills that are installed (exist in `~/.claude/skills/`). Skip silently if not installed.
 
+<!-- SKILL_LOADING_TABLE START -->
 | File Extension | Skill to Load |
 |----------------|---------------|
 | `.py` | `~/.claude/skills/standards-python/SKILL.md` |
@@ -313,6 +318,7 @@ Only load skills that are installed (exist in `~/.claude/skills/`). Skip silentl
 | `.java` | `~/.claude/skills/standards-java/SKILL.md` |
 | `.kt`, `.kts` | `~/.claude/skills/standards-kotlin/SKILL.md` |
 | `.gradle.kts`, `.gradle` | `~/.claude/skills/standards-gradle/SKILL.md` |
+<!-- SKILL_LOADING_TABLE END -->
 
 **Example:** Project has `Tech Stack: Python` but user asks for a shell script test.
 → Load `standards-shell` BEFORE writing the `.sh` file.

@@ -125,57 +125,245 @@ install_skill() {
     return 0
 }
 
-# Build CLAUDE.md from template
+# Replace content between marker comments in a file
+# Arguments: $1 = file, $2 = marker name (e.g. "MCP_TABLE"), $3 = new content
+replace_marker_section() {
+    local file="$1" marker_name="$2" content="$3"
+    local start_marker="<!-- ${marker_name} START -->"
+    local end_marker="<!-- ${marker_name} END -->"
+    local tmp_before tmp_after tmp_result
+
+    tmp_before=$(mktemp)
+    tmp_after=$(mktemp)
+    tmp_result=$(mktemp)
+
+    # Ensure cleanup on any failure
+    _cleanup_marker_temps() {
+        rm -f "$tmp_before" "$tmp_after" "$tmp_result" 2>/dev/null || true
+    }
+
+    # Extract everything before start marker
+    awk -v marker="$start_marker" '$0 == marker {exit} {print}' "$file" > "$tmp_before"
+    # Extract everything after end marker
+    awk -v marker="$end_marker" 'p; $0 == marker {p=1}' "$file" > "$tmp_after"
+
+    # Combine: before + start marker + content + end marker + after
+    if ! {
+        cat "$tmp_before"
+        echo "$start_marker"
+        echo "$content"
+        echo "$end_marker"
+        cat "$tmp_after"
+    } > "$tmp_result"; then
+        _cleanup_marker_temps
+        return 1
+    fi
+
+    mv "$tmp_result" "$file"
+    rm -f "$tmp_before" "$tmp_after"
+}
+
+# Resolve source directory for a module (handles custom: prefix)
+# Arguments: $1 = module name, $2 = module type ("mcp" or "skills")
+# Outputs: path to source directory/file
+_resolve_module_path() {
+    local name="$1" type="$2"
+    if [[ "$name" == custom:* ]]; then
+        echo "$CUSTOM_DIR/$type/${name#custom:}"
+    else
+        echo "$SCRIPT_DIR/$type/$name"
+    fi
+}
+
+# Read a frontmatter field from a SKILL.md file
+# Arguments: $1 = file path, $2 = field name
+# Outputs: field value (raw)
+_read_frontmatter() {
+    local file="$1" field="$2"
+    if [[ ! -f "$file" ]]; then
+        return 1
+    fi
+    # Extract only the first frontmatter block (between first two --- lines)
+    awk '/^---$/{n++; next} n==1{print} n>=2{exit}' "$file" | sed -n "s/^${field}: *//p"
+}
+
+# Generate MCP Servers table content from installed.json
+generate_mcp_table() {
+    local modules
+    modules=$(get_installed "mcp")
+
+    if [[ -z "$modules" ]]; then
+        echo "> No MCP servers installed."
+        return
+    fi
+
+    echo "| Server | Description |"
+    echo "|--------|-------------|"
+
+    local name source_path description
+    while IFS= read -r name; do
+        [[ -z "$name" ]] && continue
+        source_path="$(_resolve_module_path "$name" "mcp").json"
+        description=""
+        if [[ -f "$source_path" ]]; then
+            description=$(jq -r '.description // ""' "$source_path" 2>/dev/null)
+        fi
+        local display_name="${name#custom:}"
+        echo "| \`${display_name}\` | ${description} |"
+    done <<< "$modules"
+
+    echo ""
+    echo "> **Note:** Run \`./install.sh --list\` to see installed servers."
+}
+
+# Generate Skills table content from installed.json + SKILL.md frontmatter
+generate_skills_table() {
+    local modules
+    modules=$(get_installed "skills")
+
+    if [[ -z "$modules" ]]; then
+        echo "> No skills installed."
+        return
+    fi
+
+    echo "| Skill | Type | Description |"
+    echo "|-------|------|-------------|"
+
+    local name source_dir skill_file description skill_type display_name
+    while IFS= read -r name; do
+        [[ -z "$name" ]] && continue
+        source_dir="$(_resolve_module_path "$name" "skills")"
+        skill_file="$source_dir/SKILL.md"
+        description=""
+        skill_type=""
+        if [[ -f "$skill_file" ]]; then
+            description=$(_read_frontmatter "$skill_file" "description")
+            skill_type=$(_read_frontmatter "$skill_file" "type")
+        fi
+        display_name="${name#custom:}"
+        echo "| \`${display_name}\` | ${skill_type} | ${description} |"
+    done <<< "$modules"
+
+    echo ""
+    echo "**Skill Types:**"
+    echo "- \`command\`: Invoked explicitly via \`/skill-name\`"
+    echo "- \`context\`: Auto-loaded based on Tech Stack AND task"
+    echo ""
+    echo "> **Note:** Run \`./install.sh --list\` to see installed skills."
+}
+
+# Generate Skill Loading table content from installed context skills
+generate_skill_loading_table() {
+    local modules
+    modules=$(get_installed "skills")
+
+    local has_entries=false
+    local rows=""
+
+    local name source_dir skill_file skill_type extensions display_name
+    while IFS= read -r name; do
+        [[ -z "$name" ]] && continue
+        source_dir="$(_resolve_module_path "$name" "skills")"
+        skill_file="$source_dir/SKILL.md"
+
+        # Only context skills have file extension mappings
+        skill_type=""
+        if [[ -f "$skill_file" ]]; then
+            skill_type=$(_read_frontmatter "$skill_file" "type")
+        fi
+        [[ "$skill_type" != "context" ]] && continue
+
+        # Read file_extensions from frontmatter
+        extensions=""
+        if [[ -f "$skill_file" ]]; then
+            extensions=$(_read_frontmatter "$skill_file" "file_extensions")
+        fi
+
+        # Fallback: hardcoded lookup for skills without file_extensions field
+        if [[ -z "$extensions" ]]; then
+            extensions=$(_get_fallback_extensions "$name")
+        fi
+        [[ -z "$extensions" ]] && continue
+
+        display_name="${name#custom:}"
+        # Convert [".py", ".pyi"] to `.py`, `.pyi` (backticks are literal markdown)
+        local formatted_exts bt='`'
+        formatted_exts=$(echo "$extensions" | tr -d '[]"' | sed "s/,  */${bt}, ${bt}/g; s/^/${bt}/; s/$/${bt}/")
+
+        rows+="| ${formatted_exts} | \`~/.claude/skills/${display_name}/SKILL.md\` |"$'\n'
+        has_entries=true
+    done <<< "$modules"
+
+    if [[ "$has_entries" != true ]]; then
+        echo "> No context skills installed."
+        return
+    fi
+
+    echo "| File Extension | Skill to Load |"
+    echo "|----------------|---------------|"
+    printf "%s" "$rows"
+}
+
+# Fallback file extensions for skills without file_extensions in frontmatter
+_get_fallback_extensions() {
+    local name="${1#custom:}"
+    case "$name" in
+        standards-python)       echo '[".py"]' ;;
+        standards-javascript)   echo '[".js", ".mjs", ".cjs"]' ;;
+        standards-typescript)   echo '[".ts", ".tsx", ".jsx"]' ;;
+        standards-shell)        echo '[".sh", ".bash"]' ;;
+        standards-java)         echo '[".java"]' ;;
+        standards-kotlin)       echo '[".kt", ".kts"]' ;;
+        standards-gradle)       echo '[".gradle.kts", ".gradle"]' ;;
+        *)                      echo "" ;;
+    esac
+}
+
+# Build CLAUDE.md from template with dynamic table generation
 build_claude_md() {
     local target="$CLAUDE_DIR/CLAUDE.md"
     local template="$SCRIPT_DIR/templates/base/global-CLAUDE.md"
-    local user_file="" default_file=""
-    local temp_file="" before_file="" after_file=""
-    local has_custom_content=false
+    local user_content="" has_custom_content=false
 
-    # Cleanup function for temp files
-    _cleanup_build_temps() {
-        rm -f "$user_file" "$default_file" "$temp_file" "$before_file" "$after_file" 2>/dev/null || true
-    }
-
-    # Extract user section if exists (between markers)
+    # Preserve user instructions from existing file
     if [[ -f "$target" ]]; then
+        local user_file default_file
         user_file=$(mktemp)
         default_file=$(mktemp)
 
-        # Extract user's current section
-        sed -n '/<!-- USER INSTRUCTIONS START -->/,/<!-- USER INSTRUCTIONS END -->/p' "$target" > "$user_file" 2>/dev/null || true
+        # Extract content between markers (exclusive — without the marker lines themselves)
+        sed -n '/<!-- USER INSTRUCTIONS START -->/,/<!-- USER INSTRUCTIONS END -->/{//!p;}' "$target" > "$user_file" 2>/dev/null || true
+        sed -n '/<!-- USER INSTRUCTIONS START -->/,/<!-- USER INSTRUCTIONS END -->/{//!p;}' "$template" > "$default_file" 2>/dev/null || true
 
-        # Extract default section from template for comparison
-        sed -n '/<!-- USER INSTRUCTIONS START -->/,/<!-- USER INSTRUCTIONS END -->/p' "$template" > "$default_file" 2>/dev/null || true
-
-        # Check if user has custom content (differs from template default)
         if [[ -s "$user_file" ]] && ! diff -q "$user_file" "$default_file" > /dev/null 2>&1; then
             has_custom_content=true
+            user_content=$(cat "$user_file")
         fi
+
+        rm -f "$user_file" "$default_file"
     fi
 
-    # Copy base template
-    cp "$template" "$target"
+    # Start from template (atomic: work on temp file)
+    local work_file
+    work_file=$(mktemp)
+    cp "$template" "$work_file"
 
-    # Re-insert preserved user content if we had custom content
-    if [[ "$has_custom_content" = true ]] && [[ -f "$user_file" ]]; then
-        temp_file=$(mktemp)
-        before_file=$(mktemp)
-        after_file=$(mktemp)
+    # Generate dynamic table content
+    local mcp_content skills_content loading_content
+    mcp_content=$(generate_mcp_table)
+    skills_content=$(generate_skills_table)
+    loading_content=$(generate_skill_loading_table)
 
-        # Extract parts: before section, user section (from file), after section
-        awk '/<!-- USER INSTRUCTIONS START -->/{exit} {print}' "$target" > "$before_file"
-        awk 'p; /<!-- USER INSTRUCTIONS END -->/{p=1}' "$target" > "$after_file"
+    # Replace marker sections with generated content
+    replace_marker_section "$work_file" "MCP_TABLE" "$mcp_content"
+    replace_marker_section "$work_file" "SKILLS_TABLE" "$skills_content"
+    replace_marker_section "$work_file" "SKILL_LOADING_TABLE" "$loading_content"
 
-        # Combine: before + preserved user section + after
-        cat "$before_file" > "$temp_file"
-        cat "$user_file" >> "$temp_file"
-        cat "$after_file" >> "$temp_file"
-
-        mv "$temp_file" "$target"
+    # Re-insert preserved user instructions
+    if [[ "$has_custom_content" = true ]]; then
+        replace_marker_section "$work_file" "USER INSTRUCTIONS" "$user_content"
     fi
 
-    # Cleanup all temp files
-    _cleanup_build_temps
+    # Atomic: move completed file to target
+    mv "$work_file" "$target"
 }

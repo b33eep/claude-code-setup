@@ -32,6 +32,10 @@ run_install_expect '
 assert_json_exists "$INSTALLED_FILE" '.mcp[] | select(. == "pdf-reader")' "pdf-reader installed"
 assert_json_exists "$INSTALLED_FILE" '.skills[] | select(. == "standards-python")' "standards-python installed"
 
+# Verify dynamic tables contain installed modules
+assert_file_contains "$CLAUDE_DIR/CLAUDE.md" "pdf-reader" "CLAUDE.md MCP table has pdf-reader"
+assert_file_contains "$CLAUDE_DIR/CLAUDE.md" "standards-python" "CLAUDE.md skills table has standards-python"
+
 scenario "Remove MCP server"
 
 # Remove pdf-reader (position 1 in remove list)
@@ -54,6 +58,13 @@ else
     pass "pdf-reader removed from .claude.json"
 fi
 
+# Verify CLAUDE.md no longer references pdf-reader in MCP table
+if grep -q '`pdf-reader`' "$CLAUDE_DIR/CLAUDE.md"; then
+    fail "pdf-reader should be removed from CLAUDE.md MCP table"
+else
+    pass "pdf-reader removed from CLAUDE.md MCP table"
+fi
+
 scenario "Remove skill"
 
 # standards-python is now position 1 (after pdf-reader was removed)
@@ -74,6 +85,13 @@ if [ -d "$CLAUDE_DIR/skills/standards-python" ]; then
     fail "standards-python directory should be removed"
 else
     pass "standards-python directory removed"
+fi
+
+# Verify CLAUDE.md no longer references standards-python in tables
+if grep -q '`standards-python`' "$CLAUDE_DIR/CLAUDE.md"; then
+    fail "standards-python should be removed from CLAUDE.md tables"
+else
+    pass "standards-python removed from CLAUDE.md tables"
 fi
 
 scenario "Remove with no modules shows message"

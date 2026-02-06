@@ -3,6 +3,7 @@ name: standards-typescript
 description: This skill provides TypeScript coding standards and is automatically loaded for TypeScript projects. It includes naming conventions, best practices, and recommended tooling.
 type: context
 applies_to: [typescript, nodejs, express, nestjs, nextjs, react, vue, angular, deno, bun, zod]
+file_extensions: [".ts", ".tsx", ".jsx"]
 ---
 
 # TypeScript Coding Standards

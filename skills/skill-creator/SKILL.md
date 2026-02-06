@@ -115,6 +115,7 @@ name: [name]
 description: [1-2 sentence description]
 type: [command|context]
 [applies_to: [tech1, tech2, ...]]  # Only for context skills
+[file_extensions: [".ext1", ".ext2"]]  # Only for context skills with file mappings
 ---
 
 # [Title]
@@ -174,6 +175,7 @@ name: skill-name
 description: Brief description of what this skill provides
 type: context
 applies_to: [python, fastapi, django]
+file_extensions: [".py"]
 ---
 
 # Skill Title
@@ -189,6 +191,7 @@ Standards or guidelines that Claude should follow automatically.
 | `description` | Yes | What the skill does (1-2 sentences, third person) |
 | `type` | Yes | `command` or `context` |
 | `applies_to` | Context only | List of tech stacks that trigger auto-load |
+| `file_extensions` | Context only | File extensions that trigger task-based loading (e.g., `[".py"]`) |
 
 ### Common `applies_to` Values
 
