@@ -40,14 +40,10 @@ assert_file_exists "$CLAUDE_DIR/CLAUDE.md" "CLAUDE.md created"
 assert_file_exists "$INSTALLED_FILE" "installed.json created"
 assert_dir_exists "$CLAUDE_DIR/commands" "commands directory created"
 
-# Verify CLAUDE.md content matches template exactly
-expected_hash=$(sha256_file "$PROJECT_DIR/templates/base/global-CLAUDE.md")
-actual_hash=$(sha256_file "$CLAUDE_DIR/CLAUDE.md")
-if [ "$expected_hash" = "$actual_hash" ]; then
-    pass "CLAUDE.md matches template (hash: ${expected_hash:0:12}...)"
-else
-    fail "CLAUDE.md differs from template (expected: ${expected_hash:0:12}..., got: ${actual_hash:0:12}...)"
-fi
+# Verify CLAUDE.md has dynamic tables with installed modules
+assert_file_contains "$CLAUDE_DIR/CLAUDE.md" "pdf-reader" "CLAUDE.md MCP table contains pdf-reader"
+assert_file_contains "$CLAUDE_DIR/CLAUDE.md" "standards-python" "CLAUDE.md skills table contains standards-python"
+assert_file_contains "$CLAUDE_DIR/CLAUDE.md" '\.py' "CLAUDE.md skill loading table contains .py extension"
 
 # Verify installed.json
 assert_json_exists "$INSTALLED_FILE" ".content_version" "content_version field exists"

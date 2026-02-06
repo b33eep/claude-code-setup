@@ -3,6 +3,7 @@ name: standards-javascript
 description: This skill provides JavaScript coding standards and is automatically loaded for JavaScript projects. It includes modern ES2025 patterns, async handling, and recommended tooling.
 type: context
 applies_to: [javascript, nodejs, express, fastify, hapi, npm, yarn, pnpm, bun, deno, vitest, jest, mocha]
+file_extensions: [".js", ".mjs", ".cjs"]
 ---
 
 # JavaScript Coding Standards

@@ -40,6 +40,7 @@ name: my-skill
 description: What this skill does
 type: context
 applies_to: [python, fastapi]
+file_extensions: [".py"]
 ---
 
 # Skill Content
@@ -55,6 +56,7 @@ name: api-standards
 description: REST API design standards
 type: context
 applies_to: [python, typescript, nodejs, fastapi, express]
+file_extensions: [".py", ".ts"]
 ---
 
 # API Design Standards
@@ -115,9 +117,10 @@ When invoked, create an OpenAPI 3.0 specification:
 | Field | Required | Description |
 |-------|----------|-------------|
 | `name` | Yes | Skill identifier (kebab-case) |
-| `description` | Yes | What the skill does |
+| `description` | Yes | What the skill does (single-line) |
 | `type` | Yes | `context` or `command` |
 | `applies_to` | Context only | Tech stack triggers |
+| `file_extensions` | Context only | File extensions for task-based loading (e.g., `[".py"]`) |
 
 ## Overriding Built-in Skills
 

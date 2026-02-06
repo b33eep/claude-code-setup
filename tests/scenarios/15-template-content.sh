@@ -67,9 +67,15 @@ assert_file_contains "$GLOBAL_TEMPLATE" "## Skill Loading" "Has Skill Loading se
 assert_file_contains "$GLOBAL_TEMPLATE" "## Git Commit Messages" "Has Git Commit Messages section"
 assert_file_contains "$GLOBAL_TEMPLATE" "No Co-Authored-By" "Has No Co-Authored-By rule"
 
-# User instructions section markers
+# Section markers for dynamic table generation
 assert_file_contains "$GLOBAL_TEMPLATE" "<!-- USER INSTRUCTIONS START -->" "Has user instructions start marker"
 assert_file_contains "$GLOBAL_TEMPLATE" "<!-- USER INSTRUCTIONS END -->" "Has user instructions end marker"
+assert_file_contains "$GLOBAL_TEMPLATE" "<!-- MCP_TABLE START -->" "Has MCP table start marker"
+assert_file_contains "$GLOBAL_TEMPLATE" "<!-- MCP_TABLE END -->" "Has MCP table end marker"
+assert_file_contains "$GLOBAL_TEMPLATE" "<!-- SKILLS_TABLE START -->" "Has skills table start marker"
+assert_file_contains "$GLOBAL_TEMPLATE" "<!-- SKILLS_TABLE END -->" "Has skills table end marker"
+assert_file_contains "$GLOBAL_TEMPLATE" "<!-- SKILL_LOADING_TABLE START -->" "Has skill loading table start marker"
+assert_file_contains "$GLOBAL_TEMPLATE" "<!-- SKILL_LOADING_TABLE END -->" "Has skill loading table end marker"
 
 # ============================================
 # PROJECT CLAUDE.MD TEMPLATE
@@ -150,6 +156,7 @@ for skill in standards-shell standards-python standards-javascript standards-typ
     assert_file_contains "$SKILL_FILE" "name:" "$skill has name in frontmatter"
     assert_file_contains "$SKILL_FILE" "type: context" "$skill is context type"
     assert_file_contains "$SKILL_FILE" "applies_to:" "$skill has applies_to"
+    assert_file_contains "$SKILL_FILE" "file_extensions:" "$skill has file_extensions"
 done
 
 # ============================================

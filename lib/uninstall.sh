@@ -253,6 +253,9 @@ do_remove() {
         esac
     done
 
+    # Rebuild CLAUDE.md so removed modules disappear from tables
+    build_claude_md
+
     print_header "Removal Complete"
     echo ""
     echo "Removed ${#SELECTED_REMOVE[@]} module(s)."

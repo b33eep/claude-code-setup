@@ -61,7 +61,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Kotlin Standards Skill | Done | Content v38: standards-kotlin skill ([Record 032](docs/records/032-kotlin-standards-skill.md)) |
 | Gradle Standards Skill | Done | Content v39: standards-gradle skill ([Record 033](docs/records/033-gradle-standards-skill.md)) |
 | Workflow Improvements | Done | Content v41: Correction trigger + re-plan signs ([Record 034](docs/records/034-workflow-improvements.md)) |
-| Dynamic CLAUDE.md Tables | Designed | Dynamic table generation for module install/remove ([Record 035](docs/records/035-dynamic-claude-md-tables.md)) |
+| Dynamic CLAUDE.md Tables | Done | Content v42: Dynamic table generation for module install/remove ([Record 035](docs/records/035-dynamic-claude-md-tables.md)) |
 
 ### Future
 
@@ -69,6 +69,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 |------|----------|---------|----------|
 | /do-review command | Low | Unclear when to trigger code review, easy to forget | Create command + refine global prompt guidance |
 | Docker Matrix Tests | Low | deps.json install commands not tested on real distros | GitHub Actions with Docker matrix ([Record 022](docs/records/022-docker-matrix-tests.md)) |
+| Slidev skill type review | Low | `create-slidev-presentation` is command but could benefit from auto-loading | Consider changing to context with `applies_to: [slidev]` |
 
 ---
 

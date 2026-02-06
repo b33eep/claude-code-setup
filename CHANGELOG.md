@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v42**: Dynamic CLAUDE.md table generation ([Record 035](docs/records/035-dynamic-claude-md-tables.md))
+  - MCP Servers, Skills, and Skill Loading tables now generated from `installed.json`
+  - Removed modules disappear from CLAUDE.md immediately
+  - Custom modules appear in tables automatically
+  - Added `file_extensions` frontmatter field to all context skills
+  - Added `replace_marker_section()` for reusable marker-based content replacement
+  - Fixed missing `type: command` in `create-slidev-presentation` frontmatter
 - **v41**: Add correction persistence trigger and re-plan signs to workflow ([Record 034](docs/records/034-workflow-improvements.md))
   - Correction trigger: routes user corrections to appropriate persistence layer (Recent Decisions, User Instructions, or Private Note)
   - Re-plan signs: concrete signals for when to stop and reassess approach (third workaround, invalidated assumption, scope creep)

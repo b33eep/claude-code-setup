@@ -3,6 +3,7 @@ name: standards-kotlin
 description: Kotlin coding standards for modern applications. Includes naming conventions, coroutines, flows, modern Kotlin 2.3.0 features, and recommended tooling.
 type: context
 applies_to: [kotlin, gradle, maven, junit, kotest, kotlinx-coroutines, ktor, spring, mockk, testcontainers]
+file_extensions: [".kt", ".kts"]
 ---
 
 # Kotlin Coding Standards
