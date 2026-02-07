@@ -8,63 +8,20 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 
 - Bash (install.sh)
 - Markdown (templates, commands)
-- Node.js (MCP servers via npx)
+- Node.js (MCP servers via npx, Nextra docs site)
 - GitHub Actions (CI/CD)
 
 ---
 
 ## Current Status
 
-| Task | Status | Notes |
-|------|--------|-------|
-| Modular Architecture | Done | Base + mcp + skills (standards now in skills) |
-| Custom Modules | Done | ~/.claude/custom/ for user modules |
-| Solo/Team Mode | Done | /init-project asks for .gitignore preference |
-| Install Script | Done | --add, --update, --list, --yes flags, ShellCheck compliant |
-| Records | Done | 30 Records (000-029) |
-| Open Source Release | Done | Published to b33eep/claude-code-setup |
-| GitHub Actions E2E | Done | Full test coverage |
-| Open Source Polish | Done | SECURITY.md, CONTRIBUTING.md, CHANGELOG.md, templates |
-| README Overhaul | Done | Core Concept prominent, ccstatusline, Plugins, Solo/Team |
-| Upgrade Commands | Done | /claude-code-setup, /add-custom ([Record 011](docs/records/011-upgrade-command.md)) |
-| Records Rename | Done | ADR → Records, added guidance in global prompt |
-| --yes Flag Bug Fix | Done | Content v7: Non-interactive updates for /claude-code-setup |
-| JavaScript Skill | Done | Content v8: standards-javascript for Node.js/JS projects |
-| Skill Creator | Done | Content v9: /skill-creator for custom skill creation ([Record 013](docs/records/013-skill-creator.md)) |
-| /claude-code-setup | Done | Content v10: Renamed from /upgrade-claude-setup, shows delta, asks before actions |
-| Linux Support | Done | Content v13: OS detection, package manager abstraction ([Record 014](docs/records/014-linux-support.md)) |
-| Install Script Refactoring | Done | Content v13: Split into lib/ modules ([Record 015](docs/records/015-install-script-refactoring.md)) |
-| Interactive Pipe Install | Done | `bash <(curl ...)` for interactive, `curl \| bash` for --yes mode |
-| ccstatusline Object Format | Done | Fix statusLine settings.json format (object, not string) |
-| One-liner UX | Done | Show `/claude-code-setup` instead of `./install.sh` for one-liner users |
-| Interactive Toggle Selection | Done | Toggle-based module selection with smart defaults, Linux-compatible |
-| Arrow-Key Navigation | Done | ↑↓ navigation, space toggle, enter confirm (macOS + Linux) |
-| Preserve User Instructions | Done | Content v15: [Record 016](docs/records/016-preserve-user-instructions.md) - Section markers in global CLAUDE.md |
-| README Restructure | Done | Problem→Solution flow, Installation steps, all features documented |
-| Optional Hooks | Rejected | Hooks cannot invoke Claude commands ([Record 012](docs/records/012-optional-hooks-automation.md)) |
-| Rename /clear-session | Done | Content v16: /wrapup for consistency with /catchup ([Record 017](docs/records/017-rename-clear-session-to-wrap-up.md)) |
-| /todo Command | Done | Content v18: Add/list todos in CLAUDE.md ([Record 018](docs/records/018-todo-command.md)) |
-| Upgrade Permissions | Rejected | Auto-permissions may discourage new users ([Record 019](docs/records/019-upgrade-permissions.md)) |
-| Custom Modules E2E Test | Done | Validated: custom repo → /add-custom → /claude-code-setup installs custom:standards-java |
-| Custom Modules Versioning | Done | VERSION + CHANGELOG.md in custom repo, tracked in installed.json ([Record 020](docs/records/020-custom-modules-versioning.md)) |
-| YouTube Transcript Skill | Done | Content v22: `/youtube-transcript` with frame extraction ([Record 021](docs/records/021-youtube-transcript-skill.md)) |
-| Security: Remove eval | Done | Remove eval from deps.json check, document trust model ([PR #22](https://github.com/b33eep/claude-code-setup/pull/22)) |
-| Decision Log | Done | Content v23: Recent Decisions section ([Record 023](docs/records/023-context-quality-improvements.md)) |
-| Documentation Site | Done | Nextra in /website, GitHub Pages ([Record 024](docs/records/024-documentation-site.md)) |
-| Private Notes | Done | Content v24: `.open.md` convention, /catchup integration ([Record 025](docs/records/025-private-notes.md)) |
-| External Plugins | Done | Content v26: Install Claude plugins via installer ([Record 026](docs/records/026-external-plugins.md)) |
-| Uninstall/Remove Modules | Done | Content v28: `--remove` flag, option in `/claude-code-setup` ([Record 027](docs/records/027-uninstall-modules.md)) |
-| Update Notifications | Done | Content v36: SessionStart hook, VERSION-based custom check ([Record 028](docs/records/028-update-notifications.md)) |
-| Documentation User Perspective | Done | Reference → Features, permission rules docs ([Record 029](docs/records/029-documentation-user-perspective.md), [PR #34](https://github.com/b33eep/claude-code-setup/pull/34)) |
-| /design Command | Done | Content v35: Structured 5-step design workflow ([Record 030](docs/records/030-design-command.md)) |
-| Java Developer Skill | Done | Content v37: standards-java skill ([Record 031](docs/records/031-java-developer-skill.md)) |
-| Kotlin Standards Skill | Done | Content v38: standards-kotlin skill ([Record 032](docs/records/032-kotlin-standards-skill.md)) |
-| Gradle Standards Skill | Done | Content v39: standards-gradle skill ([Record 033](docs/records/033-gradle-standards-skill.md)) |
-| Workflow Improvements | Done | Content v41: Correction trigger + re-plan signs ([Record 034](docs/records/034-workflow-improvements.md)) |
-| Dynamic CLAUDE.md Tables | Done | Content v42: Dynamic table generation for module install/remove ([Record 035](docs/records/035-dynamic-claude-md-tables.md)) |
-| Installation Walkthrough | Done | Step-by-step wizard guide in docs, nav reorder (disable-autocompact before first-project) |
-| Docs Style Review | Done | 17 pages rewritten for natural tone, AI-generated patterns removed |
-| Dynamic Docs Generation | Done | Prebuild scripts generate Records + Skills pages from source |
+| Story | Status | Notes |
+|-------|--------|-------|
+| — | — | No active work |
+
+**Legend:** Open | In Progress | Done
+
+**Next Step:** Pick from Future table or backlog
 
 ### Future
 
@@ -119,6 +76,13 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 
 ---
 
+## Recent Decisions
+
+| Date | Decision | Why |
+|------|----------|-----|
+
+---
+
 ## Files
 
 ```
@@ -138,7 +102,11 @@ claude-code-setup/
 ├── mcp/
 ├── commands/
 ├── skills/
-└── docs/records/000-030-*.md
+├── website/                   # Nextra documentation site
+│   ├── components/
+│   ├── pages/
+│   └── scripts/               # Prebuild generators
+└── docs/records/000-035-*.md
 ```
 
 ---
@@ -159,15 +127,11 @@ Tests use `expect` for real interactive simulation (toggle selection, API key in
 
 ### Manual Testing
 
-Test the install script without affecting your real `~/.claude`:
-
 ```bash
 HOME=/tmp/claude-manual-test && rm -rf $HOME && mkdir -p $HOME && ./install.sh
 ```
 
-This creates a clean test environment under `/tmp/claude-manual-test/`. After testing:
-- Config: `/tmp/claude-manual-test/.claude/`
-- MCP: `/tmp/claude-manual-test/.claude.json`
+Creates a clean test environment under `/tmp/claude-manual-test/`.
 
 ### Bump Content Version
 
@@ -175,13 +139,8 @@ When changing managed content (templates, commands, skills, mcp):
 
 1. Increment `templates/VERSION`
 2. Update badge in `README.md` (search for `content-v`)
-3. Add CHANGELOG.md entry:
-   ```markdown
-   ## [Unreleased]
-   - Content vX: Description of change
-   ```
+3. Add CHANGELOG.md entry
 4. Run tests: `./tests/test.sh`
-5. Update docs if relevant (see below)
 
 ### Documentation Site
 
@@ -190,23 +149,6 @@ When changing commands, skills, or features:
 1. Update relevant pages in `website/pages/`
 2. Test locally: `cd website && npm run dev`
 3. Changes deploy automatically on merge to main
-
-**What needs docs updates:**
-- New/changed commands → `website/pages/commands/`
-- New/changed skills → `website/pages/features/skills/`
-- New concepts → `website/pages/concepts/`
-- Workflow changes → `website/pages/guides/`
-
-### Git
-
-```bash
-git status
-git push
-
-# Tag release
-git tag -a v1.0.0 -m "v1.0.0: Initial public release"
-git push origin v1.0.0
-```
 
 ## Repository
 
