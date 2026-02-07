@@ -465,7 +465,7 @@ Overwrite with new design? [Yes / No]
 
 ### /wrapup
 - Updates story status in Record if implementation happened
-- Syncs Record status with CLAUDE.md
+- Updates Current Status table in project CLAUDE.md
 
 ### /todo
 - /todo = quick capture (Future table)

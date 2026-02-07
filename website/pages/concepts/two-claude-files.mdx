@@ -28,8 +28,9 @@ Located in your project root, this file contains:
 
 - **Project overview** - Name, description, tech stack
 - **Current Status** - Active tasks with status and notes
-- **Records table** - Links to design decisions
 - **Recent Decisions** - Small decisions that survive /clear
+- **Project Instructions** - Project-specific preferences (preserved during migrations)
+- **Files** - Project structure overview
 - **Development commands** - Project-specific commands
 
 This file is **project-specific**.
@@ -42,7 +43,7 @@ This file is **project-specific**.
 │ Workflow rules      │      │ Project: MyApp      │
 │ Conventions         │  +   │ Status: Auth done   │
 │ Skill loading       │      │ Next: Add logout    │
-│ User preferences    │      │ Records: [001, 002] │
+│ User preferences    │      │ Project prefs       │
 └─────────────────────┘      └─────────────────────┘
            │                          │
            └──────────┬───────────────┘
@@ -52,22 +53,29 @@ This file is **project-specific**.
               - WHAT to work on (project)
 ```
 
-## User Instructions Section
+## Preserved Sections
 
-The global CLAUDE.md has a special section at the bottom:
+Both CLAUDE.md files have sections with markers that survive updates and migrations.
+
+### User Instructions (Global)
 
 ```markdown
 <!-- USER INSTRUCTIONS START -->
-Add your personal preferences here.
-This section survives updates.
+Your personal preferences here.
 <!-- USER INSTRUCTIONS END -->
 ```
 
-Put your customizations here:
-- Language preferences
-- Personal conventions
-- Tool preferences
-- Credential locations
+For personal customizations: language preferences, conventions, tool preferences, credential locations.
+
+### Project Instructions (Project)
+
+```markdown
+<!-- PROJECT INSTRUCTIONS START -->
+Project-specific preferences here.
+<!-- PROJECT INSTRUCTIONS END -->
+```
+
+For project-specific rules: testing conventions, deployment preferences, coding rules shared with the team.
 
 ## Related
 

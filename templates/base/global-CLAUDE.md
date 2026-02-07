@@ -126,8 +126,9 @@ Stop and reassess your approach when:
 
 When the user corrects a mistake or shares project knowledge that should survive `/clear`,
 persist it to the appropriate location:
-- Project facts and constraints → Recent Decisions
 - Personal preferences → User Instructions (global CLAUDE.md)
+- Project-specific preferences → Project Instructions (project CLAUDE.md)
+- Project facts and constraints → Recent Decisions
 - Session-specific context → Private Note
 
 Mention briefly: "Noted in [location]."
@@ -176,8 +177,9 @@ Records document decisions, designs, features, and implementation plans. They ke
 - Implementation plans
 - Or combinations of the above
 
-**Keeping Records in sync:**
-- `/wrapup` scans `docs/records/` and adds missing entries to the Records table in project CLAUDE.md
+**Working with Records:**
+- Records live in `docs/records/`. Use `ls docs/records/` to list them.
+- Reference specific Records by number in Current Status and Future tables when actively relevant.
 - `/catchup` reads Records relevant to in-progress or next-step work
 - `/todo` lists existing todos or adds new ones to Future table (for complex features, use `/design`)
 

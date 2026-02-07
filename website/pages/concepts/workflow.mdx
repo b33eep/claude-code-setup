@@ -82,8 +82,9 @@ When you correct Claude or share project knowledge, it gets saved so it survives
 
 | Correction type | Saved to |
 |---|---|
+| Personal preferences ("I prefer German commits") | User Instructions (global) |
+| Project preferences ("always use pytest-asyncio") | Project Instructions |
 | Project facts ("API expects ISO-8601") | Recent Decisions |
-| Preferences ("I prefer German commits") | User Instructions |
 | Session context ("Bug is in Auth module") | Private Note |
 
 ### Signs to Re-Plan
@@ -115,7 +116,7 @@ At ~80%, it's time to wrap up.
 
 Claude will:
 1. Update CLAUDE.md status
-2. Create/sync Records
+2. Create Records if needed
 3. Commit changes
 
 ### Clear Context
