@@ -9,7 +9,7 @@ At session start (new session or after `/clear`), Claude Code Setup automaticall
 1. **Checks base repo** - Compares your installed version with the latest on GitHub
 2. **Checks custom repo** - If you have a custom modules repo, checks for new commits
 
-This runs silently in the background via Claude Code's hook system.
+This runs via Claude Code's hook system at session start.
 
 ## Output Examples
 
@@ -23,7 +23,7 @@ When custom modules have updates:
 Custom modules update available (run /claude-code-setup)
 ```
 
-When everything is up to date: no output (silent).
+When everything is up to date: no output.
 
 ### Configuration
 
@@ -66,9 +66,9 @@ The update check script is located at `~/.claude/hooks/check-update.sh`.
 
 ### Behavior
 
-- **Fail-silent** - On network errors or missing dependencies, exits quietly
-- **Fast** - ~100-200ms total (curl with 2s timeout)
-- **Privacy-aware** - Only fetches a single VERSION file from GitHub raw (no API calls)
+- Exits quietly on network errors or missing dependencies
+- Takes ~100-200ms (curl with 2s timeout)
+- Only fetches a single VERSION file from GitHub raw - no API calls, no tracking
 
 ## Disabling Update Notifications
 

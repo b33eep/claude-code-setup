@@ -78,7 +78,7 @@ Claude determines if it needs a Record or just a table entry.
 
 ### Corrections Are Saved Automatically
 
-When you correct Claude or share project knowledge, it persists the learning so it survives `/clear`:
+When you correct Claude or share project knowledge, it gets saved so it survives `/clear`:
 
 | Correction type | Saved to |
 |---|---|
@@ -88,13 +88,13 @@ When you correct Claude or share project knowledge, it persists the learning so 
 
 ### Signs to Re-Plan
 
-Claude watches for signals that the current approach isn't working:
+Claude notices when the current approach isn't working:
 
 - Third workaround for the same problem
-- A discovery that invalidates an earlier assumption
-- Scope growing significantly beyond the original task
+- Something invalidates an earlier assumption
+- Scope growing well beyond the original task
 
-When these occur, Claude stops and reassesses rather than pushing through with workarounds.
+When this happens, Claude pauses and reconsiders instead of pushing through with workarounds.
 
 ### Monitor Context
 
@@ -133,7 +133,7 @@ Start fresh. Next session begins with `/catchup`.
 | Auto-compact loses details | You control what's saved via /wrapup |
 | "Where was I?" | /catchup shows exactly where you left off |
 | Lost decisions | Records preserve reasoning |
-| Inconsistent sessions | Same workflow every time |
+| Inconsistent sessions | /catchup → work → /wrapup, every time |
 
 ## Related
 

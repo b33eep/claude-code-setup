@@ -1,6 +1,6 @@
 # Session Workflow
 
-A practical guide to working with Claude Code Setup. Sessions typically last 30-90 minutes before context fills up.
+A practical guide to working with Claude Code Setup. Sessions usually last 30-90 minutes before context fills up.
 
 ## The Session Cycle
 
@@ -62,7 +62,7 @@ Look at what `/catchup` suggested, or check the Current Status table in CLAUDE.m
 
 ### Implement
 
-Work normally. Coding standards are already loaded.
+Work normally. Coding standards are loaded already.
 
 ### Track Decisions
 
@@ -81,21 +81,21 @@ Add to Recent Decisions: Using bcrypt with cost=12 for password hashing
 When you correct Claude or share project knowledge ("This API expects ISO-8601", "Never use sudo here"),
 Claude automatically persists it so the knowledge survives `/clear`:
 
-- **Project facts and constraints** → Recent Decisions table
-- **Personal preferences** → User Instructions (global CLAUDE.md)
-- **Session-specific context** → Private Note
+- **Project facts** ("API expects ISO-8601") → Recent Decisions table
+- **Preferences** ("Use German commits") → User Instructions (global CLAUDE.md)
+- **Session context** ("Bug is in Auth module") → Private Note
 
-Claude will confirm briefly: "Noted in Recent Decisions."
+Claude confirms briefly: "Noted in Recent Decisions."
 
 ### When to Re-Plan
 
 If implementation runs into trouble, watch for these signs:
 
-- **Third workaround** for the same problem
-- A **discovery invalidates** an earlier assumption
-- **Scope is growing** significantly beyond the original task
+- Third workaround for the same problem
+- Something invalidates an earlier assumption
+- Scope growing well beyond the original task
 
-When you hit these, stop and reassess the approach rather than pushing through.
+When this happens, pause and reconsider instead of pushing through.
 
 ### Add Tasks That Come Up
 

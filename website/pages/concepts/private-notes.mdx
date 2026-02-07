@@ -4,7 +4,7 @@ Session notes, research, and personal TODOs that stay private and never get comm
 
 ## What Are Private Notes?
 
-Private notes live in `docs/notes/` and are **gitignored by default**. They're for:
+Private notes live in `docs/notes/` and stay private (gitignored). They're for:
 
 - Session logs
 - Research results
@@ -24,10 +24,10 @@ docs/notes/
 ```
 
 **Why filename markers?**
-- Simple glob pattern: `*.open.md`
+- Simple glob: `*.open.md`
 - No content parsing needed
 - Visible in file listings
-- Easy to close: just rename
+- Close by renaming the file
 
 ## Managing Notes
 
@@ -52,8 +52,8 @@ Closed notes stay in the folder for reference but won't be loaded.
 
 1. Globs for `docs/notes/*.open.md`
 2. Reads all matching files
-3. Summarizes key points
-4. Includes context in session start
+3. Shows what's relevant
+4. Includes it in session start
 
 ## Notes vs Records
 
@@ -64,8 +64,7 @@ Closed notes stay in the folder for reference but won't be loaded.
 | **Lifespan** | Temporary | Permanent |
 | **Location** | `docs/notes/` | `docs/records/` |
 
-Use **Notes** for anything you wouldn't want in version control.
-Use **Records** for decisions and designs the team should see.
+Notes are for anything private. Records are for decisions the team should see.
 
 ## Setup
 

@@ -63,6 +63,8 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Workflow Improvements | Done | Content v41: Correction trigger + re-plan signs ([Record 034](docs/records/034-workflow-improvements.md)) |
 | Dynamic CLAUDE.md Tables | Done | Content v42: Dynamic table generation for module install/remove ([Record 035](docs/records/035-dynamic-claude-md-tables.md)) |
 | Installation Walkthrough | Done | Step-by-step wizard guide in docs, nav reorder (disable-autocompact before first-project) |
+| Docs Style Review | Done | 17 pages rewritten for natural tone, AI-generated patterns removed |
+| Dynamic Docs Generation | Done | Prebuild scripts generate Records + Skills pages from source |
 
 ### Future
 

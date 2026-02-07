@@ -5,6 +5,11 @@ node_modules/
 .next/
 out/
 
+# Generated at build time (prebuild scripts)
+data/
+pages/features/skills/standards-*.mdx
+pages/features/skills/_meta.js
+
 # Misc
 .DS_Store
 *.log

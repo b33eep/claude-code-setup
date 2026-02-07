@@ -122,6 +122,50 @@ When invoked, create an OpenAPI 3.0 specification:
 | `applies_to` | Context only | Tech stack triggers |
 | `file_extensions` | Context only | File extensions for task-based loading (e.g., `[".py"]`) |
 
+## Optional Files
+
+Beyond `SKILL.md`, skills can include additional files:
+
+```
+my-skill/
+├── SKILL.md              # Required — skill definition
+├── deps.json             # System dependencies to install
+├── assets/               # Templates, reusable content
+├── references/           # Reference docs Claude can read
+└── test-project/         # Example project for testing
+```
+
+### deps.json
+
+Declares system dependencies that the installer handles per platform:
+
+```json
+{
+  "dependencies": [
+    {
+      "name": "yt-dlp",
+      "install": {
+        "macos": "brew install yt-dlp",
+        "debian": "apt-get install -y yt-dlp",
+        "arch": "pacman -S --noconfirm yt-dlp"
+      }
+    }
+  ]
+}
+```
+
+### references/
+
+Markdown files that Claude reads alongside the SKILL.md. Useful for code review checklists, pattern libraries, or API references that would make the main SKILL.md too long.
+
+### assets/
+
+Reusable content like templates. For example, `create-slidev-presentation` includes slide layout templates here.
+
+### test-project/
+
+A working example project. `standards-gradle` includes a full Gradle project that demonstrates the conventions from the skill.
+
 ## Overriding Built-in Skills
 
 Put your skill in `~/.claude/custom/skills/` with the same name:

@@ -65,7 +65,7 @@ MCP Servers (toggle with number, Enter to confirm):
   ↑↓ navigate  ⎵ toggle  ⏎ confirm
 ```
 
-**What are MCP servers?** MCP (Model Context Protocol) servers extend Claude with additional tools for tasks like reading PDFs or searching the web. Each server adds a specific capability.
+**What are MCP servers?** MCP (Model Context Protocol) servers give Claude extra tools - reading PDFs, searching the web, etc. Each server adds one capability.
 
 **How to use this screen:** Use arrow keys (↑↓) to move between options, press Space to toggle an option on/off, and press Enter to confirm your selection.
 
@@ -148,7 +148,7 @@ External Plugins (via Claude CLI):
   ↑↓ navigate  ⎵ toggle  ⏎ confirm
 ```
 
-**What are external plugins?** These are third-party Claude plugins that add specialized capabilities. They're installed via Claude's built-in plugin system.
+**What are external plugins?** Third-party plugins for Claude, installed via `claude plugin`. They add things like code review or document generation.
 
 | Plugin | Pre-selected | What it does |
 |--------|:---:|--------------|
@@ -199,7 +199,7 @@ Building CLAUDE.md
 - **Commands** are slash commands you'll use in Claude Code (`/init-project`, `/wrapup`, `/catchup`, etc.)
 - **MCP servers** get configured in `~/.claude.json` so Claude can use them
 - **Skills** are copied to `~/.claude/skills/` where Claude reads them automatically
-- **CLAUDE.md** is the global configuration file that defines your workflow. It's the core of the setup.
+- **CLAUDE.md** is the global configuration file that drives the whole setup
 
 If you selected an MCP server that requires API keys (like Google Search), you'll be prompted to enter them during this step:
 
