@@ -122,8 +122,7 @@ assert_file_contains "$PROJECT_TEMPLATE" "### Future" "Has Future subsection"
 assert_file_contains "$PROJECT_TEMPLATE" "## Recent Decisions" "Has Recent Decisions section"
 assert_file_contains "$PROJECT_TEMPLATE" "| Date | Decision | Why |" "Has decisions table header"
 
-# User stories and development
-assert_file_contains "$PROJECT_TEMPLATE" "## User Stories" "Has User Stories section"
+# Development
 assert_file_contains "$PROJECT_TEMPLATE" "## Development" "Has Development section"
 
 # ============================================

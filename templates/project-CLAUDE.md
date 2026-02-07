@@ -1,4 +1,4 @@
-<!-- project-template: 43 -->
+<!-- project-template: 44 -->
 # {Project Name}
 
 ## About
@@ -40,14 +40,6 @@
 
 | Date | Decision | Why |
 |------|----------|-----|
-
----
-
-## User Stories
-
-### US-1: {Title}
-- [ ] Task 1
-- [ ] Task 2
 
 ---
 

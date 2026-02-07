@@ -53,7 +53,7 @@
 ```
 ┌─────────────────────────────────────────────────────────┐
 │  1. SPECIFY                                             │
-│     - Define user story / task in CLAUDE.md             │
+│     - Define task in CLAUDE.md or /design for complex   │
 │     - Set acceptance criteria                           │
 └─────────────────────────────────────────────────────────┘
                           │
@@ -147,7 +147,6 @@ Mention briefly: "Noted in [location]."
 - Project overview
 - Tech stack
 - **Current status** (status table)
-- User stories with status
 - Decisions (brief, link to Record for details)
 - Development commands
 - Next step
