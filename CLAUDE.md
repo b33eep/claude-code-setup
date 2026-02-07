@@ -73,6 +73,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Gradle Standards Skill | Gradle 9 Kotlin DSL: project config + plugin development | [033](docs/records/033-gradle-standards-skill.md) |
 | Workflow Improvements | Correction trigger + re-plan signs | [034](docs/records/034-workflow-improvements.md) |
 | Dynamic CLAUDE.md Tables | Dynamic table generation for install/remove | [035](docs/records/035-dynamic-claude-md-tables.md) |
+| Project Template Versioning | `/catchup` detects outdated project CLAUDE.md | [036](docs/records/036-project-template-versioning.md) |
 
 ---
 
