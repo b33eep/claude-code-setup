@@ -67,9 +67,8 @@ New step added early in the catchup flow (before reading changed files):
 3. If equal → skip, zero overhead
 4. If different → read full template, compare section headers (`##` and `###` level) against project CLAUDE.md
 5. If missing sections found → ask user: "Your project CLAUDE.md is missing sections: [list]. Add them?"
-6. If user accepts → insert missing sections with empty template structure at correct position, update marker
-7. If user declines → leave marker unchanged (will be asked again next session)
-8. If no sections missing → update marker to current version silently
+6. If user accepts → insert missing sections with empty template structure at correct position
+7. Always update marker to current version (regardless of accept/decline/no missing sections)
 
 ### `/wrapup` Integration
 
@@ -80,7 +79,7 @@ No changes needed. `/wrapup` already commits project CLAUDE.md changes. The mark
 | Case | Behavior |
 |------|----------|
 | No marker in project CLAUDE.md | Treated as version `0`, full comparison triggered |
-| User declines update | Marker stays unchanged, asked again next session |
+| User declines update | Marker updated anyway — user won't be asked again until next template change |
 | Multiple upgrades skipped (v23 → v28) | One template read catches all structural changes |
 | Template hasn't changed since install | One-time read after upgrade, marker updated, no further checks |
 | Project has extra sections not in template | Ignored — only missing sections are flagged |
@@ -100,7 +99,7 @@ No changes needed. `/wrapup` already commits project CLAUDE.md changes. The mark
 - [x] When versions differ: template is read, section headers compared
 - [x] Missing sections are listed and user is asked before changes
 - [x] On accept: missing sections inserted at correct position, marker updated
-- [x] On decline: marker unchanged, user asked again next session
+- [x] On decline: marker updated (won't be asked again until next template change)
 - [x] Projects without marker are treated as version `0`
 - [x] Content version bump includes marker in template
 

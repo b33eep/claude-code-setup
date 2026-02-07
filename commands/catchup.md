@@ -14,9 +14,8 @@ After `/clear` or new chat, understand recent changes.
      1. Read full template from `~/.claude/templates/CLAUDE.template.md`
      2. Compare section headers (`##` and `###` level) against project CLAUDE.md
      3. If missing sections found → ask user: "Your project CLAUDE.md is missing sections: [list]. Add them?"
-     4. If user accepts → insert missing sections with empty template structure at correct position, update marker to current version
-     5. If user declines → leave marker unchanged (will be asked again next session)
-     6. If no sections missing → update marker to current version
+     4. If user accepts → insert missing sections with empty template structure at correct position
+     5. Always update marker to current version (regardless of accept/decline/no missing sections)
 
 2. **Read project README.md**
    - If exists: Read `README.md` in project root
