@@ -10,19 +10,21 @@ Resume your work after `/clear` or a new chat session.
 
 ## What It Does
 
-1. **Reads project README.md** - Understands project purpose and structure
+1. **Checks project template version** - Compares your project CLAUDE.md against the latest template and offers to add missing sections
 
-2. **Reads changed files** - Uses `git diff --name-only HEAD~10` to see recent changes
+2. **Reads project README.md** - Understands project purpose and structure
 
-3. **Loads relevant Records** - Checks Current Status table for in-progress work with Record references
+3. **Reads changed files** - Uses `git diff --name-only HEAD~10` to see recent changes
 
-4. **Checks Recent Decisions** - Reads small decisions that survived the last `/clear`
+4. **Loads relevant Records** - Checks Current Status table for in-progress work with Record references
 
-5. **Reads open private notes** - Loads `docs/notes/*.open.md` files with session context
+5. **Checks Recent Decisions** - Reads small decisions that survived the last `/clear`
 
-6. **Loads context skills** - Matches your Tech Stack to coding standards
+6. **Reads open private notes** - Loads `docs/notes/*.open.md` files with session context
 
-7. **Summarizes** - Shows what changed, open notes, and what's next
+7. **Loads context skills** - Matches your Tech Stack to coding standards
+
+8. **Summarizes** - Shows what changed, open notes, and what's next
 
 ## Example Output
 

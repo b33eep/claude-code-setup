@@ -85,6 +85,26 @@ scenario "Project CLAUDE.md template structure"
 
 PROJECT_TEMPLATE="$PROJECT_DIR/templates/project-CLAUDE.md"
 
+# Project template version marker
+assert_file_contains "$PROJECT_TEMPLATE" "<!-- project-template:" "Has project-template version marker"
+
+# Marker should be on first line
+FIRST_LINE=$(head -1 "$PROJECT_TEMPLATE")
+if [[ "$FIRST_LINE" =~ ^\<\!--\ project-template:\ [0-9]+\ --\>$ ]]; then
+    pass "Version marker is on first line with valid format"
+else
+    fail "Version marker should be on first line (got: $FIRST_LINE)"
+fi
+
+# Marker version must match VERSION file
+MARKER_VERSION=$(echo "$FIRST_LINE" | sed 's/.*project-template: \([0-9]*\).*/\1/')
+FILE_VERSION=$(cat "$PROJECT_DIR/templates/VERSION" | tr -d '[:space:]')
+if [[ "$MARKER_VERSION" == "$FILE_VERSION" ]]; then
+    pass "Project-template marker ($MARKER_VERSION) matches VERSION file ($FILE_VERSION)"
+else
+    fail "Project-template marker ($MARKER_VERSION) != VERSION ($FILE_VERSION)"
+fi
+
 # Header sections
 assert_file_contains "$PROJECT_TEMPLATE" "## About" "Has About section"
 assert_file_contains "$PROJECT_TEMPLATE" "## Tech Stack" "Has Tech Stack section"
@@ -115,6 +135,9 @@ scenario "Command templates content"
 # catchup.md
 CATCHUP="$PROJECT_DIR/commands/catchup.md"
 assert_file_contains "$CATCHUP" "# Catchup" "catchup.md has title"
+assert_file_contains "$CATCHUP" "Check project template version" "catchup checks template version"
+assert_file_contains "$CATCHUP" "project-template:" "catchup references project-template marker"
+assert_file_contains "$CATCHUP" "CLAUDE.template.md" "catchup reads template file"
 assert_file_contains "$CATCHUP" "Read project README.md" "catchup reads README"
 assert_file_contains "$CATCHUP" "Read changed files" "catchup reads changed files"
 assert_file_contains "$CATCHUP" "Load relevant Records" "catchup loads Records"
