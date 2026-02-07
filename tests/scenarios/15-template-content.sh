@@ -113,10 +113,23 @@ assert_file_contains "$PROJECT_TEMPLATE" "## Tech Stack" "Has Tech Stack section
 assert_file_contains "$PROJECT_TEMPLATE" "## Current Status" "Has Current Status section"
 assert_file_contains "$PROJECT_TEMPLATE" "| Story | Status | Tests | Notes |" "Has status table header"
 
-# Records
-assert_file_contains "$PROJECT_TEMPLATE" "## Records" "Has Records section"
-assert_file_contains "$PROJECT_TEMPLATE" "| Decision | Choice | Record |" "Has records table header"
+# Records table removed (v46)
+if grep -q "## Records" "$PROJECT_TEMPLATE" 2>/dev/null; then
+    fail "Records section should not exist in project template"
+else
+    pass "No Records section in project template"
+fi
+
+# Future (under Current Status)
 assert_file_contains "$PROJECT_TEMPLATE" "### Future" "Has Future subsection"
+
+# Project Instructions
+assert_file_contains "$PROJECT_TEMPLATE" "## Project Instructions" "Has Project Instructions section"
+assert_file_contains "$PROJECT_TEMPLATE" "<!-- PROJECT INSTRUCTIONS START -->" "Has project instructions start marker"
+assert_file_contains "$PROJECT_TEMPLATE" "<!-- PROJECT INSTRUCTIONS END -->" "Has project instructions end marker"
+
+# Files
+assert_file_contains "$PROJECT_TEMPLATE" "## Files" "Has Files section"
 
 # Recent Decisions (v23)
 assert_file_contains "$PROJECT_TEMPLATE" "## Recent Decisions" "Has Recent Decisions section"
@@ -142,13 +155,20 @@ assert_file_contains "$CATCHUP" "Read changed files" "catchup reads changed file
 assert_file_contains "$CATCHUP" "Load relevant Records" "catchup loads Records"
 assert_file_contains "$CATCHUP" "Check Recent Decisions" "catchup reads Recent Decisions (v23)"
 assert_file_contains "$CATCHUP" "Load context skills" "catchup loads skills"
+assert_file_contains "$CATCHUP" "migrate-project-template.md" "catchup delegates to migration command"
+
+# migrate-project-template.md
+MIGRATE="$PROJECT_DIR/commands/migrate-project-template.md"
+assert_file_contains "$MIGRATE" "# Migrate Project Template" "migrate-project-template.md has title"
+assert_file_contains "$MIGRATE" "Create backup" "migration creates backup"
+assert_file_contains "$MIGRATE" "PROJECT INSTRUCTIONS" "migration preserves Project Instructions"
 
 # wrapup.md
 WRAPUP="$PROJECT_DIR/commands/wrapup.md"
 assert_file_contains "$WRAPUP" "# Wrapup" "wrapup.md has title"
 assert_file_contains "$WRAPUP" "Update CLAUDE.md" "wrapup updates CLAUDE.md"
 assert_file_contains "$WRAPUP" "Create Record" "wrapup can create Record"
-assert_file_contains "$WRAPUP" "Sync Records table" "wrapup syncs Records"
+assert_file_contains "$WRAPUP" "PROJECT INSTRUCTIONS" "wrapup preserves Project Instructions"
 assert_file_contains "$WRAPUP" "Git commit" "wrapup handles git"
 assert_file_contains "$WRAPUP" "Review for missed decisions" "wrapup reviews missed decisions"
 

@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v46**: Project Template v2 ([Record 037](docs/records/037-project-template-v2.md))
+  - Remove Records table from project template — records on disk are the source of truth
+  - Add `## Project Instructions` with `<!-- PROJECT INSTRUCTIONS START/END -->` markers (preserved during `/wrapup` and migrations)
+  - Add `## Files` section for project structure overview
+  - Re-parent `### Future` from under `## Records` to under `## Current Status`
+  - New migration command (`commands/migrate-project-template.md`) triggered by `/catchup` on version mismatch
+  - Update `/wrapup` to remove Records sync step, add Project Instructions preservation rule
+  - Update global template: Records docs, After User Corrections routing with Project Instructions
 - **v45**: Fix `/catchup` template version check — explicit Read tool instruction to prevent `~` path expansion issues
 - **v44**: Fix template versioning ([Record 036](docs/records/036-project-template-versioning.md))
   - Remove `## User Stories` placeholder from project template (belongs in Records via `/design`)

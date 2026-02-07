@@ -81,8 +81,9 @@ Add to Recent Decisions: Using bcrypt with cost=12 for password hashing
 When you correct Claude or share project knowledge ("This API expects ISO-8601", "Never use sudo here"),
 Claude automatically persists it so the knowledge survives `/clear`:
 
+- **Personal preferences** ("Use German commits") → User Instructions (global CLAUDE.md)
+- **Project preferences** ("always use pytest-asyncio") → Project Instructions (project CLAUDE.md)
 - **Project facts** ("API expects ISO-8601") → Recent Decisions table
-- **Preferences** ("Use German commits") → User Instructions (global CLAUDE.md)
 - **Session context** ("Bug is in Auth module") → Private Note
 
 Claude confirms briefly: "Noted in Recent Decisions."
@@ -134,7 +135,7 @@ When context approaches 80%:
 
 Claude:
 - Updates CLAUDE.md with current status
-- Creates/syncs any new Records
+- Creates any new Records
 - Commits changes
 
 Then:

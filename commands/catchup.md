@@ -10,12 +10,8 @@ After `/clear` or new chat, understand recent changes.
    - Use the Read tool on `~/.claude/templates/CLAUDE.template.md` (expand `~` to absolute path) → extract version from first line
    - If file does not exist (Read returns error) → skip this step
    - If versions match → skip, continue to next task
-   - If versions differ:
-     1. Read full template from `~/.claude/templates/CLAUDE.template.md`
-     2. Compare section headers (`##` and `###` level) against project CLAUDE.md
-     3. If missing sections found → ask user: "Your project CLAUDE.md is missing sections: [list]. Add them?"
-     4. If user accepts → insert missing sections with empty template structure at correct position
-     5. Always update marker to current version (regardless of accept/decline/no missing sections)
+   - If versions differ → use the Read tool on `~/.claude/commands/migrate-project-template.md` (expand `~` to absolute path) → follow the migration steps inside
+   - After migration completes → continue with step 2 (Read project README.md)
 
 2. **Read project README.md**
    - If exists: Read `README.md` in project root

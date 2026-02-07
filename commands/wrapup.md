@@ -12,21 +12,15 @@ Wrap up the session before `/clear`. Document the current status for the next se
 2. **Create Record (if needed)**
    - Was a decision, design, or significant feature documented this session?
    - If yes: Create Record in `docs/records/`
-   - Add link to CLAUDE.md Records table
+   - Reference in Current Status or Future table if actively relevant
 
-3. **Sync Records table**
-   - Scan `docs/records/` for all existing Records
-   - Compare with the Records table in project CLAUDE.md
-   - Add any missing Records to the table
-   - This keeps CLAUDE.md in sync with the actual Records on disk
-
-4. **Review for missed decisions**
+3. **Review for missed decisions**
    - Were any decisions made this session that are not in Recent Decisions?
    - A decision has: an alternative, a non-obvious "why", future relevance
    - If yes: Add them now (better late than never)
    - This is a safety net - decisions should be added in real-time
 
-5. **Git commit (if applicable)**
+4. **Git commit (if applicable)**
 
    First check: Is CLAUDE.md tracked in Git?
    ```
@@ -40,7 +34,7 @@ Wrap up the session before `/clear`. Document the current status for the next se
      - Stage: CLAUDE.md, docs/records/
      - Commit: `docs: update project status`
 
-6. **Output summary**
+5. **Output summary**
    - What was documented in CLAUDE.md?
    - What was committed (if any)?
    - Reminder: Run `/clear` to clear context
@@ -58,6 +52,10 @@ Check: Is this a Git repo?
             └─ No changes → Skip commit
             └─ Changes found → Commit with "docs: update project status"
 ```
+
+## Project Instructions
+
+When updating CLAUDE.md, do not add, remove, or change any content between the `<!-- PROJECT INSTRUCTIONS START -->` and `<!-- PROJECT INSTRUCTIONS END -->` markers. Treat this section as read-only during /wrapup.
 
 ## Note
 

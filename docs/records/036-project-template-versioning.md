@@ -2,7 +2,7 @@
 
 ## Status
 
-Done
+Done (superseded by [Record 037](037-project-template-v2.md) — migration logic moved to dedicated command)
 
 ---
 

@@ -1,4 +1,4 @@
-<!-- project-template: 45 -->
+<!-- project-template: 46 -->
 # {Project Name}
 
 ## About
@@ -21,14 +21,6 @@
 
 **Next Step:** {What's next}
 
----
-
-## Records
-
-| Decision | Choice | Record |
-|----------|--------|--------|
-| {What} | {Decision} | [001](docs/records/001-xxx.md) |
-
 ### Future
 
 | Todo | Priority | Problem | Solution |
@@ -40,6 +32,26 @@
 
 | Date | Decision | Why |
 |------|----------|-----|
+
+---
+
+## Project Instructions
+
+<!-- PROJECT INSTRUCTIONS START -->
+Add project-specific instructions, preferences, and conventions here.
+This section is preserved during template migrations and /wrapup.
+
+Examples:
+- Testing preferences
+- Deployment conventions
+- Project-specific coding rules
+<!-- PROJECT INSTRUCTIONS END -->
+
+---
+
+## Files
+
+{Project file tree - key directories and files}
 
 ---
 
