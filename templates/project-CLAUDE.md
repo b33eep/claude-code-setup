@@ -1,4 +1,4 @@
-<!-- project-template: 44 -->
+<!-- project-template: 45 -->
 # {Project Name}
 
 ## About

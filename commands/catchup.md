@@ -7,8 +7,8 @@ After `/clear` or new chat, understand recent changes.
 1. **Check project template version**
    - Read first line of project CLAUDE.md → extract version from `<!-- project-template: N -->`
    - If no marker found: treat as version `0`
-   - Read first line of `~/.claude/templates/CLAUDE.template.md` → extract version
-   - If template file not found → skip this step
+   - Use the Read tool on `~/.claude/templates/CLAUDE.template.md` (expand `~` to absolute path) → extract version from first line
+   - If file does not exist (Read returns error) → skip this step
    - If versions match → skip, continue to next task
    - If versions differ:
      1. Read full template from `~/.claude/templates/CLAUDE.template.md`

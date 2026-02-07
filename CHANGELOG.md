@@ -9,7 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
-- **v44**: Fix template versioning — remove `## User Stories` placeholder from project template (belongs in Records via `/design`), fix `/catchup` to always set version marker even when user declines adding missing sections
+- **v45**: Fix `/catchup` template version check — explicit Read tool instruction to prevent `~` path expansion issues
+- **v44**: Fix template versioning ([Record 036](docs/records/036-project-template-versioning.md))
+  - Remove `## User Stories` placeholder from project template (belongs in Records via `/design`)
+  - Fix `/catchup` to always set version marker even when user declines adding missing sections
 - **v43**: Project template versioning — `/catchup` detects outdated project CLAUDE.md and offers to add missing sections ([Record 036](docs/records/036-project-template-versioning.md))
 - **v42**: Dynamic CLAUDE.md table generation ([Record 035](docs/records/035-dynamic-claude-md-tables.md))
   - MCP Servers, Skills, and Skill Loading tables now generated from `installed.json`
