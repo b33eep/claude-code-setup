@@ -62,6 +62,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Gradle Standards Skill | Done | Content v39: standards-gradle skill ([Record 033](docs/records/033-gradle-standards-skill.md)) |
 | Workflow Improvements | Done | Content v41: Correction trigger + re-plan signs ([Record 034](docs/records/034-workflow-improvements.md)) |
 | Dynamic CLAUDE.md Tables | Done | Content v42: Dynamic table generation for module install/remove ([Record 035](docs/records/035-dynamic-claude-md-tables.md)) |
+| Installation Walkthrough | Done | Step-by-step wizard guide in docs, nav reorder (disable-autocompact before first-project) |
 
 ### Future
 
