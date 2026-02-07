@@ -81,6 +81,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 
 | Date | Decision | Why |
 |------|----------|-----|
+| 2026-02-07 | Reuse content version as project-template marker | Avoids second versioning system; false-positive template reads after non-structural upgrades are cheap (one file, once) |
 
 ---
 
