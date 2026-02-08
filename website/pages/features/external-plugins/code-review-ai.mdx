@@ -13,7 +13,7 @@ AI-powered architectural review and code quality analysis.
 
 ## Why Recommended?
 
-This plugin integrates with our [development workflow](/concepts/workflow). The global CLAUDE.md references `code-review-ai:architect-review` as the agent for code reviews before committing significant changes.
+This plugin integrates with our [development workflow](/concepts/workflow). The [`/do-review`](/commands/do-review) command uses `code-review-ai:architect-review` as the review agent.
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -31,7 +31,7 @@ This plugin integrates with our [development workflow](/concepts/workflow). The 
                           ▼
 ┌─────────────────────────────────────────────────────────┐
 │  3. CODE REVIEW  ◄──── code-review-ai                   │
-│     - Agent: code-review-ai:architect-review            │
+│     - Run /do-review                                    │
 │     - Incorporate feedback                              │
 └─────────────────────────────────────────────────────────┘
 ```
@@ -68,6 +68,18 @@ claude plugin install code-review-ai@claude-code-workflows
 
 ## Usage
 
+### Via /do-review (recommended)
+
+The [`/do-review`](/commands/do-review) command is the primary way to trigger this plugin:
+
+```
+/do-review                    # Review uncommitted changes
+/do-review HEAD~3..HEAD       # Review specific commit range
+/do-review --branch           # Review current branch vs main
+```
+
+It automatically gathers the diff, loads coding standards, and spawns the review agent.
+
 ### Direct Request
 
 ```
@@ -84,7 +96,7 @@ The plugin provides a subagent that can be spawned via the Task tool:
 subagent_type: "code-review-ai:architect-review"
 ```
 
-This is used automatically when following the development workflow in global CLAUDE.md.
+This is what `/do-review` uses under the hood.
 
 ## Review Output
 
@@ -100,9 +112,11 @@ The agent provides structured feedback:
 
 After implementing a feature:
 
-1. Claude spawns `code-review-ai:architect-review`
+1. Run `/do-review`
 2. Agent reviews the changes
 3. Feedback is incorporated
 4. Code is committed
 
 This catches issues before they get committed.
+
+See [`/do-review`](/commands/do-review) for details.

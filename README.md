@@ -75,6 +75,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/b33eep/claude-code-setup/mai
 | `/wrapup` | Save status before /clear |
 | `/todo` | Manage todos |
 | `/design` | Structured feature design |
+| `/do-review` | Code review via code-review-ai |
 | `/with-advisor` | Expert pair programming via Agent Teams |
 | `/delegate` | Independent parallel work via Agent Teams |
 | `/add-custom` | Add custom modules |

@@ -19,16 +19,16 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Story | Status | Notes |
 |-------|--------|-------|
 | Agent Teams Commands | Done | [Record 038](docs/records/038-pair-programming-with-agent-teams.md) — All 4 stories complete |
+| /do-review command | Done | Command, docs, tests, code-review-ai.mdx updated |
 
 **Legend:** Open | In Progress | Done
 
-**Next Step:** Story 4 — templates (global CLAUDE.md with both commands), docs pages, version bump, release
+**Next Step:** Merge PR #43, bump version on main
 
 ### Future
 
 | Todo | Priority | Problem | Solution |
 |------|----------|---------|----------|
-| /do-review command | Low | Unclear when to trigger code review, easy to forget | Create command + refine global prompt guidance |
 | Docker Matrix Tests | Low | deps.json install commands not tested on real distros | GitHub Actions with Docker matrix ([Record 022](docs/records/022-docker-matrix-tests.md)) |
 | Slidev skill type review | Low | `create-slidev-presentation` is command but could benefit from auto-loading | Consider changing to context with `applies_to: [slidev]` |
 
