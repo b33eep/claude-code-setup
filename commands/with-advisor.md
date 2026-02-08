@@ -110,7 +110,9 @@ Continue working on the task without advisors. Do not retry automatically.
 
 ### 5. Challenge approach with advisors
 
-**Wait for advisors to finish onboarding** (they send an initial assessment). Then, before writing any code:
+**Wait for advisors to finish onboarding** (they send an initial assessment). While waiting, formulate your approach (step 1 below) — but do NOT start implementing. If the advisor hasn't sent their assessment yet after you've formulated and shared your approach, tell the user "Waiting for advisor..." and **end your turn.** The advisor's message will arrive as a new conversation turn.
+
+Before writing any code:
 
 1. Formulate your planned approach — how you intend to solve the task (structure, key decisions, sequence)
 2. Share it with each advisor via SendMessage:
@@ -123,17 +125,24 @@ My planned approach for [task]:
 Challenge this before I start. What am I missing? What would you do differently?
 ```
 
-3. **Wait for advisor feedback.** Don't start implementing yet.
-4. Incorporate feedback (or decide to proceed anyway — you're in control), then tell the user:
+3. **Wait for advisor feedback. This is the highest-value phase — do NOT skip it.**
+   - Tell the user: "Waiting for advisor feedback on approach..." and **end your turn.** Do NOT use sleep loops.
+   - The advisor's response will arrive as a new conversation turn automatically.
+   - Only proceed without feedback if the **user** explicitly says to start (e.g., "just start", "don't wait").
+4. Incorporate feedback (or decide to proceed anyway — you're in control).
+5. **Identify upcoming decision points.** Based on your approach and the advisor's feedback, list 2-4 decisions you'll face during implementation where the advisor's expertise would help.
+6. Tell the user:
 
 ```
 Approach discussed with advisors. Key feedback:
 - [summary of advisor input]
 
+Decision points I'll check with the advisor during implementation:
+- [decision 1]
+- [decision 2]
+
 Starting implementation.
 ```
-
-**If advisors haven't responded yet** after you've shared your approach (i.e., you've been idle waiting with nothing to do), tell the user and start implementing. Share the approach when they're ready — it becomes a retroactive review of the direction, which is still valuable.
 
 ### 6. Implement with advisor collaboration
 
@@ -145,7 +154,11 @@ You'll see advisor messages inline. Act on them or ignore them — your call.
 To stop: say "stop advisors" anytime.
 ```
 
-**Ask advisors at decision points:** When you hit a fork — multiple valid approaches, unclear tradeoff, unfamiliar territory — ask the advisor BEFORE choosing:
+**IMPORTANT: Consult the advisor at decision points — don't just implement and send progress updates.**
+
+The biggest risk is falling into a "implement everything, then send update" pattern. That's code review, not pair programming. Instead:
+
+1. **Work through the decision points you identified in step 5.** When you reach one, pause and ask the advisor BEFORE choosing:
 
 ```
 Decision point: [describe the choice]
@@ -155,12 +168,14 @@ Option B: [approach] — [tradeoff]
 What's your take?
 ```
 
-Don't ask for every small choice — not variable naming, file organization, or routine patterns. Ask when the advisor's domain expertise would genuinely help.
+2. **Watch for new decision points** that emerge during implementation. If you catch yourself about to make a non-obvious choice, stop and ask.
 
-After receiving the advisor's recommendation, briefly tell the user what you decided:
+3. After receiving the advisor's recommendation, briefly tell the user what you decided:
 ```
 Going with [choice] based on advisor input: [one-line reason].
 ```
+
+Don't ask for every small choice — not variable naming, file organization, or routine patterns. Ask when the advisor's domain expertise would genuinely help.
 
 **Progress updates:** After significant changes (completing a component, committing code), send a brief update:
 
@@ -217,9 +232,14 @@ Claude → User: Approach discussed with advisors. Key feedback:
 - Add refresh token rotation
 - Check for existing auth middleware first
 
+Decision points I'll check with the advisor during implementation:
+- JWT signing algorithm (HMAC vs RSA)
+- Token storage strategy (cookies vs localStorage)
+- Refresh token rotation mechanism
+
 Starting implementation.
 
-[During implementation, Claude hits a decision point]
+[Claude reaches the first decision point]
 
 Claude → security-advisor: "Decision point: HMAC-SHA256 vs RSA for JWT signing.
 Single service, no external token consumers. Your take?"
