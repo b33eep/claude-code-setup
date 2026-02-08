@@ -18,12 +18,11 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 
 | Story | Status | Notes |
 |-------|--------|-------|
-| Agent Teams Commands | Done | [Record 038](docs/records/038-pair-programming-with-agent-teams.md) — All 4 stories complete |
-| /do-review command | Done | Command, docs, tests, code-review-ai.mdx updated |
+| User Stories Skill | In Progress | [Record 039](docs/records/039-user-stories-skill.md) — Stories 1-3 done, needs commit + PR + docs page |
 
 **Legend:** Open | In Progress | Done
 
-**Next Step:** Merge PR #43, bump version on main
+**Next Step:** Commit user-stories skill changes, create PR, add docs page (website/pages/)
 
 ### Future
 
@@ -38,15 +37,8 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 
 | Date | Decision | Why |
 |------|----------|-----|
-| 2026-02-08 | Two commands: `/with-advisor` + `/delegate` | Different use cases: augmentation (expert monitors your work) vs delegation (teammate works independently). |
-| 2026-02-08 | Pattern B over Pattern A | Human needs full visibility. Pattern A (delegation) left human blind. Pattern B (Main + Advisors) validated via PoC. |
-| 2026-02-08 | Advisor onboarding = `/catchup` + role | Reuses existing infrastructure. No custom onboarding needed. |
-| 2026-02-08 | Delegate write isolation via `git worktree` | Prevents conflicts between Main and delegate working in same repo. |
-| 2026-02-08 | Agent Teams as install wizard toggle | Command always installed, Agent Teams env var as separate opt-in. Runtime check with hint if not enabled. |
-| 2026-02-08 | /with-advisor: principle over checklists for task complexity | Claude can judge "overhead exceeds benefit" itself. Hardcoded lists restrict and don't add value. |
-| 2026-02-08 | Dynamic team names for /delegate (`delegate-[slug]`) | Fixed name would block concurrent delegates. Slug-based naming enables multiple parallel delegations. |
-| 2026-02-08 | `-B` flag for worktree branch creation | `-b` fails if branch exists from previous run. `-B` resets gracefully, better UX for reruns. |
-| 2026-02-08 | /with-advisor scales to short tasks as async reviewer | Advisor onboards slower than fast implementations. Works as post-hoc review — still valuable. Documented in Record 038. |
+| 2026-02-08 | User-stories skill as command type (not context) | Invoked explicitly via /design Step 4 or manually, not auto-loaded per Tech Stack. |
+| 2026-02-08 | Adapted agile-product-owner, stripped sprint/velocity/epic | User story focus only — sprint planning is out of scope for claude-code-setup. |
 
 ---
 
@@ -82,7 +74,8 @@ claude-code-setup/
 ├── templates/
 ├── mcp/
 ├── commands/
-├── skills/
+├── skills/                    # Coding standards + tool skills
+│   └── user-stories/          # INVEST stories, Given-When-Then AC
 ├── website/                   # Nextra documentation site
 │   ├── components/
 │   ├── pages/

@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v49**: User Stories skill ([Record 039](docs/records/039-user-stories-skill.md))
+  - New skill: `user-stories` — INVEST criteria, Given-When-Then acceptance criteria, story splitting, antipatterns
+  - `/design` Step 4 loads skill automatically if installed
+  - Source: adapted from [agile-product-owner](https://github.com/alirezarezvani/claude-skills/tree/main/product-team/agile-product-owner) by alirezarezvani (MIT)
 - **v48**: Improve project CLAUDE.md template & workflow
   - Template: add `## Architecture` section for high-level patterns and data flow
   - `/wrapup` now checks Development, Files, Architecture sections for needed updates

@@ -90,7 +90,8 @@ const displayNames = {
   'standards-gradle': 'Gradle',
   'youtube-transcript': 'YouTube Transcript',
   'create-slidev-presentation': 'Slidev Presentations',
-  'skill-creator': 'Skill Creator'
+  'skill-creator': 'Skill Creator',
+  'user-stories': 'User Stories'
 }
 
 const dirs = readdirSync(skillsDir, { withFileTypes: true })

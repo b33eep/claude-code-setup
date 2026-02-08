@@ -204,6 +204,8 @@ Wait for user response. Then:
 
 ### Step 4: User Stories
 
+**Before writing stories:** If `~/.claude/skills/user-stories/SKILL.md` exists, read it. Apply INVEST criteria and Given-When-Then acceptance criteria patterns from the skill.
+
 Ask the user:
 ```
 Let's break this into implementable stories.
@@ -219,9 +221,10 @@ What's the first/most important story?
 
 Work through stories iteratively:
 1. For each story, capture: Title, As a/I want/So that, Acceptance Criteria, Priority
-2. Ask: "Any more stories?" until user says no
-3. Update Record with all User Stories
-4. Confirm: "Stories documented: [list titles]"
+2. Validate each story against INVEST criteria (if skill loaded)
+3. Ask: "Any more stories?" until user says no
+4. Update Record with all User Stories
+5. Confirm: "Stories documented: [list titles]"
 
 ### Step 5: Finalize
 

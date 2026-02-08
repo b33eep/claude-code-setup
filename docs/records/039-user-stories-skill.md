@@ -69,9 +69,9 @@ Source: [agile-product-owner](https://github.com/alirezarezvani/claude-skills/tr
 **Acceptance Criteria:**
 - [ ] Test scenario `tests/scenarios/25-user-stories.sh` (file structure, frontmatter, installation)
 - [ ] README.md updated (Tool Skills table)
-- [ ] CHANGELOG.md v48 entry
-- [ ] `templates/VERSION` incremented to 48
-- [ ] README badge updated to v48
+- [ ] CHANGELOG.md v49 entry
+- [ ] `templates/VERSION` incremented to 49
+- [ ] README badge updated to v49
 - [ ] All existing tests still pass
 
 **Priority:** Medium
