@@ -67,7 +67,7 @@
                           ▼
 ┌─────────────────────────────────────────────────────────┐
 │  3. CODE REVIEW (if plugin installed)                   │
-│     - Agent: code-review-ai:architect-review            │
+│     - Run /do-review                                    │
 │     - Incorporate feedback                              │
 └─────────────────────────────────────────────────────────┘
                           │

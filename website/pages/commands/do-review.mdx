@@ -1,0 +1,130 @@
+# /do-review
+
+Code review on your recent changes using the code-review-ai plugin. Step 3 in the Development Flow.
+
+## Usage
+
+```
+/do-review                    # Review all uncommitted changes
+/do-review HEAD~3..HEAD       # Review specific commit range
+/do-review --branch           # Review current branch vs main
+```
+
+## What It Does
+
+1. **Checks for the plugin** — requires [code-review-ai](/features/external-plugins/code-review-ai)
+2. **Gathers changes** — uncommitted, commit range, or branch diff
+3. **Loads coding standards** — matches file extensions to installed skills
+4. **Spawns the review agent** — `code-review-ai:architect-review` via Task tool
+5. **Shows findings** — structured feedback with actionable suggestions
+6. **Offers to apply** — incorporate feedback directly or pick specific items
+
+## Review Scopes
+
+| Invocation | What gets reviewed | When to use |
+|-----------|-------------------|-------------|
+| `/do-review` | Staged + unstaged changes | Before committing |
+| `/do-review HEAD~3..HEAD` | Specific commit range | Reviewing recent commits |
+| `/do-review --branch` | Current branch vs main | Before creating a PR |
+
+## Example Session
+
+```
+You: /do-review
+
+Claude: Reviewing uncommitted changes (4 files, ~120 lines)...
+
+Review findings:
+
+1. Security: Input validation missing in handle_upload() —
+   user-supplied filename used directly in path construction.
+   Use os.path.basename().
+
+2. Code quality: process_items() has a nested loop that
+   could be O(n*m). Consider using a dict for lookups.
+
+3. Standards: Function getData doesn't follow snake_case
+   convention per project standards.
+
+Incorporate feedback? [Yes / No / Pick specific items]
+
+You: Yes
+
+Claude: Applied all 3 suggestions.
+        Run /do-review again to verify, or commit.
+```
+
+## How It Fits the Workflow
+
+```
+1. SPECIFY (/design or CLAUDE.md)
+         │
+         ▼
+2. IMPLEMENT (write code + tests)
+         │
+         ▼
+3. REVIEW (/do-review)  ◄── you are here
+         │
+         ▼
+   Back to 1. or /wrapup → /clear
+```
+
+`/do-review` fills the gap between implementing and committing. It automates what the Development Flow describes as Step 3.
+
+## What Gets Passed to the Review Agent
+
+The command automatically gathers:
+
+- **The diff** — what changed
+- **Changed file list** — the agent reads full files for context
+- **Coding standards** — from skills matching the file extensions
+- **Project context** — tech stack and current task from CLAUDE.md
+
+You don't need to provide any of this manually.
+
+## Large Changesets
+
+For diffs over 20 files or 500+ lines, Claude will warn you:
+
+```
+Large changeset: 32 files, ~800 lines changed.
+Review may be less thorough. Continue as-is, or narrow the scope?
+[Continue] / [Specify files or range]
+```
+
+You can narrow with a commit range or review in smaller batches.
+
+## vs /design --review
+
+| | /do-review | /design --review |
+|---|-----------|-----------------|
+| **Reviews** | Code changes (diffs) | Design Records |
+| **When** | After implementing | During design |
+| **Focus** | Architecture, security, code quality, standards | Problem clarity, story quality, completeness |
+| **Scope** | Git changes | Record content |
+
+Both use the same `code-review-ai:architect-review` agent but with different context.
+
+## Prerequisites
+
+Requires the [code-review-ai plugin](/features/external-plugins/code-review-ai). If not installed:
+
+```
+code-review-ai plugin is not installed. This command requires it.
+
+Install it: /claude-code-setup → External Plugins
+```
+
+## Tips
+
+- Run after implementing but before committing — catches issues early
+- Use `--branch` before creating PRs for a comprehensive review
+- Coding standards are included automatically — no need to mention them
+- You choose what feedback to act on — nothing is applied without your say
+- Works well with `/with-advisor`: advisor during implementation, review after
+
+## Related
+
+- [/design --review](/commands/design) - Design review (not code review)
+- [code-review-ai](/features/external-plugins/code-review-ai) - The review plugin
+- [Workflow](/concepts/workflow) - Where /do-review fits

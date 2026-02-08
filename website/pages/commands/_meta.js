@@ -6,6 +6,7 @@ export default {
   'add-custom': '/add-custom',
   'todo': '/todo',
   'design': '/design',
+  'do-review': '/do-review',
   'with-advisor': '/with-advisor',
   'delegate': '/delegate'
 }
