@@ -121,6 +121,10 @@ do_update() {
     print_header "Hooks"
     configure_hooks
 
+    # Configure Agent Teams (for users updating from pre-Agent-Teams)
+    print_header "Agent Teams"
+    configure_agent_teams
+
     # Update content version
     set_installed_content_version "$available_v"
 

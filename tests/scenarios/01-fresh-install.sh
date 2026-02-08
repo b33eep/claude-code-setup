@@ -33,6 +33,9 @@ run_install_expect '
 
     # Accept status line
     accept_statusline
+
+    # Decline Agent Teams
+    decline_agent_teams
 ' > /dev/null
 
 # Verify core files

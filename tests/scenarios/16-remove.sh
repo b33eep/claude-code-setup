@@ -27,6 +27,9 @@ run_install_expect '
 
     # Decline status line
     decline_statusline
+
+    # Decline Agent Teams
+    decline_agent_teams
 ' > /dev/null
 
 assert_json_exists "$INSTALLED_FILE" '.mcp[] | select(. == "pdf-reader")' "pdf-reader installed"
@@ -117,6 +120,9 @@ run_add_expect '
 
     # Decline status line
     decline_statusline
+
+    # Decline Agent Teams
+    decline_agent_teams
 ' > /dev/null
 
 assert_json_exists "$INSTALLED_FILE" '.skills[] | select(. == "standards-shell")' "standards-shell installed for cancel test"

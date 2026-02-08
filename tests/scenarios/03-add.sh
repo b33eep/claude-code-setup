@@ -28,6 +28,9 @@ run_install_expect '
 
     # Decline status line
     decline_statusline
+
+    # Decline Agent Teams
+    decline_agent_teams
 ' > /dev/null
 
 assert_file_exists "$INSTALLED_FILE" "installed.json exists"
@@ -46,6 +49,9 @@ run_add_expect '
 
     # Decline status line (not configured in initial install)
     decline_statusline
+
+    # Decline Agent Teams
+    decline_agent_teams
 ' > /dev/null
 
 assert_dir_exists "$CLAUDE_DIR/skills/standards-typescript" "standards-typescript installed"
@@ -65,6 +71,9 @@ run_add_expect '
 
     # Decline status line
     decline_statusline
+
+    # Decline Agent Teams
+    decline_agent_teams
 ' > /dev/null
 
 assert_dir_exists "$CLAUDE_DIR/skills/standards-shell" "standards-shell installed"
@@ -92,6 +101,9 @@ run_add_expect '
 
     # Decline status line
     decline_statusline
+
+    # Decline Agent Teams
+    decline_agent_teams
 ' > /dev/null
 
 assert_json_exists "$MCP_CONFIG_FILE" '.mcpServers["pdf-reader"]' "pdf-reader configured"
@@ -115,6 +127,9 @@ run_add_expect '
 
     # Decline status line
     decline_statusline
+
+    # Decline Agent Teams
+    decline_agent_teams
 ' > /dev/null
 
 assert_json_exists "$MCP_CONFIG_FILE" '.mcpServers["brave-search"]' "brave-search configured"
@@ -132,6 +147,9 @@ output=$(run_add_expect '
 
     # Decline status line
     decline_statusline
+
+    # Decline Agent Teams
+    decline_agent_teams
 ' 2>&1)
 
 # Check that installed modules show [installed]

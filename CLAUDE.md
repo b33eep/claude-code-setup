@@ -18,11 +18,11 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 
 | Story | Status | Notes |
 |-------|--------|-------|
-| — | — | No active work |
+| Agent Teams Commands | Done | [Record 038](docs/records/038-pair-programming-with-agent-teams.md) — All 4 stories complete |
 
 **Legend:** Open | In Progress | Done
 
-**Next Step:** Pick from Future table or backlog
+**Next Step:** Story 4 — templates (global CLAUDE.md with both commands), docs pages, version bump, release
 
 ### Future
 
@@ -38,6 +38,15 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 
 | Date | Decision | Why |
 |------|----------|-----|
+| 2026-02-08 | Two commands: `/with-advisor` + `/delegate` | Different use cases: augmentation (expert monitors your work) vs delegation (teammate works independently). |
+| 2026-02-08 | Pattern B over Pattern A | Human needs full visibility. Pattern A (delegation) left human blind. Pattern B (Main + Advisors) validated via PoC. |
+| 2026-02-08 | Advisor onboarding = `/catchup` + role | Reuses existing infrastructure. No custom onboarding needed. |
+| 2026-02-08 | Delegate write isolation via `git worktree` | Prevents conflicts between Main and delegate working in same repo. |
+| 2026-02-08 | Agent Teams as install wizard toggle | Command always installed, Agent Teams env var as separate opt-in. Runtime check with hint if not enabled. |
+| 2026-02-08 | /with-advisor: principle over checklists for task complexity | Claude can judge "overhead exceeds benefit" itself. Hardcoded lists restrict and don't add value. |
+| 2026-02-08 | Dynamic team names for /delegate (`delegate-[slug]`) | Fixed name would block concurrent delegates. Slug-based naming enables multiple parallel delegations. |
+| 2026-02-08 | `-B` flag for worktree branch creation | `-b` fails if branch exists from previous run. `-B` resets gracefully, better UX for reruns. |
+| 2026-02-08 | /with-advisor scales to short tasks as async reviewer | Advisor onboards slower than fast implementations. Works as post-hoc review — still valuable. Documented in Record 038. |
 
 ---
 
@@ -113,6 +122,15 @@ When changing managed content (templates, commands, skills, mcp):
 2. Update badge in `README.md` (search for `content-v`)
 3. Add CHANGELOG.md entry
 4. Run tests: `./tests/test.sh`
+
+**Two separate versions — don't confuse them:**
+
+| Version | File | Tracks | Bump when |
+|---------|------|--------|-----------|
+| Content version | `templates/VERSION` | All managed content (commands, skills, MCP, templates) | Any managed content changes |
+| Template version | `<!-- project-template: N -->` in `templates/project-CLAUDE.md` | Project CLAUDE.md structure only | Template structure changes |
+
+Content version >= template version. Adding a command bumps content version but NOT the template version (template didn't change). Only bump both when `project-CLAUDE.md` itself changes.
 
 ### Documentation Site
 

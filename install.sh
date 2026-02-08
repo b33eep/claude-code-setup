@@ -40,6 +40,8 @@ source "$SCRIPT_DIR/lib/external-plugins.sh"
 source "$SCRIPT_DIR/lib/uninstall.sh"
 # shellcheck source=lib/hooks.sh
 source "$SCRIPT_DIR/lib/hooks.sh"
+# shellcheck source=lib/agent-teams.sh
+source "$SCRIPT_DIR/lib/agent-teams.sh"
 
 # Cleanup handler for temp files and interrupts
 cleanup() {
@@ -208,6 +210,10 @@ do_install() {
     # Configure hooks
     print_header "Hooks"
     configure_hooks
+
+    # Configure Agent Teams
+    print_header "Agent Teams"
+    configure_agent_teams
 
     # Done
     print_header "Installation Complete"

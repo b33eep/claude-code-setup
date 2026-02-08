@@ -96,13 +96,13 @@ else
     fail "Version marker should be on first line (got: $FIRST_LINE)"
 fi
 
-# Marker version must match VERSION file
+# Marker version must be <= VERSION file (template changes less often than content)
 MARKER_VERSION=$(echo "$FIRST_LINE" | sed 's/.*project-template: \([0-9]*\).*/\1/')
 FILE_VERSION=$(cat "$PROJECT_DIR/templates/VERSION" | tr -d '[:space:]')
-if [[ "$MARKER_VERSION" == "$FILE_VERSION" ]]; then
-    pass "Project-template marker ($MARKER_VERSION) matches VERSION file ($FILE_VERSION)"
+if [[ "$MARKER_VERSION" -le "$FILE_VERSION" ]]; then
+    pass "Project-template marker ($MARKER_VERSION) <= VERSION ($FILE_VERSION)"
 else
-    fail "Project-template marker ($MARKER_VERSION) != VERSION ($FILE_VERSION)"
+    fail "Project-template marker ($MARKER_VERSION) > VERSION ($FILE_VERSION) — marker should never exceed content version"
 fi
 
 # Header sections

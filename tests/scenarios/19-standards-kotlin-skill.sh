@@ -107,6 +107,9 @@ run_install_expect '
 
     # Accept status line
     accept_statusline
+
+    # Decline Agent Teams
+    decline_agent_teams
 ' > /dev/null 2>&1
 
 # Verify skill directory was created

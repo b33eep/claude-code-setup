@@ -1,0 +1,155 @@
+import { Callout } from 'nextra/components'
+
+# /delegate
+
+Spawn a teammate to work on a separate task independently. You keep working on your own thing and get notified when the teammate finishes.
+
+<Callout type="info">
+Requires [Agent Teams](/guides/agent-teams) (experimental) to be enabled.
+</Callout>
+
+## Usage
+
+```
+/delegate "write unit tests for the auth module"
+/delegate "research how other CLIs handle plugin systems"
+/delegate "refactor the database layer to use connection pooling"
+```
+
+## When to Use
+
+| Use /delegate when... | Use /with-advisor instead when... |
+|-----------------------|-----------------------------------|
+| Task is independent from your current work | You need expert feedback on YOUR work |
+| Writing tests while you implement | Unfamiliar domain where mistakes are costly |
+| Research or analysis in parallel | Task requires your judgment throughout |
+| Refactoring a separate module | You want to stay in control of the implementation |
+
+## How It Works
+
+```
+You ←→ Main (continues your current work)
+             └── Delegate (works on assigned task)
+                   ├── Asks Main if clarification needed
+                   └── Notifies Main when done
+```
+
+1. You run `/delegate "task description"`
+2. Claude spawns a teammate with the task
+3. Teammate onboards via `/catchup` — learns your project automatically
+4. You keep working on your own task
+5. If the teammate needs a decision, they ask — you answer
+6. When done, you get a summary of what changed
+
+## Write vs Read-Only Tasks
+
+Claude classifies the task automatically:
+
+| Task type | Where delegate works | Examples |
+|-----------|---------------------|----------|
+| **Write** | `git worktree` on separate branch | "write tests", "refactor module", "add feature" |
+| **Read-only** | Scratchpad in `/tmp` | "research how X works", "analyze logs", "summarize findings" |
+
+**Write tasks use git worktree** — the delegate works on an isolated branch, so there are no conflicts with your work. When they're done, you review and decide whether to merge.
+
+**Read-only tasks use `/tmp`** — no repo changes, just findings sent back to you.
+
+## Concurrent Delegates
+
+You can run multiple delegates at the same time:
+
+```
+/delegate "write tests for the auth module"
+/delegate "research caching strategies for our API"
+```
+
+Each delegate gets its own team and worktree. They work independently.
+
+## Reviewing Results
+
+When a write delegate finishes, you get the branch name and review commands:
+
+```
+Delegate finished. Branch: delegate/auth-tests
+
+To review: git diff main...delegate/auth-tests
+To merge:  git merge delegate/auth-tests
+To clean:  git worktree remove /tmp/delegate-auth-tests && git branch -d delegate/auth-tests
+```
+
+You decide what to do: merge, ask for changes, or discard.
+
+## Stopping a Delegate
+
+Say "stop [delegate name]" at any point. The worktree stays so you can still review partial work.
+
+## Example Sessions
+
+### Write task
+
+```
+You: /delegate "write unit tests for the auth module"
+
+Claude: Delegate active for: write unit tests for the auth module
+
+  test-writer: working in git worktree on branch delegate/auth-tests
+
+Continue your work. The delegate will notify you when done.
+
+[You keep working on your own task]
+
+@test-writer: Done. Added 12 test cases covering login, token refresh,
+and session expiry. Branch: delegate/auth-tests
+
+Delegate finished. Branch: delegate/auth-tests
+
+To review: git diff main...delegate/auth-tests
+To merge:  git merge delegate/auth-tests
+```
+
+### Research task
+
+```
+You: /delegate "research how other CLIs handle plugin systems"
+
+Claude: Delegate active for: research CLI plugin systems
+
+  researcher: researching in background
+
+[You keep working]
+
+@researcher: Analyzed 5 CLIs (Terraform, Helm, kubectl, gh, Heroku).
+Three main patterns: directory-based discovery, registry-based, and
+protocol-based (like Terraform). For your use case, directory-based
+is simplest and matches your existing skill loading pattern.
+```
+
+### Out-of-context question
+
+```
+You: /delegate "when does AC Milan play next?"
+
+Claude: Delegate active for: AC Milan next match
+
+  researcher: researching in background
+
+[You keep coding — your context stays clean]
+
+@researcher: AC Milan vs Como, Saturday 15:00 at San Siro.
+```
+
+Your context window stays focused on your code. The delegate handles the tangent.
+
+### Task better suited for /with-advisor
+
+```
+You: /delegate "help me design the API endpoints"
+
+Claude: This task needs your continuous input.
+Use /with-advisor instead — it keeps you in the loop with expert feedback.
+```
+
+## Related
+
+- [/with-advisor](/commands/with-advisor) - Expert pair programming
+- [Agent Teams](/guides/agent-teams) - Setup guide

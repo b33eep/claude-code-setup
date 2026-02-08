@@ -45,6 +45,9 @@ run_install_expect '
 
     # Decline status line
     decline_statusline
+
+    # Decline Agent Teams
+    decline_agent_teams
 ' > /dev/null
 
 output=$("$PROJECT_DIR/install.sh" --list 2>&1)

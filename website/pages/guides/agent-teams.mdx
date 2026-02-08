@@ -1,0 +1,87 @@
+import { Callout } from 'nextra/components'
+
+# Agent Teams
+
+<Callout type="info">
+Agent Teams is an experimental Claude Code feature. The API may change.
+</Callout>
+
+Agent Teams lets multiple Claude instances work together. claude-code-setup provides two commands that make use of it: [`/with-advisor`](/commands/with-advisor) and [`/delegate`](/commands/delegate).
+
+## Enabling Agent Teams
+
+### Via install wizard
+
+Run the installer or update:
+
+```bash
+./install.sh
+# or
+/claude-code-setup
+```
+
+Select **Yes** when prompted for "Enable Agent Teams (experimental)?".
+
+### Manually
+
+Add to `~/.claude/settings.json`:
+
+```json
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  }
+}
+```
+
+## The Two Commands
+
+| Command | Pattern | You... | Teammate... |
+|---------|---------|--------|-------------|
+| `/with-advisor` | Augmentation | Do the work yourself | Challenges your approach, advises at decision points |
+| `/delegate` | Delegation | Keep working on your thing | Does the assigned task |
+
+### When to use which
+
+**Use `/with-advisor`** when you're working on something and want expert feedback:
+- Unfamiliar domain
+- Multiple valid approaches — advisor challenges before you commit
+- Quality matters and you want expert guidance during implementation
+
+**Use `/delegate`** when you want parallel work:
+- Independent tasks that don't need your continuous input
+- You want to keep working on something else
+- Out-of-context questions you don't want polluting your context window
+
+### Quick comparison
+
+```
+/with-advisor "implement OAuth login"
+  → Advisor challenges your approach, then advises at decision points while you implement
+
+/delegate "write tests for the auth module"
+  → Teammate writes tests, you keep coding, get notified when done
+```
+
+## How Onboarding Works
+
+Both commands use `/catchup` for teammate onboarding. The advisor or delegate automatically:
+- Reads project CLAUDE.md and global CLAUDE.md
+- Reads README.md for project purpose
+- Loads relevant Records for current work
+- Loads coding standards for the tech stack
+- Reads open session notes
+
+No custom onboarding needed — your existing project context is reused.
+
+## Token Cost
+
+**`/delegate`** doesn't create extra cost — the work would be done in your main session anyway. The delegate just moves it to a parallel process.
+
+**`/with-advisor`** adds overhead because the advisor challenges your approach and advises at decision points on top of what you're already doing. In practice, advisors often save cost by catching bad directions early and preventing rework. Claude refuses advisors for simple tasks automatically.
+
+## Related
+
+- [/with-advisor](/commands/with-advisor) - Expert pair programming
+- [/delegate](/commands/delegate) - Independent parallel work
+- [Session Workflow](/guides/daily-workflow) - How commands fit into your workflow

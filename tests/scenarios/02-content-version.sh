@@ -31,6 +31,9 @@ run_install_expect '
 
     # Decline status line
     decline_statusline
+
+    # Decline Agent Teams
+    decline_agent_teams
 ' > /dev/null
 
 # Verify content_version field exists (not the specific value - that changes with every release)
@@ -74,6 +77,7 @@ run_update_expect '
         {Proceed?} { send "y\r" }
         timeout { puts "TIMEOUT at continue"; exit 1 }
     }
+    decline_agent_teams
     expect {
         {Install new modules?} { send "n\r" }
         timeout { puts "TIMEOUT at new modules"; exit 1 }
@@ -97,6 +101,7 @@ run_update_expect '
         {Proceed?} { send "y\r" }
         timeout { puts "TIMEOUT at continue"; exit 1 }
     }
+    decline_agent_teams
     expect {
         {Install new modules?} { send "n\r" }
         timeout { puts "TIMEOUT at new modules"; exit 1 }
@@ -129,6 +134,7 @@ run_update_expect '
         {Proceed?} { send "y\r" }
         timeout { puts "TIMEOUT at continue"; exit 1 }
     }
+    decline_agent_teams
     expect {
         {Install new modules?} { send "y\r" }
         timeout { puts "TIMEOUT at new modules"; exit 1 }

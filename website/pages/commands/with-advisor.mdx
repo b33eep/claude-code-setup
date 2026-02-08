@@ -1,0 +1,131 @@
+import { Callout } from 'nextra/components'
+
+# /with-advisor
+
+Expert pair programming with AI advisors. Spawns specialist advisor(s) that monitor your work and give proactive domain feedback while you stay in control.
+
+<Callout type="info">
+Requires [Agent Teams](/guides/agent-teams) (experimental) to be enabled.
+</Callout>
+
+## Usage
+
+```
+/with-advisor "implement OAuth login with JWT tokens"
+/with-advisor "optimize the slow database queries"
+/with-advisor "design a plugin system for the CLI"
+```
+
+## When to Use
+
+| Use /with-advisor when... | Use /delegate instead when... |
+|---------------------------|-------------------------------|
+| You want expert feedback on YOUR work | You want someone else to do the work |
+| Unfamiliar domain | Independent task |
+| Multiple valid approaches | Task doesn't need your input |
+| Quality matters — expert guidance during implementation | You want to keep working on something else |
+
+## How It Works
+
+```
+You ←→ Main (does the work, like normal)
+             ├── Advisor 1: [auto-selected]
+             └── Advisor 2: [only if needed, max 2]
+```
+
+1. You run `/with-advisor "task description"`
+2. Claude analyzes the task and picks the right advisor expertise
+3. Advisor(s) onboard via `/catchup` — they learn your project automatically
+4. Claude shares the planned approach with advisors — they challenge it before coding starts
+5. Claude implements, asking advisors at decision points and sending progress updates
+6. You see everything — advisor messages, challenges, recommendations — and decide what to act on
+
+## Smart Advisor Selection
+
+Claude picks advisors based on the task. You don't need to specify what kind of expert you want.
+
+| Task | Advisors | Why |
+|------|----------|-----|
+| "implement OAuth login" | Security + Auth Expert | Security-sensitive domain |
+| "optimize database queries" | Performance Expert | Specific expertise needed |
+| "refactor the auth module" | Codebase Patterns Expert | Consistency across large change |
+| "add WebSocket support" | Distributed Systems Expert | Concurrency concerns |
+
+**Max 2 advisors.** One is usually enough. Two only when genuinely different expertise is needed.
+
+**Simple tasks get rejected.** If the overhead of spawning advisors exceeds the benefit (e.g., "fix typo in README"), Claude will tell you to just do it directly.
+
+## What Advisors Do (and Don't Do)
+
+**Advisors DO:**
+- **Challenge your approach** before you start coding — catch bad directions early
+- **Answer at decision points** during implementation — give clear recommendations when you hit a fork
+- Research best practices in their specialty
+- Review your changes via git diffs at checkpoints
+- Flag over-engineering or missed requirements
+
+**Advisors DON'T:**
+- Write or edit code
+- Make decisions for you
+- Wait until after implementation to give feedback (that's code review, not pair programming)
+
+## Adapts to Task Duration
+
+From real-world testing: advisors adapt to how long the task takes.
+
+- **Long tasks (30+ min):** Advisor onboards in time, challenges your approach before you start, answers questions during implementation
+- **Short tasks (\<10 min):** Advisor may still be onboarding when you're ready. Claude starts implementing and shares the approach retroactively — the advisor reviews the direction and flags issues early enough to course-correct
+
+Both modes deliver value. The user experience is the same — findings appear inline.
+
+## Stopping Advisors
+
+Say "stop advisors" at any point, or Claude shuts them down when the task is complete.
+
+## Example Session
+
+```
+You: /with-advisor "implement OAuth login with JWT tokens"
+
+Claude: Analyzing task... Authentication and security — good fit for advisors.
+
+Advisors active for: implement OAuth login with JWT tokens
+
+  security-advisor: Security Expert — onboarding...
+  auth-advisor: Auth Domain Expert — onboarding...
+
+[Advisors onboard and send initial assessments]
+
+Claude → Advisors: "My planned approach: Use passport.js with JWT, store
+refresh tokens in httpOnly cookies, access tokens in memory. Challenge this?"
+
+@security-advisor: Cookie storage is good. Add token rotation on refresh —
+without it, a leaked refresh token is valid forever.
+
+@auth-advisor: passport.js works, but check if the project already has auth
+middleware. Don't introduce a second pattern.
+
+Claude: Approach discussed with advisors. Key feedback:
+- Add refresh token rotation
+- Check for existing auth middleware first
+
+Starting implementation.
+
+[During implementation, Claude hits a decision point]
+
+Claude → @security-advisor: "Decision point: HMAC-SHA256 vs RSA for JWT
+signing. Single service, no external token consumers. Your take?"
+
+@security-advisor: HMAC-SHA256. RSA only matters when other services need
+to verify without the secret. Single service = symmetric is simpler.
+
+Claude: Going with HMAC-SHA256 based on advisor input: simpler for
+single-service, no need for asymmetric keys.
+
+[Claude implements, sends progress updates at checkpoints]
+```
+
+## Related
+
+- [/delegate](/commands/delegate) - Independent parallel work
+- [Agent Teams](/guides/agent-teams) - Setup guide
