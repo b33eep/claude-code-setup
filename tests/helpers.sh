@@ -141,6 +141,22 @@ _EXPECT_COMMON_PROCS='
             }
         }
 
+        # Accept Agent Teams prompt with y
+        proc accept_agent_teams {} {
+            expect {
+                {Enable Agent Teams} { send "y\n"; sleep 0.1 }
+                timeout { puts "TIMEOUT at Agent Teams"; exit 1 }
+            }
+        }
+
+        # Decline Agent Teams prompt with n or Enter (default N)
+        proc decline_agent_teams {} {
+            expect {
+                {Enable Agent Teams} { send "n\n"; sleep 0.1 }
+                timeout { puts "TIMEOUT at Agent Teams"; exit 1 }
+            }
+        }
+
         # Enter API key when prompted
         proc enter_api_key {key} {
             expect {

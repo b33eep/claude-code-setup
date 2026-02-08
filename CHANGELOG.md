@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v47**: Agent Teams commands ([Record 038](docs/records/038-pair-programming-with-agent-teams.md))
+  - New command: `/with-advisor "task"` — expert pair programming via Agent Teams
+  - New command: `/delegate "task"` — independent parallel work via Agent Teams
+  - Smart advisor selection, /catchup onboarding, progress updates
+  - Delegate: git worktree isolation, concurrent delegates, write/read-only task classification
+  - Install wizard: Agent Teams toggle
+  - Documentation pages for both commands
 - **v46**: Project Template v2 ([Record 037](docs/records/037-project-template-v2.md))
   - Remove Records table from project template — records on disk are the source of truth
   - Add `## Project Instructions` with `<!-- PROJECT INSTRUCTIONS START/END -->` markers (preserved during `/wrapup` and migrations)

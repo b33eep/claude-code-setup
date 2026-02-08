@@ -79,6 +79,17 @@
 
 > **Note:** `/wrapup` handles updating CLAUDE.md and committing changes.
 
+### Agent Teams (if enabled)
+
+Use `/with-advisor` and `/delegate` during implementation when the task benefits from expert feedback or parallel work.
+
+| Command | When | What happens |
+|---------|------|-------------|
+| `/with-advisor "task"` | Unfamiliar domain, multiple approaches, quality matters | Expert advisor(s) monitor your work and send findings |
+| `/delegate "task"` | Independent parallel work (tests, research, refactoring) | Teammate works on separate task, notifies when done |
+
+Both commands use `/catchup` for onboarding — teammates learn the project automatically.
+
 ### Before Implementing: Complexity Check
 
 When starting a story/task, assess whether it needs upfront design work. This prevents mid-implementation pivots and captures decisions for future reference.

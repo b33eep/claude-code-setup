@@ -89,6 +89,9 @@ run_install_expect '
 
     # Decline status line
     decline_statusline
+
+    # Decline Agent Teams
+    decline_agent_teams
 ' > /dev/null
 
 assert_dir_exists "$CLAUDE_DIR/skills/skill-creator" "skill-creator installed"

@@ -123,6 +123,9 @@ run_install_expect '
 
     # Accept statusline
     accept_statusline
+
+    # Decline Agent Teams
+    decline_agent_teams
 ' > /dev/null 2>&1
 
 # Verify install worked with correct selections

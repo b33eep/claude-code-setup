@@ -31,6 +31,9 @@ run_install_expect '
 
     # Accept status line
     accept_statusline
+
+    # Decline Agent Teams
+    decline_agent_teams
 ' > /dev/null
 
 # Verify Claude settings.json has statusLine as object
@@ -65,6 +68,9 @@ run_install_expect '
 
     # Decline status line
     decline_statusline
+
+    # Decline Agent Teams
+    decline_agent_teams
 ' > /dev/null 2>&1
 
 # Verify settings.json either doesn't exist or has no statusLine
@@ -100,6 +106,9 @@ output=$(run_add_expect '
 
     # Deselect all skills
     deselect_all_skills
+
+    # Decline Agent Teams (statusline already configured, but Agent Teams is not)
+    decline_agent_teams
 ' 2>&1)
 
 # Verify original statusLine preserved
@@ -137,6 +146,9 @@ run_install_expect '
 
     # Accept status line
     accept_statusline
+
+    # Decline Agent Teams
+    decline_agent_teams
 ' > /dev/null
 
 # Verify Claude settings.json has statusLine
@@ -168,6 +180,9 @@ run_install_expect '
 
     # Press Enter (default is Y)
     expect {Enable context status line} { send "\r" }
+
+    # Decline Agent Teams
+    decline_agent_teams
 ' > /dev/null
 
 assert_json_exists "$CLAUDE_DIR/settings.json" ".statusLine" "statusLine enabled with empty input (default Y)"
@@ -192,6 +207,9 @@ output=$(run_install_expect '
 
     # Accept status line
     accept_statusline
+
+    # Decline Agent Teams
+    decline_agent_teams
 ' 2>&1)
 
 # Verify recovery message shown

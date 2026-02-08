@@ -22,6 +22,7 @@ run_install_expect '
     deselect_all_mcp
     deselect_all_skills
     decline_statusline
+    decline_agent_teams
 ' > /dev/null
 
 # Verify markers exist
@@ -65,6 +66,7 @@ run_install_expect '
     deselect_all_mcp
     deselect_all_skills
     decline_statusline
+    decline_agent_teams
 ' > /dev/null
 
 # Verify default content

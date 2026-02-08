@@ -152,6 +152,7 @@ run_install_expect '
     confirm_mcp
     confirm_skills
     decline_statusline
+    decline_agent_teams
 ' > /dev/null
 
 assert_file_exists "$CLAUDE_DIR/hooks/check-update.sh" "Hook script installed to ~/.claude/hooks/"
@@ -195,7 +196,10 @@ fi
 pass "Pre-v33 state simulated (no hooks)"
 
 # Run update
-run_update_expect 'confirm_update' > /dev/null
+run_update_expect '
+    confirm_update
+    decline_agent_teams
+' > /dev/null
 
 # Verify hooks are now installed
 assert_file_exists "$CLAUDE_DIR/hooks/check-update.sh" "Hook script installed during update"

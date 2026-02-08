@@ -5,5 +5,7 @@ export default {
   'claude-code-setup': '/claude-code-setup',
   'add-custom': '/add-custom',
   'todo': '/todo',
-  'design': '/design'
+  'design': '/design',
+  'with-advisor': '/with-advisor',
+  'delegate': '/delegate'
 }
