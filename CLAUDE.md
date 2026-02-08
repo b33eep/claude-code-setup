@@ -1,4 +1,4 @@
-<!-- project-template: 46 -->
+<!-- project-template: 48 -->
 # Claude Code Setup
 
 ## About
@@ -18,11 +18,11 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 
 | Story | Status | Notes |
 |-------|--------|-------|
-| User Stories Skill | In Progress | [Record 039](docs/records/039-user-stories-skill.md) — Stories 1-3 done, needs commit + PR + docs page |
+| (none) | | |
 
 **Legend:** Open | In Progress | Done
 
-**Next Step:** Commit user-stories skill changes, create PR, add docs page (website/pages/)
+**Next Step:** Pick from Future table or start new feature
 
 ### Future
 
@@ -30,6 +30,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 |------|----------|---------|----------|
 | Docker Matrix Tests | Low | deps.json install commands not tested on real distros | GitHub Actions with Docker matrix ([Record 022](docs/records/022-docker-matrix-tests.md)) |
 | Slidev skill type review | Low | `create-slidev-presentation` is command but could benefit from auto-loading | Consider changing to context with `applies_to: [slidev]` |
+| Upgrade flow: --update then --add | Medium | `--update` only updates existing modules, new skills require manual `--add` | `/claude-code-setup` should run `--update` first, then `--add` for new modules |
 
 ---
 
@@ -37,8 +38,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 
 | Date | Decision | Why |
 |------|----------|-----|
-| 2026-02-08 | User-stories skill as command type (not context) | Invoked explicitly via /design Step 4 or manually, not auto-loaded per Tech Stack. |
-| 2026-02-08 | Adapted agile-product-owner, stripped sprint/velocity/epic | User story focus only — sprint planning is out of scope for claude-code-setup. |
+| | | |
 
 ---
 
@@ -53,6 +53,61 @@ Examples:
 - Deployment conventions
 - Project-specific coding rules
 <!-- PROJECT INSTRUCTIONS END -->
+
+---
+
+## Architecture
+
+**Install-time** and **runtime** are separate concerns:
+
+### Install-time: `install.sh` + `lib/`
+
+The installer is a modular Bash script. `install.sh` is the entry point, sourcing libraries from `lib/`:
+
+| Library | Responsibility |
+|---------|---------------|
+| `platform.sh` | OS detection (macOS/Ubuntu/Arch/Fedora), package manager |
+| `helpers.sh` | Colors, printing, JSON utilities, TTY-aware input |
+| `modules.sh` | Interactive toggle selection UI, module discovery |
+| `mcp.sh` | MCP server installation (JSON config → `~/.claude.json`) |
+| `skills.sh` | Skill installation + `build_claude_md()` |
+| `update.sh` | `--update` mode, content version comparison |
+| `uninstall.sh` | `--remove` mode |
+| `external-plugins.sh` | Third-party plugin installation (document-skills, code-review-ai) |
+| `statusline.sh` | ccstatusline configuration |
+| `hooks.sh` | Claude Code hooks setup |
+| `agent-teams.sh` | Agent Teams env var toggle in settings.json |
+
+**Install flow:** detect OS → select modules (interactive toggle) → copy commands to `~/.claude/commands/` → install MCP configs to `~/.claude.json` → copy skills to `~/.claude/skills/` → build global CLAUDE.md from template + dynamic tables → install external plugins → configure statusline/hooks/agent-teams.
+
+### Runtime: Markdown files consumed by Claude Code
+
+Nothing runs at runtime. The installer produces static Markdown files that Claude Code reads:
+
+```
+~/.claude/
+├── CLAUDE.md              ← Global instructions (built from templates/base/global-CLAUDE.md + dynamic tables)
+├── commands/*.md          ← Slash commands (Claude reads on /command invocation)
+├── skills/*/SKILL.md      ← Context skills (Claude reads based on tech stack / file type)
+└── templates/             ← Project CLAUDE.md template (used by /init-project)
+
+project/
+├── CLAUDE.md              ← Project-specific instructions (created by /init-project)
+└── docs/records/*.md      ← Design decisions, feature specs (created by /design)
+```
+
+### Module types
+
+| Type | Source format | Installed to | Consumed by |
+|------|-------------|-------------|-------------|
+| Commands | `commands/*.md` | `~/.claude/commands/` | Claude on `/command` |
+| Skills | `skills/*/SKILL.md` | `~/.claude/skills/*/` | Claude via auto-loading (tech stack match or file extension) |
+| MCP servers | `mcp/*.json` | `~/.claude.json` (merged) | Claude Code MCP client |
+| Templates | `templates/*.md` | `~/.claude/templates/` | `/init-project`, `/catchup` (migration) |
+
+### Content versioning
+
+`templates/VERSION` tracks all managed content. `<!-- project-template: N -->` in `templates/project-CLAUDE.md` tracks template structure separately. The installer compares installed vs available versions for `--update`.
 
 ---
 
