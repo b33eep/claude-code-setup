@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v48**: Improve project CLAUDE.md template & workflow
+  - Template: add `## Architecture` section for high-level patterns and data flow
+  - `/wrapup` now checks Development, Files, Architecture sections for needed updates
+  - `/wrapup` now archives Done items from Current Status and prunes stale Recent Decisions
+  - Recent Decisions guidelines: new 4th criterion — project-level scope, not implementation details
+  - Template: remove unused Tests column from Status table
+  - Template: expand Project Instructions examples (constraints, areas to avoid)
 - **v47**: Agent Teams commands + /do-review ([Record 038](docs/records/038-pair-programming-with-agent-teams.md))
   - New command: `/with-advisor "task"` — expert pair programming via Agent Teams
   - New command: `/delegate "task"` — independent parallel work via Agent Teams

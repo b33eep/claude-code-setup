@@ -222,12 +222,17 @@ For decisions that are:
 **Criteria for adding:**
 1. There was an alternative (it's a decision, not just an action)
 2. The "why" is not obvious
-3. It could be relevant in future sessions
+3. A future session working on a **different** feature might need this
+4. It's a **project-level** decision, not an implementation detail of a specific feature
 
 **Examples:**
 - ✅ "pip --user instead of global" → Reason not obvious (PEP 668)
+- ✅ "Agent Teams as install wizard toggle" → Affects user-facing install flow
+- ✅ "Two commands: /with-advisor + /delegate" → Shapes the feature's public API
 - ❌ "Fixed typo in line 42" → Action, not decision
 - ❌ "Added input validation" → Obvious why (security/robustness)
+- ❌ "`-B` flag for worktree branch creation" → Implementation detail (belongs in Record)
+- ❌ "plugin detection via spawn error" → Internal technical choice (documented in Record)
 
 **Maintenance:**
 - Max 20 entries

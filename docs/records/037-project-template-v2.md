@@ -95,9 +95,9 @@ New template structure:
 
 ## Current Status
 
-| Story | Status | Tests | Notes |
-|-------|--------|-------|-------|
-| US-1 | {Status} | {N} | {Brief info} |
+| Story | Status | Notes |
+|-------|--------|-------|
+| US-1 | {Status} | {Brief info or [Record NNN](docs/records/NNN-slug.md)} |
 
 **Legend:** Open | In Progress | Done
 
@@ -127,7 +127,15 @@ Examples:
 - Testing preferences
 - Deployment conventions
 - Project-specific coding rules
+- Hard constraints (e.g., "never break the public API")
+- Areas to avoid (deprecated modules, frozen interfaces)
 <!-- PROJECT INSTRUCTIONS END -->
+
+---
+
+## Architecture
+
+{High-level architecture: key patterns, how components interact, data flow}
 
 ---
 
@@ -144,9 +152,25 @@ Examples:
 
 **Removed:** `## Records` table (was between Current Status and Recent Decisions)
 
-**Added:** `## Project Instructions` with markers (after Recent Decisions), `## Files` for project structure overview (after Project Instructions)
+**Added:** `## Project Instructions` with markers (after Recent Decisions), `## Architecture` for high-level patterns and component interactions. `## Files` already existed and was kept as-is with added key directories hint.
 
 **Moved:** `### Future` re-parented from under `## Records` to under `## Current Status` (matches current practice in this project). This is a structural move, not just a section removal — the migration command must handle this explicitly (see Migration Command below).
+
+### Architecture Section (added in v48)
+
+Research against official Anthropic guidance, community patterns (Shrivu Shankar enterprise usage, Boris/creator recommendations), and real-world usage confirmed Architecture as the #3 most recommended CLAUDE.md section (after Commands and Code Style).
+
+**Why added:** High-level architecture context (key patterns, component interactions, data flow) helps Claude understand the system without reading every file. This is project knowledge that doesn't change every session but matters for every task.
+
+**Why Code Style was NOT added:** Code style is handled by auto-loading coding standards skills (per Tech Stack). Adding it to the template would duplicate what skills already provide.
+
+**`/wrapup` maintenance:** Added a new step to `/wrapup` that checks whether Development, Files, or Architecture sections need updates based on the session's work. This keeps these sections fresh without manual effort. Only updates when actual changes happened — no cosmetic rewrites.
+
+Key research insights that informed this decision:
+- Official Anthropic docs warn against bloated CLAUDE.md: "For each line, ask: Would removing this cause Claude to make mistakes?"
+- Community consensus: essential sections are About, Tech Stack, Commands, Code Style, Architecture
+- Our workflow sections (Status, Future, Decisions) are non-standard but are our differentiator for session continuity
+- `/wrapup` as automated maintainer addresses the "stale information" anti-pattern
 
 ### Migration Skill
 
@@ -214,14 +238,14 @@ Update the "After User Corrections" routing to include Project Instructions:
 
 | File | Change |
 |------|--------|
-| `templates/project-CLAUDE.md` | Remove Records table, add Project Instructions and Files sections, re-parent Future |
+| `templates/project-CLAUDE.md` | Remove Records table, add Project Instructions, Files, and Architecture sections, re-parent Future |
 | `commands/catchup.md` | Simplify step 1 to delegate to migration command |
 | `commands/migrate-project-template.md` | **New** — migration command with explicit logic |
-| `commands/wrapup.md` | Remove Records sync step, add Project Instructions preservation rule |
+| `commands/wrapup.md` | Remove Records sync step, add Project Instructions preservation rule, add Development/Files/Architecture maintenance step |
 | `commands/design.md` | Update line 468 "Syncs Record status with CLAUDE.md" — no more Records table |
 | `templates/base/global-CLAUDE.md` | Update Records docs, After User Corrections routing |
 | `templates/VERSION` | Bump version |
-| `tests/scenarios/15-template-content.sh` | Replace Records assertions with Project Instructions/Files assertions |
+| `tests/scenarios/15-template-content.sh` | Replace Records assertions with Project Instructions/Files/Architecture assertions |
 | `CLAUDE.md` | Migrate this project's own file (remove Records table, add Project Instructions) |
 | `README.md` | Update version badge |
 | `CHANGELOG.md` | Add entry |
@@ -236,7 +260,7 @@ For existing users (project CLAUDE.md has Records table, no Project Instructions
 
 1. User runs `/catchup` → version mismatch detected
 2. Migration command loads → identifies:
-   - **Missing:** `## Project Instructions`, `## Files` → "Add?"
+   - **Missing:** `## Project Instructions`, `## Architecture`, `## Files` → "Add?"
    - **Extra:** `## Records` table → "Still needed? (Records on disk in `docs/records/` are the source of truth.)"
    - **Extra:** `## Repository` → "Still needed?"
 3. User decides per change

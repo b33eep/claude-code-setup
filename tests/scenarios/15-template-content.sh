@@ -51,6 +51,7 @@ assert_file_contains "$GLOBAL_TEMPLATE" "Too small for a Record" "Explains when 
 assert_file_contains "$GLOBAL_TEMPLATE" "Max 20 entries" "Documents max entries"
 assert_file_contains "$GLOBAL_TEMPLATE" "Graduating to Records" "Documents when to graduate to Record"
 assert_file_contains "$GLOBAL_TEMPLATE" "Obvious why" "Has negative example for obvious decisions"
+assert_file_contains "$GLOBAL_TEMPLATE" "project-level" "Has project-level scope criterion for decisions"
 
 # Workflow improvements (v41)
 assert_file_contains "$GLOBAL_TEMPLATE" "### After User Corrections" "Has correction persistence trigger"
@@ -111,7 +112,7 @@ assert_file_contains "$PROJECT_TEMPLATE" "## Tech Stack" "Has Tech Stack section
 
 # Status tracking
 assert_file_contains "$PROJECT_TEMPLATE" "## Current Status" "Has Current Status section"
-assert_file_contains "$PROJECT_TEMPLATE" "| Story | Status | Tests | Notes |" "Has status table header"
+assert_file_contains "$PROJECT_TEMPLATE" "| Story | Status | Notes |" "Has status table header"
 
 # Records table removed (v46)
 if grep -q "## Records" "$PROJECT_TEMPLATE" 2>/dev/null; then
@@ -127,6 +128,9 @@ assert_file_contains "$PROJECT_TEMPLATE" "### Future" "Has Future subsection"
 assert_file_contains "$PROJECT_TEMPLATE" "## Project Instructions" "Has Project Instructions section"
 assert_file_contains "$PROJECT_TEMPLATE" "<!-- PROJECT INSTRUCTIONS START -->" "Has project instructions start marker"
 assert_file_contains "$PROJECT_TEMPLATE" "<!-- PROJECT INSTRUCTIONS END -->" "Has project instructions end marker"
+
+# Architecture (v48)
+assert_file_contains "$PROJECT_TEMPLATE" "## Architecture" "Has Architecture section"
 
 # Files
 assert_file_contains "$PROJECT_TEMPLATE" "## Files" "Has Files section"
@@ -171,6 +175,9 @@ assert_file_contains "$WRAPUP" "Create Record" "wrapup can create Record"
 assert_file_contains "$WRAPUP" "PROJECT INSTRUCTIONS" "wrapup preserves Project Instructions"
 assert_file_contains "$WRAPUP" "Git commit" "wrapup handles git"
 assert_file_contains "$WRAPUP" "Review for missed decisions" "wrapup reviews missed decisions"
+assert_file_contains "$WRAPUP" "Archive Done items" "wrapup archives Done items"
+assert_file_contains "$WRAPUP" "Prune Recent Decisions" "wrapup prunes stale decisions"
+assert_file_contains "$WRAPUP" "Development, Files, Architecture" "wrapup checks structural sections"
 
 # init-project.md
 INIT="$PROJECT_DIR/commands/init-project.md"
