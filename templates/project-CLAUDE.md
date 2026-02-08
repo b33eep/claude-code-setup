@@ -1,4 +1,4 @@
-<!-- project-template: 46 -->
+<!-- project-template: 48 -->
 # {Project Name}
 
 ## About
@@ -13,9 +13,9 @@
 
 ## Current Status
 
-| Story | Status | Tests | Notes |
-|-------|--------|-------|-------|
-| US-1 | {Status} | {N} | {Brief info} |
+| Story | Status | Notes |
+|-------|--------|-------|
+| US-1 | {Status} | {Brief info or [Record NNN](docs/records/NNN-slug.md)} |
 
 **Legend:** Open | In Progress | Done
 
@@ -45,13 +45,24 @@ Examples:
 - Testing preferences
 - Deployment conventions
 - Project-specific coding rules
+- Hard constraints (e.g., "never break the public API")
+- Areas to avoid (deprecated modules, frozen interfaces)
 <!-- PROJECT INSTRUCTIONS END -->
+
+---
+
+## Architecture
+
+{High-level architecture: key patterns, how components interact, data flow}
 
 ---
 
 ## Files
 
 {Project file tree - key directories and files}
+
+Key directories:
+- `docs/records/` — Design decisions and feature specs (created by /design)
 
 ---
 

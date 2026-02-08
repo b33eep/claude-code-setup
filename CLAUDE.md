@@ -128,9 +128,9 @@ When changing managed content (templates, commands, skills, mcp):
 | Version | File | Tracks | Bump when |
 |---------|------|--------|-----------|
 | Content version | `templates/VERSION` | All managed content (commands, skills, MCP, templates) | Any managed content changes |
-| Template version | `<!-- project-template: N -->` in `templates/project-CLAUDE.md` | Project CLAUDE.md structure only | Template structure changes |
+| Template version | `<!-- project-template: N -->` in `templates/project-CLAUDE.md` | Project CLAUDE.md structure only | Set to current content version when template structure changes |
 
-Content version >= template version. Adding a command bumps content version but NOT the template version (template didn't change). Only bump both when `project-CLAUDE.md` itself changes.
+Content version >= template version. Adding a command bumps content version but NOT the template version (template didn't change). When `project-CLAUDE.md` itself changes, set template version = content version (don't increment independently).
 
 ### Documentation Site
 
