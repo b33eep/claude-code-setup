@@ -16,7 +16,7 @@
 [![macOS](https://img.shields.io/badge/platform-macOS-blue.svg)](https://www.apple.com/macos/)
 [![Linux](https://img.shields.io/badge/platform-Linux-blue.svg)](https://www.linux.org/)
 [![WSL](https://img.shields.io/badge/platform-WSL-blue.svg)](https://docs.microsoft.com/en-us/windows/wsl/)
-[![Content v48](https://img.shields.io/badge/content-v48-blue.svg)](CHANGELOG.md)
+[![Content v49](https://img.shields.io/badge/content-v49-blue.svg)](CHANGELOG.md)
 
 **Persistent memory for Claude Code via Markdown files.**
 
@@ -100,6 +100,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/b33eep/claude-code-setup/mai
 | YouTube Transcript | Download transcripts with frame extraction |
 | Slidev Presentations | Create Markdown slide decks |
 | Skill Creator | Create custom skills |
+| User Stories | INVEST-compliant stories with Given-When-Then AC |
 
 ### MCP Servers
 

@@ -1,0 +1,59 @@
+# User Stories
+
+Write INVEST-compliant user stories with Given-When-Then acceptance criteria.
+
+## Metadata
+
+| Field | Value |
+|-------|-------|
+| Type | command |
+| Invoked by | `/design` Step 4 (auto) or manually |
+| Source | [agile-product-owner](https://github.com/alirezarezvani/claude-skills/tree/main/product-team/agile-product-owner) by alirezarezvani (MIT) |
+
+## Usage
+
+The skill loads automatically during `/design` Step 4 (User Stories) if installed. You can also ask Claude to apply it when writing stories outside of `/design`.
+
+## What It Covers
+
+- **User Story Template** — As a / I want / So that
+- **Story Types** — Feature, Improvement, Bug Fix, Enabler
+- **Persona Reference** — End User, Admin, Power User, New User
+- **INVEST Criteria** — Validate every story (Independent, Negotiable, Valuable, Estimable, Small, Testable)
+- **Acceptance Criteria** — Given-When-Then patterns with checklist (happy path, validation, error handling, performance, accessibility)
+- **Story Splitting** — Techniques for breaking down large stories
+- **Antipatterns** — Common mistakes in stories and acceptance criteria
+
+## What It Does NOT Cover
+
+Sprint planning, velocity tracking, and epic breakdown are out of scope. This skill focuses on individual story quality only.
+
+## Example
+
+When running `/design`, Step 4 produces stories like:
+
+```
+### Story 1: Export campaign reports
+**As a** marketing manager,
+**I want** to export campaign reports to PDF,
+**So that** I can share results with stakeholders who don't have system access.
+
+**Acceptance Criteria:**
+- Given the user is on the reports page,
+  When they click "Export PDF",
+  Then a PDF download starts within 2 seconds.
+- Given the report contains charts,
+  When exported to PDF,
+  Then all charts render correctly in the document.
+- Given the export fails due to a server error,
+  When the user clicks "Export PDF",
+  Then a user-friendly error message is displayed.
+
+**INVEST:** Independent (no dependencies), Valuable (clear benefit),
+Small (single feature), Testable (3 concrete AC).
+```
+
+## Related
+
+- [/design](/commands/design) — Structured feature design (loads this skill in Step 4)
+- [Record 039](https://github.com/b33eep/claude-code-setup/blob/main/docs/records/039-user-stories-skill.md) — Design record
