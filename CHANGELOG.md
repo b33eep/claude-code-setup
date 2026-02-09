@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v51**: `/claude-code-setup` offers Agent Teams configuration
+  - Agent Teams status check and enable option added to `/claude-code-setup` command
+  - Fixes: `/claude-code-setup` used `install.sh --update --yes` which silently skipped Agent Teams
+  - Fixes: unsafe `> tmp` temp file pattern in jq operations replaced with explicit paths
 - **v50**: Direct module installation + tracking reconciliation
   - New CLI options: `--add-skill <name>` and `--add-mcp <name>` for non-interactive installation
   - New `reconcile_tracking()` function syncs `installed.json` with filesystem during `--update`
