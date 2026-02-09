@@ -86,7 +86,7 @@ Use `/with-advisor` and `/delegate` during implementation when the task benefits
 | Command | When | What happens |
 |---------|------|-------------|
 | `/with-advisor "task"` | Unfamiliar domain, multiple approaches, quality matters | Expert advisor(s) monitor your work and send findings |
-| `/delegate "task"` | Independent parallel work (tests, research, refactoring) | Teammate works on separate task, notifies when done |
+| `/delegate "task"` | Independent parallel work (coding, research, analysis, documentation) | Teammate works on separate task, notifies when done |
 
 Both commands use `/catchup` for onboarding — teammates learn the project automatically.
 

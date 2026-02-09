@@ -211,10 +211,13 @@ This should be reflected in the documentation — `/with-advisor` is not just re
 
 An on-demand command that spawns a teammate to work on a separate task independently. The user continues their own work and gets notified when the teammate finishes.
 
+Works for any independent task: coding, research, data analysis, information gathering, documentation, etc.
+
 ```
 /delegate "write unit tests for the auth module"
 /delegate "research how other CLIs handle plugin systems, summarize findings"
-/delegate "refactor the database layer to use connection pooling"
+/delegate "analyze Milan's last 10 matches and summarize their performance"
+/delegate "compare pricing models of top 5 SaaS competitors"
 ```
 
 ### How it works
@@ -240,8 +243,8 @@ Delegates that need to modify files in the repo work in a **git worktree** — a
 
 | Task type | Where delegate works | Why |
 |-----------|---------------------|-----|
-| Read-only (research, analysis) | Scratchpad / `/tmp` | No repo changes needed |
-| Write (code, tests, refactoring) | `git worktree` on separate branch | Isolated from Main, no conflicts |
+| Read-only (research, analysis, information gathering) | Scratchpad / `/tmp` | No repo changes needed |
+| Write (code, docs, config) | `git worktree` on separate branch | Isolated from Main, no conflicts |
 
 The delegate creates a worktree, works on its branch, and when done the user decides whether to merge.
 
