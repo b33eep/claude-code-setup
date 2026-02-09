@@ -1,6 +1,6 @@
 # /claude-code-setup
 
-Check status and update Claude Code Setup from within Claude.
+Check status and manage your Claude Code Setup installation from within Claude.
 
 ## Usage
 
@@ -8,67 +8,81 @@ Check status and update Claude Code Setup from within Claude.
 /claude-code-setup
 ```
 
-## What It Does
+## How It Works
 
-1. **Checks versions**
-   - Compares installed version with available version
-   - Shows what's new in the update
+The command runs in three phases, completing any scenario in just **2 permission prompts**.
 
-2. **Offers actions**
-   - Upgrade base modules
-   - Upgrade custom modules
-   - Install new modules (Skills, MCP servers, External plugins)
-   - Remove installed modules
+### Phase 1: Discovery (1 Bash call)
+
+Clones the repo and runs a discovery script that gathers all status info as JSON:
+
+- Installed vs available version
+- New modules (skills, MCP servers, plugins)
+- Installed modules
+- Custom repo status
+- Agent Teams status
+
+If the network is unavailable or the installation is missing, the command shows a message and stops gracefully.
+
+### Phase 2: Present + Ask (0 Bash calls)
+
+Shows your installation status and asks what you want to do. All options are generated from the discovery data — no additional shell commands needed.
+
+### Phase 3: Execute (1 Bash call)
+
+Chains all selected actions into a single command. Install, remove, and upgrade operations run in sequence, followed by cleanup.
 
 ## Example Output
 
-```
-Claude Code Setup Status:
-
-Installed: v22
-Available: v23
-
-Changes in v23:
-- Decision Log feature
-- Context quality improvements
-
-What would you like to do?
-1) Upgrade to v23
-2) Check custom modules
-3) Add new modules
-4) Remove modules
-5) Cancel
-```
-
-## Upgrade vs Fresh Install
-
-| Action | What happens |
-|--------|--------------|
-| Upgrade | Preserves User Instructions section |
-| Fresh install | Overwrites everything |
-
-Your customizations in the "User Instructions" section of `~/.claude/CLAUDE.md` are preserved during upgrades.
-
-## Custom Modules
-
-If you have custom modules installed (via `/add-custom`), this command also checks for updates to those.
+### Status with upgrade available
 
 ```
-Custom modules:
-- company-standards: v2 → v3 available
-- internal-mcp: up to date
+claude-code-setup status:
+- Base: v50 installed, v52 available
+- Custom: v1 (up-to-date)
+- Agent Teams: enabled
+
+Modules available to install:
+  Skills: standards-kotlin
+  MCP Servers: brave-search
+  External Plugins: document-skills
+
+Changes in v51-v52:
+- v52: Add /skill-creator command skill
+- v51: Add standards-kotlin coding standards
 ```
+
+### No upgrade available
+
+```
+claude-code-setup status:
+- Base: v52 (up-to-date)
+- Custom: (not configured)
+- Agent Teams: enabled
+
+Modules available to install:
+  MCP Servers: brave-search
+
+Tip: Use /add-custom <url> to add company modules.
+```
+
+## Available Actions
+
+| Action | When shown |
+|--------|-----------|
+| Upgrade base | New version available |
+| Upgrade custom | Custom repo has updates |
+| Install new skills/MCP | Uninstalled modules exist |
+| Install plugins | Uninstalled plugins exist |
+| Remove modules | Installed modules exist |
+| Enable Agent Teams | Not yet configured |
+
+You can select multiple actions at once — they all execute in a single chained command.
 
 ## Modules Requiring API Keys
 
-When installing MCP servers that require an API key, the interactive prompt cannot work within Claude Code (stdin is consumed by menu interactions).
+When installing MCP servers that require an API key (like `brave-search`), Claude inserts the config directly with a placeholder instead of using the interactive installer prompt.
 
-In this case, Claude will:
-1. **Insert the config directly** into `~/.claude.json` with a placeholder
-2. Tell you where to get the API key
-3. Instruct you to replace the placeholder
-
-**Example output:**
 ```
 MCP "brave-search" configured with placeholder.
 
@@ -82,30 +96,30 @@ To get your API key:
 Then restart Claude Code.
 ```
 
-You only need to replace one value - no copy/pasting of JSON blocks required.
-
 ## External Plugins
 
-External plugins (like `code-review-ai`) are installed directly via the Claude CLI:
+External plugins (like `code-review-ai`) are installed via the Claude CLI:
 
-1. Claude adds the marketplace if needed (`claude plugin marketplace add`)
-2. Claude installs the plugin (`claude plugin install`)
+1. Claude adds the marketplace if needed
+2. Claude installs the plugin
 3. You restart Claude Code to activate
 
-**Example output:**
-```
-Installing external plugin code-review-ai...
-  Adding marketplace claude-code-workflows...
-  ✓ Marketplace claude-code-workflows added
-  Installing code-review-ai...
-  ✓ code-review-ai installed
+## After Changes
 
-Restart Claude Code to activate the plugin.
-```
+After any install, upgrade, or removal:
 
-This is fully automatic - you just select which plugins to install.
+```
+Completed:
+- Upgraded base: v50 -> v52
+- Installed skill: standards-kotlin
+- Enabled Agent Teams
+
+IMPORTANT: Restart Claude Code now.
+    After restart, run /catchup to reload context.
+```
 
 ## Related
 
+- [Module Management](/features/module-management) - Terminal-based management with install.sh
 - [/add-custom](/commands/add-custom) - Install custom modules
 - [Installation](/getting-started/installation) - Initial setup
