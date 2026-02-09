@@ -59,6 +59,14 @@ assert_file_contains "$PROJECT_DIR/commands/claude-code-setup.md" "custom_versio
 assert_file_contains "$PROJECT_DIR/commands/claude-code-setup.md" "Upgrade custom" "Has upgrade custom option"
 assert_file_contains "$PROJECT_DIR/commands/claude-code-setup.md" "not configured" "Has no-custom-repo message"
 
+scenario "Command has Agent Teams support"
+
+assert_file_contains "$PROJECT_DIR/commands/claude-code-setup.md" "Check Agent Teams status" "Has Agent Teams status check step"
+assert_file_contains "$PROJECT_DIR/commands/claude-code-setup.md" "Enable Agent Teams" "Has Enable Agent Teams option"
+assert_file_contains "$PROJECT_DIR/commands/claude-code-setup.md" "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS" "References Agent Teams env var"
+assert_file_contains "$PROJECT_DIR/commands/claude-code-setup.md" "Agent Teams: enabled" "Has enabled status example"
+assert_file_contains "$PROJECT_DIR/commands/claude-code-setup.md" "Agent Teams: not configured" "Has not-configured status example"
+
 scenario "Command has external plugins support"
 
 assert_file_contains "$PROJECT_DIR/commands/claude-code-setup.md" "external-plugins.json" "References external-plugins.json"

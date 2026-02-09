@@ -48,7 +48,14 @@ Manage your claude-code-setup installation: check status, upgrade, and install m
    - Determine if upgrade is needed (current < latest)
    - Fetch CHANGELOG.md from GitHub to show changes
 
-7. **Check custom repo** (if exists)
+7. **Check Agent Teams status**
+   ```bash
+   jq -e '.env.CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS' ~/.claude/settings.json 2>/dev/null
+   ```
+   - If key exists → Agent Teams already configured
+   - If key missing or file missing → Agent Teams not configured (can be offered)
+
+8. **Check custom repo** (if exists)
    - If `~/.claude/custom` exists:
      ```bash
      # Fetch latest from remote
@@ -67,13 +74,14 @@ Manage your claude-code-setup installation: check status, upgrade, and install m
 
 ### Phase 2: Show Status & Ask User
 
-8. **Present findings to user**
+9. **Present findings to user**
 
    Show a summary like this:
    ```
    claude-code-setup status:
    - Base: v8 installed, v9 available
    - Custom: v1 installed, v2 available
+   - Agent Teams: not configured
 
    Modules available to install:
      Skills:
@@ -89,12 +97,17 @@ Manage your claude-code-setup installation: check status, upgrade, and install m
    What would you like to do?
    ```
 
-9. **STOP and ask user** (use AskUserQuestion tool)
+   Include Agent Teams line:
+   - `Agent Teams: enabled` (if key exists in settings.json)
+   - `Agent Teams: not configured` (if key missing)
+
+10. **STOP and ask user** (use AskUserQuestion tool)
 
    Options depend on what's available:
    - "Upgrade base" (if base update available)
    - "Upgrade custom" (if custom update available)
    - "Install modules" (if uninstalled modules exist)
+   - "Enable Agent Teams" (if not configured — required for /with-advisor and /delegate)
    - "Remove modules" (if modules are installed)
    - "Nothing"
 
@@ -102,23 +115,23 @@ Manage your claude-code-setup installation: check status, upgrade, and install m
 
 ### Phase 3: Execute User's Choice
 
-10. **Perform base upgrade** (if requested)
+11. **Perform base upgrade** (if requested)
     ```bash
     cd "$temp_dir" && ./install.sh --update --yes
     ```
 
-11. **Perform custom upgrade** (if requested)
+12. **Perform custom upgrade** (if requested)
     ```bash
     git -C ~/.claude/custom pull
     # Update custom_version in installed.json
     if [[ -f ~/.claude/custom/VERSION ]] && [[ -f ~/.claude/installed.json ]]; then
         new_version=$(cat ~/.claude/custom/VERSION 2>/dev/null || echo "0")
         jq --arg v "$new_version" '.custom_version = ($v | tonumber)' \
-           ~/.claude/installed.json > tmp && mv tmp ~/.claude/installed.json
+           ~/.claude/installed.json > ~/.claude/installed.json.tmp && mv ~/.claude/installed.json.tmp ~/.claude/installed.json
     fi
     ```
 
-12. **Install new modules** (if requested)
+13. **Install new modules** (if requested)
     - Ask which specific modules to install
     - For Skills, use `--add-skill <name>`:
       ```bash
@@ -132,7 +145,7 @@ Manage your claude-code-setup installation: check status, upgrade, and install m
       ```
     - These commands are non-interactive and handle tracking automatically
 
-13. **Install external plugins** (if requested)
+    **Install external plugins** (if requested)
     External plugins CANNOT be installed via install.sh --add (stdin issues).
     Install them directly via claude CLI:
 
@@ -152,10 +165,30 @@ Manage your claude-code-setup installation: check status, upgrade, and install m
 
     # 4. Track in installed.json
     jq --arg p "$plugin_id@$marketplace" '.external_plugins = ((.external_plugins // []) + [$p] | unique)' \
-       ~/.claude/installed.json > tmp && mv tmp ~/.claude/installed.json
+       ~/.claude/installed.json > ~/.claude/installed.json.tmp && mv ~/.claude/installed.json.tmp ~/.claude/installed.json
     ```
 
-14. **Remove modules** (if requested)
+14. **Enable Agent Teams** (if requested)
+    ```bash
+    # Ensure settings.json exists
+    if [[ ! -f ~/.claude/settings.json ]]; then
+        echo '{}' > ~/.claude/settings.json
+    fi
+
+    # Add env var
+    jq '.env = (.env // {}) | .env.CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1"' \
+       ~/.claude/settings.json > ~/.claude/settings.json.tmp && mv ~/.claude/settings.json.tmp ~/.claude/settings.json
+    ```
+    Show confirmation:
+    ```
+    Agent Teams enabled.
+    Required for /with-advisor and /delegate commands.
+
+    ⚠️  IMPORTANT: Restart Claude Code now.
+        After restart, run /catchup to reload context.
+    ```
+
+15. **Remove modules** (if requested)
     - Show installed modules from `~/.claude/installed.json`
     - Ask which specific modules to remove
     - Run install.sh --remove:
@@ -168,7 +201,7 @@ Manage your claude-code-setup installation: check status, upgrade, and install m
       - Plugins: Run `claude plugin remove <name>`
       - Update `installed.json` accordingly
 
-15. **Cleanup**
+16. **Cleanup**
     ```bash
     rm -rf "$temp_dir"
     ```
@@ -186,6 +219,7 @@ Manage your claude-code-setup installation: check status, upgrade, and install m
 claude-code-setup status:
 - Base: v8 installed, v9 available
 - Custom: v1 (up-to-date)
+- Agent Teams: not configured
 
 Modules available to install:
   Skills:
@@ -238,7 +272,7 @@ Instead of just showing a snippet, **insert the config directly into ~/.claude.j
      "env": {
        "BRAVE_API_KEY": "YOUR_API_KEY_HERE"
      }
-   }' ~/.claude.json > tmp && mv tmp ~/.claude.json
+   }' ~/.claude.json > ~/.claude.json.tmp && mv ~/.claude.json.tmp ~/.claude.json
    ```
 
 3. **Show simple instructions** to the user:
@@ -263,6 +297,7 @@ Instead of just showing a snippet, **insert the config directly into ~/.claude.j
 claude-code-setup status:
 - Base: v9 (up-to-date)
 - Custom: v2 (up-to-date)
+- Agent Teams: enabled
 
 Modules available to install:
   Skills:
@@ -295,6 +330,7 @@ Installing external plugin code-review-ai...
 claude-code-setup status:
 - Base: v9 (up-to-date)
 - Custom: v2 (up-to-date)
+- Agent Teams: enabled
 
 All available modules are installed.
 ```
@@ -304,6 +340,7 @@ All available modules are installed.
 claude-code-setup status:
 - Base: v9 (up-to-date)
 - Custom: (not configured)
+- Agent Teams: not configured
 
 All available modules are installed.
 
