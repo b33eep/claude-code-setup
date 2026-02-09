@@ -44,13 +44,35 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 ## Project Instructions
 
 <!-- PROJECT INSTRUCTIONS START -->
-Add project-specific instructions, preferences, and conventions here.
-This section is preserved during template migrations and /wrapup.
 
-Examples:
-- Testing preferences
-- Deployment conventions
-- Project-specific coding rules
+### Pull Request Format
+
+When creating PRs, use this structure (see PRs #45, #46 for examples):
+
+```markdown
+## Summary
+- Bullet points of what changed
+
+## Problem
+Why this change is needed
+
+## Solution
+How the problem is solved
+
+## Test plan
+- [ ] Test description 1
+- [ ] Test description 2
+- [ ] All tests pass
+
+## Files Changed (optional)
+- List of changed files
+```
+
+**Important:**
+- Use "Test plan" section with checkboxes, NOT "Actions taken"
+- Include `/do-review` results in test plan if applicable
+- Keep summary concise (3-5 bullets max)
+
 <!-- PROJECT INSTRUCTIONS END -->
 
 ---
