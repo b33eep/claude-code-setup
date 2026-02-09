@@ -98,6 +98,7 @@ The installer is a modular Bash script. `install.sh` is the entry point, sourcin
 | `statusline.sh` | ccstatusline configuration |
 | `hooks.sh` | Claude Code hooks setup |
 | `agent-teams.sh` | Agent Teams env var toggle in settings.json |
+| `setup-status.sh` | Discovery script for `/claude-code-setup` — outputs JSON status (standalone, NOT sourced by install.sh) |
 
 **Install flow:** detect OS → select modules (interactive toggle) → copy commands to `~/.claude/commands/` → install MCP configs to `~/.claude.json` → copy skills to `~/.claude/skills/` → build global CLAUDE.md from template + dynamic tables → install external plugins → configure statusline/hooks/agent-teams.
 

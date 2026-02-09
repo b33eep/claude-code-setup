@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v53**: Rewrite `/claude-code-setup` to 3-phase flow ([Record 040](docs/records/040-setup-command-ux.md))
+  - Discovery script (`lib/setup-status.sh`) replaces 8-12 Bash calls with single JSON output
+  - New flags: `--remove-skill` and `--remove-mcp` for non-interactive module removal
+  - Any scenario completes in 2 permission prompts (down from ~12-18)
 - **v52**: Generalize `/delegate` to support any task type
   - Documentation clarified: works for coding, research, analysis, information gathering, documentation
   - Examples updated to include non-development tasks (sports analysis, competitor pricing, academic research)

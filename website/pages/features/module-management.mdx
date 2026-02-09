@@ -4,7 +4,9 @@ Add, update, remove, and list installed modules (skills, MCP servers, plugins).
 
 ## From Within Claude
 
-Use `/claude-code-setup` to manage modules interactively during a session.
+Use `/claude-code-setup` to manage modules interactively during a session. It discovers your installation status and lets you install, remove, or upgrade — all in 2 permission prompts.
+
+See [/claude-code-setup](/commands/claude-code-setup) for details.
 
 ## From Terminal
 
@@ -40,6 +42,15 @@ Shows module selector for:
 - Skills not yet installed
 - External plugins (via Claude CLI)
 
+### --add-skill, --add-mcp
+
+Install a specific module by name.
+
+```bash
+./install.sh --add-skill standards-kotlin
+./install.sh --add-mcp brave-search
+```
+
 ### --update
 
 Update all installed modules to latest versions.
@@ -48,7 +59,7 @@ Update all installed modules to latest versions.
 ./install.sh --update
 ```
 
-Equivalent to running `/claude-code-setup` from within Claude.
+Preserves your User Instructions section in `~/.claude/CLAUDE.md`.
 
 ### --remove
 
@@ -69,6 +80,24 @@ Select modules to remove, then confirm. Removal:
 - Runs `claude plugin remove` for external plugins
 - Updates `installed.json` tracking
 - Regenerates CLAUDE.md tables
+
+### --remove-skill, --remove-mcp
+
+Remove a specific module by name, non-interactively.
+
+```bash
+./install.sh --remove-skill standards-kotlin
+./install.sh --remove-mcp brave-search
+```
+
+Also works with custom modules using the `custom:` prefix:
+
+```bash
+./install.sh --remove-skill custom:my-skill
+./install.sh --remove-mcp custom:my-mcp
+```
+
+These flags are used by `/claude-code-setup` to chain removals into a single command. They're also useful for scripting.
 
 ### --list
 
@@ -135,43 +164,10 @@ After initial install, update from within Claude:
 /claude-code-setup
 ```
 
-This preserves your User Instructions section.
-
-## Reducing Permission Prompts
-
-When running `/claude-code-setup`, Claude Code's sandbox prompts for permission on each command (`git clone`, `curl`, `jq`, etc.).
-
-### Recommended: Run from Terminal
-
-Run updates from terminal instead of within Claude - no permission prompts:
+Or from terminal:
 
 ```bash
-./install.sh --update
+cd claude-code-setup && git pull && ./install.sh --update
 ```
 
-This is the simplest solution and works reliably.
-
-### Alternative: Allow Rules (Limited)
-
-import { Callout } from 'nextra/components'
-
-You can add permission rules to `~/.claude/settings.json`, but due to a [known limitation](https://github.com/anthropics/claude-code/issues/5503) in Claude Code, rules only work for simple commands:
-
-```json
-{
-  "permissions": {
-    "allow": [
-      "Bash(curl -fsSL:*)",
-      "Bash(jq -r:*)",
-      "Bash(rm -rf /tmp/claude-setup-:*)",
-      "Read(~/.claude/**)"
-    ]
-  }
-}
-```
-
-<Callout type="warning">
-**Limitation:** Rules with special characters (`$`, `[[`, `=`) at the command start don't work reliably. Commands like `temp_dir=$(...)` or `if [[ ...` will still prompt for permission.
-</Callout>
-
-For a prompt-free experience, use `./install.sh --update` from terminal instead.
+Both preserve your User Instructions section.

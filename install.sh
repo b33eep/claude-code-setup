@@ -70,13 +70,17 @@ show_usage() {
     echo "  --help      Show this help message"
     echo ""
     echo "Direct Installation (non-interactive):"
-    echo "  --add-skill <name>   Install a specific skill by name"
-    echo "  --add-mcp <name>     Install a specific MCP server by name"
+    echo "  --add-skill <name>      Install a specific skill by name"
+    echo "  --add-mcp <name>        Install a specific MCP server by name"
+    echo "  --remove-skill <name>   Remove a specific skill by name"
+    echo "  --remove-mcp <name>     Remove a specific MCP server by name"
     echo ""
     echo "Examples:"
     echo "  ./install.sh --update --yes        Non-interactive update"
     echo "  ./install.sh --add-skill standards-kotlin"
     echo "  ./install.sh --add-mcp brave-search"
+    echo "  ./install.sh --remove-skill standards-kotlin"
+    echo "  ./install.sh --remove-mcp brave-search"
     echo "  ./install.sh --remove              Remove installed modules"
     echo ""
     echo "Custom Modules:"
@@ -405,6 +409,108 @@ do_add_mcp() {
 }
 
 # ============================================
+# DIRECT REMOVAL (non-interactive)
+# ============================================
+
+# Remove a single skill by name
+# Usage: do_remove_skill <skill_name>
+# skill_name can be "skill-name" or "custom:skill-name"
+do_remove_skill() {
+    local skill_name=$1
+
+    echo ""
+    echo "Claude Code Setup - Remove Skill"
+    echo "================================="
+
+    # Check dependencies
+    detect_os
+    check_package_manager
+    install_jq
+
+    # Check for installed.json
+    if [[ ! -f "$INSTALLED_FILE" ]]; then
+        print_error "No installation found. Nothing to remove."
+        return 1
+    fi
+
+    # Check if skill is installed (tracking or filesystem)
+    local display_name="${skill_name#custom:}"
+    if ! is_installed "skills" "$skill_name"; then
+        print_warning "Skill '$skill_name' is not installed"
+        return 0
+    fi
+
+    # Remove skill
+    print_header "Removing Skill: $display_name"
+
+    if uninstall_skill "$skill_name"; then
+        print_success "$display_name removed"
+    else
+        print_error "Failed to remove $display_name"
+        return 1
+    fi
+
+    # Rebuild CLAUDE.md without removed skill
+    print_header "Rebuilding CLAUDE.md"
+    build_claude_md
+    print_success "CLAUDE.md updated"
+
+    echo ""
+    print_success "Done! Skill '$display_name' has been removed."
+    echo ""
+}
+
+# Remove a single MCP server by name
+# Usage: do_remove_mcp <mcp_name>
+# mcp_name can be "mcp-name" or "custom:mcp-name"
+do_remove_mcp() {
+    local mcp_name=$1
+
+    echo ""
+    echo "Claude Code Setup - Remove MCP Server"
+    echo "======================================="
+
+    # Check dependencies
+    detect_os
+    check_package_manager
+    install_jq
+
+    # Check for installed.json
+    if [[ ! -f "$INSTALLED_FILE" ]]; then
+        print_error "No installation found. Nothing to remove."
+        return 1
+    fi
+
+    # Check if MCP is installed (tracking or filesystem)
+    local display_name="${mcp_name#custom:}"
+    if ! is_installed "mcp" "$mcp_name"; then
+        print_warning "MCP server '$mcp_name' is not installed"
+        return 0
+    fi
+
+    # Remove MCP
+    print_header "Removing MCP: $display_name"
+
+    if uninstall_mcp "$mcp_name"; then
+        print_success "$display_name removed"
+    else
+        print_error "Failed to remove $display_name"
+        return 1
+    fi
+
+    # Rebuild CLAUDE.md without removed MCP
+    print_header "Rebuilding CLAUDE.md"
+    build_claude_md
+    print_success "CLAUDE.md updated"
+
+    echo ""
+    print_success "Done! MCP server '$display_name' has been removed."
+    echo ""
+    echo "IMPORTANT: Restart Claude Code to deactivate the removed MCP server."
+    echo ""
+}
+
+# ============================================
 # MAIN
 # ============================================
 
@@ -412,6 +518,8 @@ main() {
     local action=""
     local add_skill_name=""
     local add_mcp_name=""
+    local remove_skill_name=""
+    local remove_mcp_name=""
 
     # Parse arguments
     while [[ $# -gt 0 ]]; do
@@ -450,6 +558,26 @@ main() {
                 fi
                 add_mcp_name="$1"
                 ;;
+            --remove-skill)
+                action="remove-skill"
+                shift
+                if [[ $# -eq 0 ]]; then
+                    print_error "--remove-skill requires a skill name"
+                    echo "Usage: ./install.sh --remove-skill <skill-name>"
+                    exit 1
+                fi
+                remove_skill_name="$1"
+                ;;
+            --remove-mcp)
+                action="remove-mcp"
+                shift
+                if [[ $# -eq 0 ]]; then
+                    print_error "--remove-mcp requires an MCP server name"
+                    echo "Usage: ./install.sh --remove-mcp <mcp-name>"
+                    exit 1
+                fi
+                remove_mcp_name="$1"
+                ;;
             --update|-u)
                 action="update"
                 ;;
@@ -482,6 +610,12 @@ main() {
             ;;
         "add-mcp")
             do_add_mcp "$add_mcp_name"
+            ;;
+        "remove-skill")
+            do_remove_skill "$remove_skill_name"
+            ;;
+        "remove-mcp")
+            do_remove_mcp "$remove_mcp_name"
             ;;
         "update")
             do_update
