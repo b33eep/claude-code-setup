@@ -120,11 +120,17 @@ Manage your claude-code-setup installation: check status, upgrade, and install m
 
 12. **Install new modules** (if requested)
     - Ask which specific modules to install
-    - For Skills and MCP servers, run install.sh --add with appropriate input:
+    - For Skills, use `--add-skill <name>`:
       ```bash
-      # Example: Install skill at position 2, no MCP
-      printf 'none\n2\nn\n' | "$temp_dir/install.sh" --add
+      "$temp_dir/install.sh" --add-skill standards-kotlin
+      "$temp_dir/install.sh" --add-skill custom:my-skill  # for custom skills
       ```
+    - For MCP servers, use `--add-mcp <name>`:
+      ```bash
+      "$temp_dir/install.sh" --add-mcp pdf-reader
+      "$temp_dir/install.sh" --add-mcp custom:my-mcp  # for custom MCP
+      ```
+    - These commands are non-interactive and handle tracking automatically
 
 13. **Install external plugins** (if requested)
     External plugins CANNOT be installed via install.sh --add (stdin issues).

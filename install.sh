@@ -69,13 +69,21 @@ show_usage() {
     echo "  --version   Show content version"
     echo "  --help      Show this help message"
     echo ""
+    echo "Direct Installation (non-interactive):"
+    echo "  --add-skill <name>   Install a specific skill by name"
+    echo "  --add-mcp <name>     Install a specific MCP server by name"
+    echo ""
     echo "Examples:"
-    echo "  ./install.sh --update --yes   Non-interactive update"
-    echo "  ./install.sh --remove         Remove installed modules"
+    echo "  ./install.sh --update --yes        Non-interactive update"
+    echo "  ./install.sh --add-skill standards-kotlin"
+    echo "  ./install.sh --add-mcp brave-search"
+    echo "  ./install.sh --remove              Remove installed modules"
     echo ""
     echo "Custom Modules:"
     echo "  Place custom modules in ~/.claude/custom/"
     echo "  Structure: custom/{mcp,skills}/"
+    echo "  Reference custom modules with 'custom:' prefix:"
+    echo "    ./install.sh --add-skill custom:my-skill"
     echo ""
     echo "Supported Platforms:"
     echo "  - macOS (Homebrew)"
@@ -244,11 +252,166 @@ do_install() {
 }
 
 # ============================================
+# DIRECT INSTALLATION (non-interactive)
+# ============================================
+
+# Install a single skill by name
+# Usage: do_add_skill <skill_name>
+# skill_name can be "skill-name" or "custom:skill-name"
+do_add_skill() {
+    local skill_name=$1
+
+    echo ""
+    echo "Claude Code Setup - Add Skill"
+    echo "=============================="
+
+    # Check dependencies
+    detect_os
+    check_package_manager
+    install_jq
+
+    # Initialize
+    mkdir -p "$CLAUDE_DIR/skills"
+    init_installed_json
+
+    # Check if already installed
+    if is_installed "skills" "$skill_name"; then
+        print_warning "Skill '$skill_name' is already installed"
+        return 0
+    fi
+
+    # Determine source directory
+    local source_dir=""
+    local display_name=""
+    if [[ "$skill_name" == custom:* ]]; then
+        local name="${skill_name#custom:}"
+        source_dir="$CUSTOM_DIR/skills/$name"
+        display_name="$name (custom)"
+    else
+        source_dir="$SCRIPT_DIR/skills/$skill_name"
+        display_name="$skill_name"
+    fi
+
+    # Check if skill exists
+    if [[ ! -d "$source_dir" ]]; then
+        print_error "Skill not found: $skill_name"
+        echo ""
+        echo "Available skills:"
+        for d in "$SCRIPT_DIR/skills/"*/; do
+            [[ -d "$d" ]] && echo "  - $(basename "$d")"
+        done
+        if [[ -d "$CUSTOM_DIR/skills" ]]; then
+            for d in "$CUSTOM_DIR/skills/"*/; do
+                [[ -d "$d" ]] && echo "  - custom:$(basename "$d")"
+            done
+        fi
+        return 1
+    fi
+
+    # Install skill
+    print_header "Installing Skill: $display_name"
+
+    if install_skill "$skill_name"; then
+        add_to_installed "skills" "$skill_name"
+        print_success "$display_name installed"
+    else
+        print_error "Failed to install $display_name"
+        return 1
+    fi
+
+    # Rebuild CLAUDE.md with new skill
+    print_header "Rebuilding CLAUDE.md"
+    build_claude_md
+    print_success "CLAUDE.md updated"
+
+    echo ""
+    print_success "Done! Skill '$display_name' is now available."
+    echo ""
+}
+
+# Install a single MCP server by name
+# Usage: do_add_mcp <mcp_name>
+# mcp_name can be "mcp-name" or "custom:mcp-name"
+do_add_mcp() {
+    local mcp_name=$1
+
+    echo ""
+    echo "Claude Code Setup - Add MCP Server"
+    echo "==================================="
+
+    # Check dependencies
+    detect_os
+    check_package_manager
+    install_jq
+
+    # Initialize
+    init_installed_json
+
+    # Check if already installed
+    if is_installed "mcp" "$mcp_name"; then
+        print_warning "MCP server '$mcp_name' is already installed"
+        return 0
+    fi
+
+    # Determine source file
+    local source_file=""
+    local display_name=""
+    if [[ "$mcp_name" == custom:* ]]; then
+        local name="${mcp_name#custom:}"
+        source_file="$CUSTOM_DIR/mcp/$name.json"
+        display_name="$name (custom)"
+    else
+        source_file="$SCRIPT_DIR/mcp/$mcp_name.json"
+        display_name="$mcp_name"
+    fi
+
+    # Check if MCP exists
+    if [[ ! -f "$source_file" ]]; then
+        print_error "MCP server not found: $mcp_name"
+        echo ""
+        echo "Available MCP servers:"
+        for f in "$SCRIPT_DIR/mcp/"*.json; do
+            [[ -f "$f" ]] && echo "  - $(basename "$f" .json)"
+        done
+        if [[ -d "$CUSTOM_DIR/mcp" ]]; then
+            for f in "$CUSTOM_DIR/mcp/"*.json; do
+                [[ -f "$f" ]] && echo "  - custom:$(basename "$f" .json)"
+            done
+        fi
+        return 1
+    fi
+
+    # Install MCP
+    print_header "Installing MCP: $display_name"
+
+    if install_mcp "$mcp_name"; then
+        add_to_installed "mcp" "$mcp_name"
+        print_success "$display_name configured"
+    else
+        print_error "Failed to install $display_name"
+        return 1
+    fi
+
+    # Rebuild CLAUDE.md with new MCP
+    print_header "Rebuilding CLAUDE.md"
+    build_claude_md
+    print_success "CLAUDE.md updated"
+
+    echo ""
+    print_success "Done! MCP server '$display_name' is now configured."
+    echo ""
+    echo "⚠️  IMPORTANT: Restart Claude Code to activate the new MCP server."
+    echo ""
+}
+
+# ============================================
 # MAIN
 # ============================================
 
 main() {
     local action=""
+    local add_skill_name=""
+    local add_mcp_name=""
 
     # Parse arguments
     while [[ $# -gt 0 ]]; do
@@ -266,6 +429,26 @@ main() {
                 ;;
             --add|-a)
                 action="add"
+                ;;
+            --add-skill)
+                action="add-skill"
+                shift
+                if [[ $# -eq 0 ]]; then
+                    print_error "--add-skill requires a skill name"
+                    echo "Usage: ./install.sh --add-skill <skill-name>"
+                    exit 1
+                fi
+                add_skill_name="$1"
+                ;;
+            --add-mcp)
+                action="add-mcp"
+                shift
+                if [[ $# -eq 0 ]]; then
+                    print_error "--add-mcp requires an MCP server name"
+                    echo "Usage: ./install.sh --add-mcp <mcp-name>"
+                    exit 1
+                fi
+                add_mcp_name="$1"
                 ;;
             --update|-u)
                 action="update"
@@ -293,6 +476,12 @@ main() {
             ;;
         "add")
             do_install "add"
+            ;;
+        "add-skill")
+            do_add_skill "$add_skill_name"
+            ;;
+        "add-mcp")
+            do_add_mcp "$add_mcp_name"
             ;;
         "update")
             do_update

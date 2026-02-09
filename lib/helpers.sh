@@ -149,3 +149,35 @@ set_installed_content_version() {
     local version=$1
     jq ".content_version = $version" "$INSTALLED_FILE" > "$INSTALLED_FILE.tmp" && mv "$INSTALLED_FILE.tmp" "$INSTALLED_FILE"
 }
+
+# Reconcile tracking with filesystem
+# Ensures installed.json reflects what's actually installed on disk
+# Call this during --update to fix tracking for modules installed before tracking existed
+reconcile_tracking() {
+    local name
+
+    # Reconcile MCP: check .claude.json for servers not tracked in installed.json
+    if [[ -f "$MCP_CONFIG_FILE" ]]; then
+        while IFS= read -r name; do
+            [[ -n "$name" ]] || continue
+            if ! is_tracked "mcp" "$name"; then
+                add_to_installed "mcp" "$name"
+                print_info "Tracking recovered: $name (MCP)"
+            fi
+        done < <(jq -r '.mcpServers | keys[]' "$MCP_CONFIG_FILE" 2>/dev/null)
+    fi
+
+    # Reconcile skills: check ~/.claude/skills/ for skills not tracked in installed.json
+    if [[ -d "$CLAUDE_DIR/skills" ]]; then
+        for d in "$CLAUDE_DIR/skills/"*/; do
+            [[ -d "$d" ]] || continue
+            name=$(basename "$d")
+            # Only track if it has SKILL.md (is a real skill, not assets/references)
+            [[ -f "$d/SKILL.md" ]] || continue
+            if ! is_tracked "skills" "$name"; then
+                add_to_installed "skills" "$name"
+                print_info "Tracking recovered: $name (skill)"
+            fi
+        done
+    fi
+}
