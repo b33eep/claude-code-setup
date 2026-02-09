@@ -2,12 +2,16 @@
 
 Spawn a teammate to work on a separate task independently. You continue your own work and get notified when the teammate finishes.
 
+Works for any independent task: coding, research, data analysis, information gathering, documentation, etc.
+
 ## Usage
 
 ```
 /delegate "write unit tests for the auth module"
 /delegate "research how other CLIs handle plugin systems, summarize findings"
-/delegate "refactor the database layer to use connection pooling"
+/delegate "analyze the last 10 Milan matches and summarize their performance"
+/delegate "summarize key findings from the 5 most cited papers on topic X"
+/delegate "compare pricing models of top 5 SaaS competitors"
 ```
 
 ## Tasks
@@ -37,12 +41,13 @@ Stop here. Do not proceed. Otherwise, continue.
 
 ### 3. Classify task type
 
-Determine whether the delegate needs to modify repo files or only read/research:
+Determine whether the delegate needs to modify repo files or only read/research.
+This applies to all tasks: development work, research, analysis, documentation, etc.
 
 | Task type | Where delegate works | Examples |
 |-----------|---------------------|----------|
-| **Write** (code, tests, refactoring) | `git worktree` on separate branch | "write tests", "refactor module", "add feature" |
-| **Read-only** (research, analysis) | Scratchpad in `/tmp` | "research how X works", "analyze performance", "summarize findings" |
+| **Write** (code, docs, config) | `git worktree` on separate branch | "write tests", "refactor module", "add feature", "add documentation to repo" |
+| **Read-only** (research, analysis, information gathering) | Scratchpad in `/tmp` | "research how X works", "analyze Milan's last games", "compare competitor pricing", "summarize key findings from papers" |
 
 ### 4. Create team and spawn delegate
 
@@ -219,6 +224,25 @@ Continue your work. The delegate will:
 
 [User continues working]
 [Delegate sends research summary]
+```
+
+### Read-only task (non-development)
+
+```
+User: /delegate "analyze Milan's last 10 matches and summarize their performance"
+
+Claude: Analyzing task... Research only — no repo changes needed.
+
+Delegate active for: analyze Milan's last 10 matches
+
+  sports-analyst: researching in background
+
+Continue your work. The delegate will:
+- Ask you if it needs clarification
+- Notify you when done with findings
+
+[User continues working]
+[Delegate sends analysis summary with match results, stats, and performance trends]
 ```
 
 ### Task better suited for /with-advisor

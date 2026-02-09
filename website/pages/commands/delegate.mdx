@@ -4,6 +4,8 @@ import { Callout } from 'nextra/components'
 
 Spawn a teammate to work on a separate task independently. You keep working on your own thing and get notified when the teammate finishes.
 
+Works for any independent task: coding, research, data analysis, information gathering, documentation, etc.
+
 <Callout type="info">
 Requires [Agent Teams](/guides/agent-teams) (experimental) to be enabled.
 </Callout>
@@ -13,7 +15,9 @@ Requires [Agent Teams](/guides/agent-teams) (experimental) to be enabled.
 ```
 /delegate "write unit tests for the auth module"
 /delegate "research how other CLIs handle plugin systems"
-/delegate "refactor the database layer to use connection pooling"
+/delegate "analyze Milan's last 10 matches and summarize their performance"
+/delegate "summarize key findings from the 5 most cited papers on topic X"
+/delegate "compare pricing models of top 5 SaaS competitors"
 ```
 
 ## When to Use
@@ -47,8 +51,8 @@ Claude classifies the task automatically:
 
 | Task type | Where delegate works | Examples |
 |-----------|---------------------|----------|
-| **Write** | `git worktree` on separate branch | "write tests", "refactor module", "add feature" |
-| **Read-only** | Scratchpad in `/tmp` | "research how X works", "analyze logs", "summarize findings" |
+| **Write** | `git worktree` on separate branch | "write tests", "refactor module", "add feature", "add documentation to repo" |
+| **Read-only** | Scratchpad in `/tmp` | "research how X works", "analyze Milan's last games", "compare competitor pricing", "summarize key findings from papers" |
 
 **Write tasks use git worktree** — the delegate works on an isolated branch, so there are no conflicts with your work. When they're done, you review and decide whether to merge.
 

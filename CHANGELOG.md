@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v52**: Generalize `/delegate` to support any task type
+  - Documentation clarified: works for coding, research, analysis, information gathering, documentation
+  - Examples updated to include non-development tasks (sports analysis, competitor pricing, academic research)
 - **v51**: `/claude-code-setup` offers Agent Teams configuration
   - Agent Teams status check and enable option added to `/claude-code-setup` command
   - Fixes: `/claude-code-setup` used `install.sh --update --yes` which silently skipped Agent Teams
