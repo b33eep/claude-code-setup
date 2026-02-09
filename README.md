@@ -16,7 +16,7 @@
 [![macOS](https://img.shields.io/badge/platform-macOS-blue.svg)](https://www.apple.com/macos/)
 [![Linux](https://img.shields.io/badge/platform-Linux-blue.svg)](https://www.linux.org/)
 [![WSL](https://img.shields.io/badge/platform-WSL-blue.svg)](https://docs.microsoft.com/en-us/windows/wsl/)
-[![Content v49](https://img.shields.io/badge/content-v49-blue.svg)](CHANGELOG.md)
+[![Content v50](https://img.shields.io/badge/content-v50-blue.svg)](CHANGELOG.md)
 
 **Persistent memory for Claude Code via Markdown files.**
 

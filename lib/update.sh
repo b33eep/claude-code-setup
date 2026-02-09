@@ -33,6 +33,9 @@ do_update() {
 
     init_installed_json
 
+    # Reconcile tracking with filesystem (fixes modules installed before tracking)
+    reconcile_tracking
+
     # Check content version
     local installed_v
     local available_v

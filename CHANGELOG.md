@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v50**: Direct module installation + tracking reconciliation
+  - New CLI options: `--add-skill <name>` and `--add-mcp <name>` for non-interactive installation
+  - New `reconcile_tracking()` function syncs `installed.json` with filesystem during `--update`
+  - Fixes tracking for modules installed before tracking existed or installed manually
+  - Enables `/claude-code-setup` skill to install modules reliably without interactive menus
 - **v49**: User Stories skill ([Record 039](docs/records/039-user-stories-skill.md))
   - New skill: `user-stories` — INVEST criteria, Given-When-Then acceptance criteria, story splitting, antipatterns
   - `/design` Step 4 loads skill automatically if installed

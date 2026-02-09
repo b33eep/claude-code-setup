@@ -30,7 +30,6 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 |------|----------|---------|----------|
 | Docker Matrix Tests | Low | deps.json install commands not tested on real distros | GitHub Actions with Docker matrix ([Record 022](docs/records/022-docker-matrix-tests.md)) |
 | Slidev skill type review | Low | `create-slidev-presentation` is command but could benefit from auto-loading | Consider changing to context with `applies_to: [slidev]` |
-| Upgrade flow: --update then --add | Medium | `--update` only updates existing modules, new skills require manual `--add` | `/claude-code-setup` should run `--update` first, then `--add` for new modules |
 
 ---
 
