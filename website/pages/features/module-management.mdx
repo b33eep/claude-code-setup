@@ -109,7 +109,8 @@ Show what's currently installed.
 
 Output:
 ```
-Installed modules:
+Installed Modules:
+
   MCP Servers:
     - pdf-reader
     - brave-search
@@ -118,11 +119,17 @@ Installed modules:
     - standards-shell
   External Plugins:
     - document-skills@anthropic-agent-skills
-  Commands:
-    - catchup
-    - wrapup
-    - init-project
+
+  Custom Commands:
+    + catchup.md (override)
+    + wrapup.md (extend)
+  Custom Scripts:
+    + my-helper.sh
 ```
+
+Custom commands show their mode: `(override)` replaces the base command entirely, `(extend)` merges custom content with the base command via `{{base:name}}` markers.
+
+See [Customizing](/guides/customizing) for details.
 
 ### --help, -h
 

@@ -1,0 +1,245 @@
+# Customizing
+
+Add your own skills, commands, scripts, and MCP servers via a custom module repository.
+
+## Setting Up a Custom Repository
+
+```bash
+mkdir my-claude-modules
+cd my-claude-modules
+git init
+```
+
+### Structure
+
+```
+my-claude-modules/
+├── VERSION              # e.g., "1.0.0"
+├── CHANGELOG.md
+├── skills/              # Custom skills (auto-load or command)
+│   └── my-skill/
+│       └── SKILL.md
+├── commands/            # Command overrides/extends (optional)
+│   └── catchup.md
+├── scripts/             # Helper scripts (optional)
+│   └── my-helper.sh
+└── mcp/                 # MCP server configs (optional)
+    └── my-server.json
+```
+
+### Install for Your Team
+
+Push to Git, then each team member runs:
+
+```
+/add-custom git@company.com:team/claude-modules.git
+```
+
+Or link manually for development:
+
+```bash
+ln -sf ~/path/to/my-claude-modules ~/.claude/custom
+```
+
+### Override Principle
+
+Custom modules override base modules with the same name. A custom `standards-python` skill replaces the built-in one.
+
+---
+
+## Custom Skills
+
+Skills provide specialized knowledge that Claude loads automatically (context skills) or on demand (command skills).
+
+### Quick Start
+
+```
+/skill-creator
+```
+
+### Manual Creation
+
+Place a `SKILL.md` in `~/.claude/custom/skills/my-skill/`:
+
+```markdown
+---
+name: my-skill
+description: What this skill does
+type: context
+applies_to: [python, fastapi]
+file_extensions: [".py"]
+---
+
+# Skill Content
+
+Instructions and standards here...
+```
+
+### Skill Types
+
+| Type | How it loads | Example |
+|------|--------------|---------|
+| **Context** | Auto-loads based on tech stack or file extension | Coding standards |
+| **Command** | User invokes with `/skill-name` | Presentation creator |
+
+### Frontmatter Fields
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `name` | Yes | Skill identifier (kebab-case) |
+| `description` | Yes | What the skill does |
+| `type` | Yes | `context` or `command` |
+| `applies_to` | Context only | Tech stack triggers (e.g., `[python, fastapi]`) |
+| `file_extensions` | Context only | File extensions for task-based loading (e.g., `[".py"]`) |
+
+### Optional Files
+
+```
+my-skill/
+├── SKILL.md              # Required
+├── deps.json             # System dependencies per platform
+├── assets/               # Templates, reusable content
+├── references/           # Reference docs Claude can read
+└── test-project/         # Example project for testing
+```
+
+See [Creating Skills](/guides/creating-skills) for detailed examples and `deps.json` format.
+
+---
+
+## Custom Commands
+
+Custom commands override or extend base commands like `/catchup`, `/wrapup`, or `/do-review`.
+
+### Override
+
+Place a command with the same name as a base command in `commands/`. It replaces the base entirely.
+
+```
+commands/do-review.md    # Replaces base do-review.md
+```
+
+### Extend
+
+Use the `{{base:command-name}}` marker to include base command content. The installer replaces the marker with the full base command at install time — Claude reads a single file.
+
+**Prepend custom steps, then base:**
+```markdown
+# Custom Catchup
+
+## Additional Steps
+- Load team-specific skills
+- Check internal tooling
+
+---
+
+{{base:catchup}}
+```
+
+**Conditional gate (custom logic first, base as fallback):**
+```markdown
+# Custom Catchup
+
+## Step 0: Detect Project Type
+Check if this is a company framework project.
+
+### If detected:
+- Follow custom workflow
+- **Stop here**
+
+### If NOT detected:
+Continue with standard tasks below.
+
+---
+
+{{base:catchup}}
+```
+
+**Append custom steps after base:**
+```markdown
+{{base:wrapup}}
+
+---
+
+## Additional Custom Steps
+- Sync with internal dashboard
+```
+
+### Edge Cases
+
+- Missing base (`{{base:nonexistent}}`): Replaced with an HTML comment warning
+- Path traversal (`{{base:../../etc/passwd}}`): Rejected — names must be alphanumeric and hyphens only
+- Multiple markers: All resolved in a single pass during installation
+
+---
+
+## Custom Scripts
+
+Place helper scripts in `scripts/`. They are deployed to `~/.claude/scripts/` with executable permissions.
+
+Commands and skills can reference them:
+```markdown
+Run the detection script:
+\`\`\`bash
+~/.claude/scripts/my-helper.sh
+\`\`\`
+```
+
+Scripts are re-deployed on `--update`. To remove a script, delete it from your custom repo and run `/claude-code-setup` or `./install.sh --update`.
+
+---
+
+## Custom MCP Servers
+
+Place JSON configs in `mcp/`:
+
+```json
+{
+  "name": "my-server",
+  "description": "Internal search API",
+  "config": {
+    "command": "npx",
+    "args": ["-y", "my-mcp-server"]
+  }
+}
+```
+
+See [MCP Servers](/features/mcp-servers) for the full config format.
+
+---
+
+## Visibility
+
+`--list` shows all custom modules:
+
+```
+Custom Commands:
+  + catchup.md (override)
+  + wrapup.md (extend)
+Custom Scripts:
+  + my-helper.sh
+Custom Skills:
+  + my-skill
+Custom MCP:
+  + my-server
+```
+
+`/claude-code-setup` also shows custom modules in its status display.
+
+---
+
+## Keeping Updated
+
+When you update the custom repo:
+
+1. Push changes
+2. Bump `VERSION`
+3. Update `CHANGELOG.md`
+
+Team members update with `/claude-code-setup` — it detects new versions automatically.
+
+## Related
+
+- [Creating Skills](/guides/creating-skills) - Detailed skill examples and deps.json format
+- [/add-custom](/commands/add-custom) - Install custom modules for your team
+- [Module Management](/features/module-management) - `--list`, `--update`, `--remove`

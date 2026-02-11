@@ -16,7 +16,7 @@
 [![macOS](https://img.shields.io/badge/platform-macOS-blue.svg)](https://www.apple.com/macos/)
 [![Linux](https://img.shields.io/badge/platform-Linux-blue.svg)](https://www.linux.org/)
 [![WSL](https://img.shields.io/badge/platform-WSL-blue.svg)](https://docs.microsoft.com/en-us/windows/wsl/)
-[![Content v53](https://img.shields.io/badge/content-v53-blue.svg)](CHANGELOG.md)
+[![Content v54](https://img.shields.io/badge/content-v54-blue.svg)](CHANGELOG.md)
 
 **Persistent memory for Claude Code via Markdown files.**
 
@@ -130,7 +130,7 @@ Install Claude plugins via the installer:
 - [Commands Reference](https://b33eep.github.io/claude-code-setup/commands/catchup)
 - [Skills](https://b33eep.github.io/claude-code-setup/features/skills)
 - [Session Workflow](https://b33eep.github.io/claude-code-setup/guides/daily-workflow)
-- [Team Setup](https://b33eep.github.io/claude-code-setup/guides/team-setup)
+- [Customizing](https://b33eep.github.io/claude-code-setup/guides/customizing)
 
 ---
 

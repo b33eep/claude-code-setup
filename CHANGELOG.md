@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v54**: Custom command overrides, extends & script deployment ([Guide](https://b33eep.github.io/claude-code-setup/guides/customizing))
+  - Custom repos can now ship commands that override or extend base commands (e.g., `/catchup` with team-specific steps)
+  - Custom repos can ship helper scripts that commands and skills reference
+  - `--list` and `/claude-code-setup` show which commands are customized
 - **v53**: Rewrite `/claude-code-setup` to 3-phase flow ([Record 040](docs/records/040-setup-command-ux.md))
   - Discovery script (`lib/setup-status.sh`) replaces 8-12 Bash calls with single JSON output
   - New flags: `--remove-skill` and `--remove-mcp` for non-interactive module removal
