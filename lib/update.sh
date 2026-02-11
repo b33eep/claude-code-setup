@@ -77,6 +77,28 @@ do_update() {
         print_success "$filename"
     done
 
+    # Apply custom command overrides/extensions on top of updated base
+    install_custom_commands || true
+
+    # Cleanup orphaned command overrides (custom commands removed from repo)
+    local override
+    while IFS= read -r override; do
+        [[ -n "$override" ]] || continue
+        if [[ ! -f "$CUSTOM_DIR/commands/$override" ]]; then
+            if [[ -f "$SCRIPT_DIR/commands/$override" ]]; then
+                cp "$SCRIPT_DIR/commands/$override" "$CLAUDE_DIR/commands/$override"
+                print_info "$override (custom override removed, restored base)"
+            else
+                rm -f "$CLAUDE_DIR/commands/$override"
+                print_info "$override (custom removed, no base)"
+            fi
+            jq '.command_overrides -= ["'"$override"'"]' "$INSTALLED_FILE" > "$INSTALLED_FILE.tmp" && mv "$INSTALLED_FILE.tmp" "$INSTALLED_FILE"
+        fi
+    done < <(get_installed "command_overrides")
+
+    # Update custom scripts (if custom repo has scripts)
+    install_custom_scripts || true
+
     # Update project template
     mkdir -p "$CLAUDE_DIR/templates"
     cp "$SCRIPT_DIR/templates/project-CLAUDE.md" "$CLAUDE_DIR/templates/CLAUDE.template.md"

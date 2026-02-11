@@ -527,6 +527,36 @@ list_modules() {
         done
     fi
 
+    echo ""
+    echo "Custom Commands:"
+    local installed_overrides
+    installed_overrides=$(get_installed "command_overrides")
+    if [[ -z "$installed_overrides" ]]; then
+        print_info "(none)"
+    else
+        for o in $installed_overrides; do
+            if [[ ! -f "$CUSTOM_DIR/commands/$o" ]]; then
+                print_warning "$o (missing)"
+            elif grep -q '{{base:' "$CUSTOM_DIR/commands/$o" 2>/dev/null; then
+                print_success "$o (extend)"
+            else
+                print_success "$o (override)"
+            fi
+        done
+    fi
+
+    echo ""
+    echo "Custom Scripts:"
+    local installed_scripts
+    installed_scripts=$(get_installed "scripts")
+    if [[ -z "$installed_scripts" ]]; then
+        print_info "(none)"
+    else
+        for s in $installed_scripts; do
+            print_success "$s"
+        done
+    fi
+
     print_header "Available Modules"
 
     echo ""

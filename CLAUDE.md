@@ -18,11 +18,11 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 
 | Story | Status | Notes |
 |-------|--------|-------|
-| (none) | | |
+| — | — | No active stories |
 
 **Legend:** Open | In Progress | Done
 
-**Next Step:** Pick from Future table or start new feature
+**Next Step:** Pick next item from Future table or start new feature
 
 ### Future
 
@@ -37,7 +37,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 
 | Date | Decision | Why |
 |------|----------|-----|
-| | | |
+| 2026-02-11 | Replaced team-setup.mdx with customizing.mdx | All custom module topics (skills, commands, scripts, MCP) belong in one page; team-setup was redundant; Solo vs Team already in init-project |
 
 ---
 
@@ -88,7 +88,7 @@ The installer is a modular Bash script. `install.sh` is the entry point, sourcin
 | Library | Responsibility |
 |---------|---------------|
 | `platform.sh` | OS detection (macOS/Ubuntu/Arch/Fedora), package manager |
-| `helpers.sh` | Colors, printing, JSON utilities, TTY-aware input |
+| `helpers.sh` | Colors, printing, JSON utilities, TTY-aware input, custom command/script install |
 | `modules.sh` | Interactive toggle selection UI, module discovery |
 | `mcp.sh` | MCP server installation (JSON config → `~/.claude.json`) |
 | `skills.sh` | Skill installation + `build_claude_md()` |

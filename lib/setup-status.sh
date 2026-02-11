@@ -62,6 +62,8 @@ fi
 installed_skills_json=$(jq -c '.skills // []' "$INSTALLED_FILE")
 installed_mcp_json=$(jq -c '.mcp // []' "$INSTALLED_FILE")
 installed_plugins_json=$(jq -c '.external_plugins // []' "$INSTALLED_FILE")
+installed_overrides_json=$(jq -c '.command_overrides // []' "$INSTALLED_FILE")
+installed_scripts_json=$(jq -c '.scripts // []' "$INSTALLED_FILE")
 
 # 3. New skills (in repo but NOT tracked in installed.json)
 # Use is_tracked instead of is_installed to avoid filesystem fallback
@@ -194,6 +196,8 @@ jq -n \
     --argjson new_skills "$new_skills_json" \
     --argjson new_mcp "$new_mcp_json" \
     --argjson new_plugins "$new_plugins_json" \
+    --argjson custom_commands "$installed_overrides_json" \
+    --argjson custom_scripts "$installed_scripts_json" \
     --argjson agent_teams "$agent_teams_enabled" \
     '{
         temp_dir: $temp_dir,
@@ -206,7 +210,9 @@ jq -n \
             configured: $custom_configured,
             installed: $custom_installed,
             available: $custom_available,
-            update_available: $custom_update
+            update_available: $custom_update,
+            commands: $custom_commands,
+            scripts: $custom_scripts
         },
         new_modules: {
             skills: $new_skills,

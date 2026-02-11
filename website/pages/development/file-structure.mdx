@@ -21,10 +21,14 @@ Complete reference for installed files and directories.
 │   ├── standards-typescript/
 │   ├── standards-javascript/
 │   └── standards-shell/
+├── scripts/            # Custom helper scripts (optional, chmod +x)
+│   └── my-helper.sh
 ├── templates/          # Project templates
 │   ├── project-CLAUDE.md
 │   └── VERSION
-└── custom/             # User customizations
+└── custom/             # User customizations (via /add-custom)
+    ├── commands/       # Command overrides/extensions
+    ├── scripts/        # Helper scripts (source, deployed to ../scripts/)
     ├── skills/
     └── mcp/
 ```
@@ -66,18 +70,21 @@ Global configuration that applies to all projects:
 Tracks what's installed and their versions:
 ```json
 {
-  "version": "23",
-  "modules": {
-    "mcp": ["pdf-reader", "brave-search"],
-    "skills": ["standards-python"],
-    "commands": ["catchup", "wrapup"]
-  },
+  "content_version": 53,
+  "mcp": ["pdf-reader", "brave-search"],
+  "skills": ["standards-python", "custom:company-standards"],
+  "external_plugins": ["code-review-ai"],
+  "scripts": ["my-helper.sh"],
+  "command_overrides": ["catchup.md", "wrapup.md"],
   "custom": {
     "repo": "git@company.com:team/modules.git",
     "version": "1.0.0"
   }
 }
 ```
+
+- `command_overrides`: Commands replaced or extended by custom versions
+- `scripts`: Helper scripts deployed from the custom repo
 
 ### ~/.claude/settings.json
 

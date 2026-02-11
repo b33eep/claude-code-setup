@@ -85,7 +85,7 @@ show_usage() {
     echo ""
     echo "Custom Modules:"
     echo "  Place custom modules in ~/.claude/custom/"
-    echo "  Structure: custom/{mcp,skills}/"
+    echo "  Structure: custom/{commands,scripts,mcp,skills}/"
     echo "  Reference custom modules with 'custom:' prefix:"
     echo "    ./install.sh --add-skill custom:my-skill"
     echo ""
@@ -153,6 +153,8 @@ do_install() {
     mkdir -p "$CLAUDE_DIR/templates"
     mkdir -p "$CUSTOM_DIR/mcp"
     mkdir -p "$CUSTOM_DIR/skills"
+    mkdir -p "$CUSTOM_DIR/scripts"
+    mkdir -p "$CUSTOM_DIR/commands"
 
     init_installed_json
 
@@ -173,6 +175,12 @@ do_install() {
         cp "$cmd" "$CLAUDE_DIR/commands/"
         print_success "$filename"
     done
+
+    # Install custom commands (override/extend base commands)
+    install_custom_commands || true
+
+    # Install custom scripts (if custom repo has scripts)
+    install_custom_scripts || true
 
     # Install project template
     cp "$SCRIPT_DIR/templates/project-CLAUDE.md" "$CLAUDE_DIR/templates/CLAUDE.template.md"
@@ -640,7 +648,7 @@ main() {
                     exit 1
                 fi
                 # Reset installed.json for fresh install
-                echo "{\"content_version\":$(get_content_version),\"mcp\":[],\"skills\":[]}" > "$INSTALLED_FILE"
+                echo "{\"content_version\":$(get_content_version),\"mcp\":[],\"skills\":[],\"scripts\":[],\"command_overrides\":[]}" > "$INSTALLED_FILE"
             fi
             do_install "install"
             ;;

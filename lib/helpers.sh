@@ -81,7 +81,14 @@ print_error() {
 init_installed_json() {
     mkdir -p "$CLAUDE_DIR"
     if [[ ! -f "$INSTALLED_FILE" ]]; then
-        echo "{\"content_version\":$(get_content_version),\"mcp\":[],\"skills\":[]}" > "$INSTALLED_FILE"
+        echo "{\"content_version\":$(get_content_version),\"mcp\":[],\"skills\":[],\"scripts\":[],\"command_overrides\":[]}" > "$INSTALLED_FILE"
+    fi
+    # Ensure new arrays exist (migration for existing installs)
+    if ! jq -e '.command_overrides' "$INSTALLED_FILE" > /dev/null 2>&1; then
+        jq '.command_overrides = []' "$INSTALLED_FILE" > "$INSTALLED_FILE.tmp" && mv "$INSTALLED_FILE.tmp" "$INSTALLED_FILE"
+    fi
+    if ! jq -e '.scripts' "$INSTALLED_FILE" > /dev/null 2>&1; then
+        jq '.scripts = []' "$INSTALLED_FILE" > "$INSTALLED_FILE.tmp" && mv "$INSTALLED_FILE.tmp" "$INSTALLED_FILE"
     fi
 }
 
@@ -180,4 +187,138 @@ reconcile_tracking() {
             fi
         done
     fi
+}
+
+# Install custom scripts from custom repo to ~/.claude/scripts/
+# Copies files from $CUSTOM_DIR/scripts/ to $CLAUDE_DIR/scripts/ with +x permissions
+# Tracks installed scripts in installed.json
+# Returns 0 if scripts were installed, 1 if no scripts found
+install_custom_scripts() {
+    if [[ ! -d "$CUSTOM_DIR/scripts" ]]; then
+        return 1
+    fi
+
+    local has_scripts=false
+    local script
+    for script in "$CUSTOM_DIR/scripts/"*; do
+        [[ -f "$script" ]] || continue
+        has_scripts=true
+        break
+    done
+
+    if [[ "$has_scripts" = false ]]; then
+        return 1
+    fi
+
+    print_header "Installing Custom Scripts"
+    mkdir -p "$CLAUDE_DIR/scripts"
+
+    local filename
+    for script in "$CUSTOM_DIR/scripts/"*; do
+        [[ -f "$script" ]] || continue
+        filename=$(basename "$script")
+        cp "$script" "$CLAUDE_DIR/scripts/"
+        chmod +x "$CLAUDE_DIR/scripts/$filename"
+        add_to_installed "scripts" "$filename"
+        print_success "$filename"
+    done
+
+    return 0
+}
+
+# Merge a custom command file, replacing {{base:name}} markers with base content
+# $1: custom command file path
+# $2: base commands directory (where base .md files live)
+# Outputs merged content to stdout
+merge_command() {
+    local custom_file=$1
+    local base_dir=$2
+    local line base_name base_file marker
+
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        # Process all {{base:name}} markers in this line
+        while [[ "$line" == *'{{base:'*'}}'* ]]; do
+            # Extract base name from first marker
+            local tmp="${line#*\{\{base:}"
+            base_name="${tmp%%\}\}*}"
+            marker="{{base:${base_name}}}"
+
+            # Validate base name (prevent empty and path traversal)
+            local warn_msg
+            if [[ -z "$base_name" ]]; then
+                print_warning "Empty base command name in marker"
+                warn_msg="<!-- WARNING: empty base command name -->"
+                line="${line/"$marker"/$warn_msg}"
+                continue
+            fi
+            if [[ ! "$base_name" =~ ^[a-zA-Z0-9_-]+$ ]]; then
+                print_warning "Invalid base command name: '$base_name'"
+                warn_msg="<!-- WARNING: invalid base command name ${base_name} -->"
+                line="${line/"$marker"/$warn_msg}"
+                continue
+            fi
+
+            base_file="$base_dir/$base_name.md"
+            if [[ -f "$base_file" ]] && [[ -r "$base_file" ]]; then
+                local base_content
+                base_content=$(<"$base_file") || {
+                    print_warning "Failed to read base command: '$base_name'"
+                    warn_msg="<!-- WARNING: failed to read base command ${base_name} -->"
+                    line="${line/"$marker"/$warn_msg}"
+                    continue
+                }
+                line="${line/"$marker"/$base_content}"
+            else
+                print_warning "Base command not found: '$base_name'"
+                warn_msg="<!-- WARNING: base command ${base_name} not found -->"
+                line="${line/"$marker"/$warn_msg}"
+            fi
+        done
+        printf '%s\n' "$line"
+    done < "$custom_file"
+}
+
+# Install custom commands from custom repo (override or extend base commands)
+# Override mode: custom command without {{base:...}} marker replaces base entirely
+# Extend mode: custom command with {{base:name}} marker merges with base content
+# Tracks installed overrides in installed.json
+# Returns 0 if commands were installed, 1 if no custom commands found
+install_custom_commands() {
+    if [[ ! -d "$CUSTOM_DIR/commands" ]]; then
+        return 1
+    fi
+
+    local has_commands=false
+    local cmd
+    for cmd in "$CUSTOM_DIR/commands/"*.md; do
+        [[ -f "$cmd" ]] || continue
+        has_commands=true
+        break
+    done
+
+    if [[ "$has_commands" = false ]]; then
+        return 1
+    fi
+
+    print_header "Installing Custom Commands"
+
+    local filename
+    for cmd in "$CUSTOM_DIR/commands/"*.md; do
+        [[ -f "$cmd" ]] || continue
+        filename=$(basename "$cmd")
+
+        if grep -q '{{base:' "$cmd" 2>/dev/null; then
+            # Extend mode: merge with base
+            merge_command "$cmd" "$SCRIPT_DIR/commands" > "$CLAUDE_DIR/commands/$filename"
+            add_to_installed "command_overrides" "$filename"
+            print_success "$filename (extended)"
+        else
+            # Override mode: replace base entirely
+            cp "$cmd" "$CLAUDE_DIR/commands/$filename"
+            add_to_installed "command_overrides" "$filename"
+            print_success "$filename (override)"
+        fi
+    done
+
+    return 0
 }

@@ -43,7 +43,7 @@ Parse the JSON output. Handle errors:
 {
   "temp_dir": "/tmp/claude-setup-XXXXXX",
   "base": { "installed": 50, "available": 52, "update_available": true },
-  "custom": { "configured": true, "installed": 1, "available": 2, "update_available": true },
+  "custom": { "configured": true, "installed": 1, "available": 2, "update_available": true, "commands": ["catchup.md"], "scripts": ["helper.sh"] },
   "new_modules": { "skills": ["name"], "mcp": ["name"], "plugins": ["id@marketplace"] },
   "installed_modules": { "skills": ["name"], "mcp": ["name"], "plugins": ["id@marketplace"] },
   "agent_teams": { "enabled": true }
@@ -60,6 +60,8 @@ Present a summary from the JSON:
 claude-code-setup status:
 - Base: v{base.installed} installed, v{base.available} available
 - Custom: v{custom.installed} installed, v{custom.available} available
+- Custom commands: {custom.commands} (only if non-empty)
+- Custom scripts: {custom.scripts} (only if non-empty)
 - Agent Teams: enabled / not configured
 
 Modules available to install:
