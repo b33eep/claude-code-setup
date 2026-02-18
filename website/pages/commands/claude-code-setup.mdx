@@ -118,6 +118,48 @@ IMPORTANT: Restart Claude Code now.
     After restart, run /catchup to reload context.
 ```
 
+## Reducing Permission Prompts
+
+By design, `/claude-code-setup` completes in 2 permission prompts (1 discovery + 1 execution). If you run it frequently and want to skip them, there are two approaches.
+
+### Option 1: "Always allow" in the prompt
+
+The easiest way. When Claude shows a permission prompt, select **"Always allow"** instead of "Allow". Claude Code automatically adds the correct pattern to `~/.claude/settings.json`. You only need to do this once per operation type.
+
+### Option 2: Pre-configure in settings.json
+
+Add patterns to `~/.claude/settings.json` before running the command:
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Bash(*setup-status.sh*)",
+      "Bash(*install.sh --update *)",
+      "Bash(*install.sh --add-*)",
+      "Bash(*install.sh --remove-*)",
+      "Bash(rm -rf /tmp/claude-setup-*)"
+    ]
+  }
+}
+```
+
+Each pattern matches a specific Bash call:
+
+| Pattern | Which prompt |
+|---------|-------------|
+| `Bash(*setup-status.sh*)` | Phase 1 (discovery) |
+| `Bash(*install.sh --update *)` | Phase 3 when upgrading |
+| `Bash(*install.sh --add-*)` | Phase 3 when installing modules |
+| `Bash(*install.sh --remove-*)` | Phase 3 when removing modules |
+| `Bash(rm -rf /tmp/claude-setup-*)` | Phase 3 when nothing to do (cleanup only) |
+
+The first pattern covers the discovery prompt. The remaining four cover Phase 3 — you only need the ones matching operations you use. In most cases, the first two patterns (discovery + upgrade) are enough.
+
+If you already have a `permissions.allow` array in your settings, merge these entries into the existing array.
+
+Patterns use glob syntax with `*` as wildcard. A space before `*` enforces a word boundary (`Bash(ls *)` matches `ls -la` but not `lsof`). See the [Claude Code permission docs](https://docs.anthropic.com/en/docs/claude-code/settings#permissions) for details.
+
 ## Related
 
 - [Module Management](/features/module-management) - Terminal-based management with install.sh
