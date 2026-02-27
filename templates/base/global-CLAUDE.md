@@ -340,9 +340,9 @@ Only load skills that are installed (exist in `~/.claude/skills/`). Skip silentl
 **Example:** Project has `Tech Stack: Python` but user asks for a shell script test.
 → Load `standards-shell` BEFORE writing the `.sh` file.
 
-### 3. Code Review Agent (if installed)
+### 3. Code Review Agents (if installed)
 
-When spawning `code-review-ai:architect-review`, include relevant skills:
+When spawning `comprehensive-review` agents (architect-review, code-reviewer, security-auditor), include relevant skills:
 
 1. Identify languages in files being reviewed
 2. Read matching skill(s)

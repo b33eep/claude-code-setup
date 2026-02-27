@@ -228,5 +228,28 @@ else
     fail "wrapup.md should exist after update"
 fi
 
+scenario "Migration v55: code-review-ai tracking migrated to comprehensive-review"
+
+# Set version pre-v55 and add old plugin tracking
+jq '.content_version = 54 | .external_plugins = ["code-review-ai@claude-code-workflows"]' \
+    "$INSTALLED_FILE" > "$INSTALLED_FILE.tmp" && mv "$INSTALLED_FILE.tmp" "$INSTALLED_FILE"
+
+# Run update (--yes skips prompts; claude CLI not available in test env -> no-CLI path)
+"$PROJECT_DIR/install.sh" --update -y > /dev/null 2>&1
+
+# Verify tracking was updated
+if jq -e '.external_plugins[] | select(. == "comprehensive-review@claude-code-workflows")' "$INSTALLED_FILE" > /dev/null 2>&1; then
+    pass "code-review-ai tracking migrated to comprehensive-review"
+else
+    fail "code-review-ai tracking should be migrated to comprehensive-review"
+fi
+
+# Verify old entry is gone
+if jq -e '.external_plugins[] | select(. == "code-review-ai@claude-code-workflows")' "$INSTALLED_FILE" > /dev/null 2>&1; then
+    fail "code-review-ai should be removed from tracking"
+else
+    pass "code-review-ai removed from tracking"
+fi
+
 # Print summary
 print_summary

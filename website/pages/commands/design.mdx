@@ -7,7 +7,7 @@ Structured feature design workflow. Works through Problem → Options → Soluti
 ```
 /design "Feature name"     # Start new design
 /design --continue         # Resume incomplete design
-/design --review           # Get feedback (requires code-review-ai)
+/design --review           # Get feedback (requires comprehensive-review)
 ```
 
 ## When to Use
@@ -151,7 +151,7 @@ Claude: Reviewing design for "Add user notifications"...
         Current state: Solution defined (Step 3 complete)
         Remaining: Stories, Finalize
 
-        [invokes code-review-ai:architect-review]
+        [invokes comprehensive-review:architect-review]
 
 Feedback:
 - Problem statement is clear and well-motivated
@@ -167,7 +167,7 @@ Claude: Let's continue with Step 4: User Stories...
 
 Feedback is shown but **not stored** in the Record. You incorporate suggestions manually.
 
-Requires the [code-review-ai plugin](/features/external-plugins/code-review-ai).
+Requires the [comprehensive-review plugin](/features/external-plugins/comprehensive-review).
 
 ## Implementing Stories
 
@@ -250,4 +250,4 @@ Both email and in-app because...
 
 - [/todo](/commands/todo) - Quick task capture
 - [Records](/concepts/records) - Design persistence
-- [code-review-ai](/features/external-plugins/code-review-ai) - Design review
+- [comprehensive-review](/features/external-plugins/comprehensive-review) - Design review

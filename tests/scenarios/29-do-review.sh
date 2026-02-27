@@ -2,7 +2,7 @@
 
 # Scenario: /do-review command structure
 # Note: This tests the command file structure. Full E2E test would require
-# Claude to execute the command with code-review-ai plugin, which is tested manually.
+# Claude to execute the command with comprehensive-review plugin, which is tested manually.
 
 set -e
 
@@ -23,7 +23,7 @@ assert_file_exists "$PROJECT_DIR/commands/do-review.md" "do-review.md exists"
 
 scenario "Command has prerequisite check"
 
-assert_file_contains "$PROJECT_DIR/commands/do-review.md" "code-review-ai" "References code-review-ai plugin"
+assert_file_contains "$PROJECT_DIR/commands/do-review.md" "comprehensive-review" "References comprehensive-review plugin"
 assert_file_contains "$PROJECT_DIR/commands/do-review.md" "not installed" "Has plugin-not-installed handling"
 
 scenario "Command has review scopes"
@@ -37,10 +37,17 @@ scenario "Command has coding standards integration"
 assert_file_contains "$PROJECT_DIR/commands/do-review.md" "coding standards" "Loads coding standards"
 assert_file_contains "$PROJECT_DIR/commands/do-review.md" "skills" "Uses skills for standards"
 
-scenario "Command spawns review agent via Task tool"
+scenario "Command spawns review agents via Task tool"
 
 assert_file_contains "$PROJECT_DIR/commands/do-review.md" "architect-review" "Uses architect-review agent"
+assert_file_contains "$PROJECT_DIR/commands/do-review.md" "code-reviewer" "Uses code-reviewer agent"
+assert_file_contains "$PROJECT_DIR/commands/do-review.md" "security-auditor" "Uses security-auditor agent"
 assert_file_contains "$PROJECT_DIR/commands/do-review.md" "Task tool" "Spawns via Task tool"
+
+scenario "Command has security and full flags"
+
+assert_file_contains "$PROJECT_DIR/commands/do-review.md" "\-\-security" "Has --security flag"
+assert_file_contains "$PROJECT_DIR/commands/do-review.md" "\-\-full" "Has --full flag"
 
 scenario "Command has post-review flow"
 

@@ -1,5 +1,5 @@
 export default {
   index: 'Overview',
-  'code-review-ai': 'code-review-ai',
+  'comprehensive-review': 'comprehensive-review',
   'document-skills': 'document-skills'
 }

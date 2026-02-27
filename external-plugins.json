@@ -17,9 +17,9 @@
       "default": false
     },
     {
-      "id": "code-review-ai",
+      "id": "comprehensive-review",
       "marketplace": "claude-code-workflows",
-      "description": "AI-powered architectural review and code quality analysis (recommended)",
+      "description": "AI-powered code review with architecture, quality, and security agents (recommended)",
       "default": true
     }
   ]

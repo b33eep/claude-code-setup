@@ -9,7 +9,7 @@ The result is a Record (markdown file) that documents design decisions and break
 ```
 /design "Feature name"     # Start new design
 /design --continue         # Resume incomplete design
-/design --review           # Get feedback on current design (requires code-review-ai)
+/design --review           # Get feedback on current design (requires comprehensive-review)
 ```
 
 ## When to Use /design vs /todo
@@ -53,7 +53,7 @@ See "Resume Design Workflow" section below for details.
 1. Find current design (active session or incomplete Record)
 2. If multiple incomplete designs: Ask "Which design to review?" with list
 3. If no design found: "No design to review. Start with /design 'feature name'"
-4. If code-review-ai plugin not installed: "Install code-review-ai plugin for design reviews: /claude-code-setup → External Plugins"
+4. If comprehensive-review plugin not installed: "Install comprehensive-review plugin for design reviews: /claude-code-setup → External Plugins"
 5. If plugin installed: Invoke review agent (see Review Agent section below)
 6. Show feedback to user (do not store in Record)
 7. After review: Prompt with explicit next step (see After Review section)
@@ -62,7 +62,7 @@ See "Resume Design Workflow" section below for details.
 
 ## Review Agent Integration
 
-When `/design --review` is invoked, use the `code-review-ai:architect-review` agent.
+When `/design --review` is invoked, use the `comprehensive-review:architect-review` agent.
 
 ### Finding the Design to Review
 

@@ -16,7 +16,7 @@
 [![macOS](https://img.shields.io/badge/platform-macOS-blue.svg)](https://www.apple.com/macos/)
 [![Linux](https://img.shields.io/badge/platform-Linux-blue.svg)](https://www.linux.org/)
 [![WSL](https://img.shields.io/badge/platform-WSL-blue.svg)](https://docs.microsoft.com/en-us/windows/wsl/)
-[![Content v54](https://img.shields.io/badge/content-v54-blue.svg)](CHANGELOG.md)
+[![Content v55](https://img.shields.io/badge/content-v55-blue.svg)](CHANGELOG.md)
 
 **Persistent memory for Claude Code via Markdown files.**
 
@@ -75,7 +75,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/b33eep/claude-code-setup/mai
 | `/wrapup` | Save status before /clear |
 | `/todo` | Manage todos |
 | `/design` | Structured feature design |
-| `/do-review` | Code review via code-review-ai |
+| `/do-review` | Code review via comprehensive-review |
 | `/with-advisor` | Expert pair programming via Agent Teams |
 | `/delegate` | Independent parallel work via Agent Teams |
 | `/add-custom` | Add custom modules |
@@ -117,7 +117,7 @@ Install Claude plugins via the installer:
 | Plugin | Description |
 |--------|-------------|
 | document-skills | Excel, Word, PowerPoint, PDF creation/editing |
-| code-review-ai | AI-powered architectural review (recommended) |
+| comprehensive-review | AI-powered code review with architecture, quality, and security agents (recommended) |
 
 ---
 
