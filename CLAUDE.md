@@ -18,11 +18,11 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 
 | Story | Status | Notes |
 |-------|--------|-------|
-| Migrate code-review-ai to comprehensive-review | In Progress | PR [#50](https://github.com/b33eep/claude-code-setup/pull/50), review feedback partially applied |
+| *(No active work)* | | |
 
 **Legend:** Open | In Progress | Done
 
-**Next Step:** Apply remaining review feedback (fix tracking ordering in update.sh already done, migration test added, test renumbered, partial-failure documented). Run full test suite, push, wait for CI green, merge.
+**Next Step:** Pick next item from Future table or start new feature.
 
 ### Future
 
