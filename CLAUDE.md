@@ -18,11 +18,11 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 
 | Story | Status | Notes |
 |-------|--------|-------|
-| *(No active work)* | | |
+| JetBrains Integration Guide | In Progress | PR #51 — docs-only guide for Debugger MCP + Built-in MCP |
 
 **Legend:** Open | In Progress | Done
 
-**Next Step:** Pick next item from Future table or start new feature.
+**Next Step:** Merge PR #51.
 
 ### Future
 
