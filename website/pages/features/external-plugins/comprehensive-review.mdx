@@ -1,0 +1,122 @@
+# comprehensive-review
+
+AI-powered code review with architecture, quality, and security agents.
+
+## Overview
+
+| Field | Value |
+|-------|-------|
+| Marketplace | claude-code-workflows |
+| Source | [wshobson/agents](https://github.com/wshobson/agents) |
+| License | MIT |
+| Default | Pre-selected (recommended) |
+
+## Why Recommended?
+
+This plugin integrates with our [development workflow](/concepts/workflow). The [`/do-review`](/commands/do-review) command uses its agents for multi-perspective code review.
+
+```
+1. SPECIFY
+         │
+         ▼
+2. IMPLEMENT
+         │
+         ▼
+3. CODE REVIEW  ◄──── comprehensive-review
+   - Run /do-review
+   - Incorporate feedback
+```
+
+## Agents
+
+The plugin provides 3 specialized review agents:
+
+| Agent | Focus | Used by |
+|-------|-------|---------|
+| `architect-review` | Architecture, design patterns, SOLID, scalability | `/do-review` (always), `/design --review` |
+| `code-reviewer` | Code quality, maintainability, error handling, best practices | `/do-review` (always) |
+| `security-auditor` | OWASP, vulnerabilities, auth, injection, secrets | `/do-review --security` or `--full` |
+
+Agents run **in parallel** for fast reviews.
+
+## Installation
+
+### Via Installer
+
+```bash
+./install.sh        # Fresh install
+./install.sh --add  # Add to existing
+```
+
+comprehensive-review is pre-selected by default.
+
+### Manual
+
+```bash
+# Add marketplace
+claude plugin marketplace add wshobson/agents
+
+# Install plugin
+claude plugin install comprehensive-review@claude-code-workflows
+```
+
+## Usage
+
+### Via /do-review (recommended)
+
+The [`/do-review`](/commands/do-review) command is the primary way to trigger this plugin:
+
+```
+/do-review                    # 2 agents: architect-review + code-reviewer
+/do-review --security         # 3 agents: + security-auditor
+/do-review --full             # 3 agents (alias for --security)
+/do-review --branch           # Review branch vs main
+/do-review --branch --full    # Full review before PR
+```
+
+It automatically gathers the diff, loads coding standards, and spawns agents in parallel.
+
+### Via /design --review
+
+The [`/design --review`](/commands/design) command uses `architect-review` for design feedback.
+
+### Direct Request
+
+```
+"Review this PR for architectural issues"
+"Analyze the security of this module"
+"Check this code for best practices"
+```
+
+### Via Task Tool
+
+The plugin provides subagents that can be spawned via the Task tool:
+
+```
+subagent_type: "comprehensive-review:architect-review"
+subagent_type: "comprehensive-review:code-reviewer"
+subagent_type: "comprehensive-review:security-auditor"
+```
+
+## Review Output
+
+Each agent provides focused feedback:
+
+- **architect-review** — Design concerns, dependency issues, pattern violations
+- **code-reviewer** — Quality improvements, maintainability, error handling gaps
+- **security-auditor** — Vulnerabilities, OWASP findings, auth/validation issues
+
+Results are grouped by perspective for easy reading.
+
+## Integration with Workflow
+
+After implementing a feature:
+
+1. Run `/do-review` (or `/do-review --full` for sensitive changes)
+2. Agents review the changes in parallel
+3. Feedback is incorporated
+4. Code is committed
+
+This catches issues before they get committed.
+
+See [`/do-review`](/commands/do-review) for details.

@@ -18,11 +18,11 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 
 | Story | Status | Notes |
 |-------|--------|-------|
-| — | — | No active stories |
+| Migrate code-review-ai to comprehensive-review | In Progress | PR [#50](https://github.com/b33eep/claude-code-setup/pull/50), review feedback partially applied |
 
 **Legend:** Open | In Progress | Done
 
-**Next Step:** Pick next item from Future table or start new feature
+**Next Step:** Apply remaining review feedback (fix tracking ordering in update.sh already done, migration test added, test renumbered, partial-failure documented). Run full test suite, push, wait for CI green, merge.
 
 ### Future
 
@@ -37,6 +37,8 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 
 | Date | Decision | Why |
 |------|----------|-----|
+| 2026-02-27 | 2 agents default + `--security`/`--full` flag for 3rd | Balance between review quality and token cost; security-auditor not needed for every review |
+| 2026-02-27 | Tracking update after plugin install, not before | Prevents state mismatch if `claude plugin install` fails (review feedback) |
 | 2026-02-11 | Replaced team-setup.mdx with customizing.mdx | All custom module topics (skills, commands, scripts, MCP) belong in one page; team-setup was redundant; Solo vs Team already in init-project |
 
 ---
@@ -94,7 +96,7 @@ The installer is a modular Bash script. `install.sh` is the entry point, sourcin
 | `skills.sh` | Skill installation + `build_claude_md()` |
 | `update.sh` | `--update` mode, content version comparison |
 | `uninstall.sh` | `--remove` mode |
-| `external-plugins.sh` | Third-party plugin installation (document-skills, code-review-ai) |
+| `external-plugins.sh` | Third-party plugin installation (document-skills, comprehensive-review) |
 | `statusline.sh` | ccstatusline configuration |
 | `hooks.sh` | Claude Code hooks setup |
 | `agent-teams.sh` | Agent Teams env var toggle in settings.json |

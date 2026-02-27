@@ -23,6 +23,36 @@ run_migrations() {
             print_info "Removed obsolete clear-session.md (renamed to wrapup.md)"
         fi
     fi
+
+    # v55: Migrate code-review-ai to comprehensive-review
+    if [[ "$from_v" -lt 55 ]] && [[ "$to_v" -ge 55 ]]; then
+        if [[ -f "$INSTALLED_FILE" ]] && jq -e '.external_plugins // [] | index("code-review-ai@claude-code-workflows")' "$INSTALLED_FILE" > /dev/null 2>&1; then
+            # Swap actual plugin if claude CLI available, then update tracking
+            if has_claude_cli; then
+                claude plugin marketplace add wshobson/agents &>/dev/null || true
+                if claude plugin install "comprehensive-review@claude-code-workflows" &>/dev/null; then
+                    print_success "comprehensive-review installed"
+                    if claude plugin remove "code-review-ai@claude-code-workflows" &>/dev/null; then
+                        print_info "code-review-ai removed"
+                    else
+                        print_warning "Could not remove code-review-ai (may already be removed)"
+                    fi
+                    # Update tracking after successful install
+                    jq '.external_plugins = [.external_plugins[] | if . == "code-review-ai@claude-code-workflows" then "comprehensive-review@claude-code-workflows" else . end]' \
+                        "$INSTALLED_FILE" > "$INSTALLED_FILE.tmp" && mv "$INSTALLED_FILE.tmp" "$INSTALLED_FILE"
+                    print_info "Updated tracking: code-review-ai -> comprehensive-review"
+                else
+                    print_warning "Could not install comprehensive-review automatically"
+                    print_info "Install manually: claude plugin install comprehensive-review@claude-code-workflows"
+                fi
+            else
+                # No CLI: update tracking anyway (command files already reference new name)
+                jq '.external_plugins = [.external_plugins[] | if . == "code-review-ai@claude-code-workflows" then "comprehensive-review@claude-code-workflows" else . end]' \
+                    "$INSTALLED_FILE" > "$INSTALLED_FILE.tmp" && mv "$INSTALLED_FILE.tmp" "$INSTALLED_FILE"
+                print_info "Updated tracking: code-review-ai -> comprehensive-review (install plugin manually when CLI available)"
+            fi
+        fi
+    fi
 }
 
 # Update all installed modules

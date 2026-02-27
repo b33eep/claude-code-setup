@@ -1,6 +1,6 @@
-# Do Review: Code Review via code-review-ai
+# Do Review: Code Review via comprehensive-review
 
-Trigger a code review on your recent changes using the code-review-ai plugin. This is Step 3 in the Development Flow — review before committing.
+Trigger a code review on your recent changes using the comprehensive-review plugin. This is Step 3 in the Development Flow — review before committing.
 
 ## Usage
 
@@ -8,23 +8,30 @@ Trigger a code review on your recent changes using the code-review-ai plugin. Th
 /do-review                    # Review all uncommitted changes
 /do-review HEAD~3..HEAD       # Review a specific commit range
 /do-review --branch           # Review current branch vs main
+/do-review --security         # Include security audit
+/do-review --full             # Run all 3 review agents (alias for --security)
 ```
 
 ## Tasks
 
 ### 1. Validate arguments and determine review scope
 
-**Unrecognized argument** (not a commit range or `--branch`):
+Parse arguments into **scope** and **agent flags**:
+
+- **Scope args** (mutually exclusive): commit range (e.g. `HEAD~3..HEAD`), `--branch`, or no args
+- **Agent flags** (optional, combinable with any scope): `--security`, `--full`
+
+**Unrecognized argument** (not a scope arg or agent flag):
 ```
-Usage: /do-review [HEAD~N..HEAD | --branch]
+Usage: /do-review [HEAD~N..HEAD | --branch] [--security | --full]
 ```
 Stop here. Do not proceed.
 
-Based on arguments:
+Based on scope:
 
 | Invocation | Scope | Git command |
 |-----------|-------|-------------|
-| `/do-review` (no args) | All uncommitted changes | `git diff HEAD` |
+| `/do-review` (no scope args) | All uncommitted changes | `git diff HEAD` |
 | `/do-review HEAD~3..HEAD` | Specific commit range | `git diff HEAD~3..HEAD` |
 | `/do-review --branch` | Current branch vs main | `git diff main...HEAD` |
 
@@ -46,7 +53,7 @@ If user narrows scope, re-run with the adjusted scope.
 
 ### 2. Prepare review context
 
-Gather context for the review agent:
+Gather context for the review agents:
 
 1. **Get the diff** — output of the git diff command from step 1
 2. **List changed files** — extract file paths from the diff
@@ -56,12 +63,22 @@ Gather context for the review agent:
    - Collect relevant standards content
 4. **Read project context** — tech stack and current task from project CLAUDE.md (About section, Tech Stack, Current Status)
 
-### 3. Run review agent
+### 3. Run review agents
 
-Spawn `code-review-ai:architect-review` via the Task tool with the following prompt:
+Determine which agents to spawn based on flags:
+
+| Flag | Agents |
+|------|--------|
+| (none) | architect-review + code-reviewer |
+| `--security` | architect-review + code-reviewer + security-auditor |
+| `--full` | architect-review + code-reviewer + security-auditor |
+
+Spawn all agents **in parallel** via the Task tool. Don't wait for one to finish before spawning the next.
+
+**Agent 1: comprehensive-review:architect-review**
 
 ```
-Review the following code changes.
+Review the following code changes from an architectural perspective.
 
 ## Project Context
 Tech Stack: [from project CLAUDE.md]
@@ -76,44 +93,107 @@ Current task: [from Current Status table, if available]
 ## Coding Standards
 [relevant standards from loaded skills]
 
+Focus on: system design, architecture patterns, SOLID principles, scalability, dependency management.
 Be actionable — suggest specific improvements, not general observations.
 Skip praise; focus on what can be improved.
 If everything looks good, say so briefly.
 ```
 
-**Spawn configuration:**
-- `subagent_type`: `code-review-ai:architect-review`
-- Let the agent read the full files itself — don't paste entire file contents
+**Agent 2: comprehensive-review:code-reviewer**
 
-**If the review agent fails because the plugin is not installed:**
 ```
-code-review-ai plugin is not installed. This command requires it.
+Review the following code changes for code quality and maintainability.
+
+## Project Context
+Tech Stack: [from project CLAUDE.md]
+Current task: [from Current Status table, if available]
+
+## Changes
+[git diff output]
+
+## Changed Files
+[list of file paths — read these for full context around the changes]
+
+## Coding Standards
+[relevant standards from loaded skills]
+
+Focus on: code quality, maintainability, error handling, best practices, production reliability, test coverage gaps.
+Be actionable — suggest specific improvements, not general observations.
+Skip praise; focus on what can be improved.
+If everything looks good, say so briefly.
+```
+
+**Agent 3 (only with --security or --full): comprehensive-review:security-auditor**
+
+```
+Perform a security audit on the following code changes.
+
+## Project Context
+Tech Stack: [from project CLAUDE.md]
+Current task: [from Current Status table, if available]
+
+## Changes
+[git diff output]
+
+## Changed Files
+[list of file paths — read these for full context around the changes]
+
+Focus on: security vulnerabilities, OWASP top 10, input validation, authentication/authorization, secrets handling, injection attacks.
+Be actionable — suggest specific fixes, not general warnings.
+Skip praise; focus on what can be improved.
+If everything looks good, say so briefly.
+```
+
+**Spawn configuration:**
+- Agent 1: `subagent_type`: `comprehensive-review:architect-review`
+- Agent 2: `subagent_type`: `comprehensive-review:code-reviewer`
+- Agent 3: `subagent_type`: `comprehensive-review:security-auditor`
+- Let agents read the full files themselves — don't paste entire file contents
+
+**If a review agent fails because the plugin is not installed:**
+```
+comprehensive-review plugin is not installed. This command requires it.
 
 Install it: /claude-code-setup → External Plugins
-Or manually: claude plugin marketplace add wshobson/agents && claude plugin install code-review-ai@claude-code-workflows
+Or manually: claude plugin marketplace add wshobson/agents && claude plugin install comprehensive-review@claude-code-workflows
 ```
 Stop here.
 
-**If the review agent fails for other reasons:**
+**If a review agent fails for other reasons:**
+- If at least one agent completed: present the available results, note which agent(s) failed
+- If all agents failed: show the error and stop
+
 ```
 Review could not be completed: [error]
 You can retry with /do-review or request a manual review.
 ```
-Stop here.
 
 ### 4. Present findings
 
-Display the review agent's output to the user. Then ask:
+Collect results from all agents. Present consolidated findings grouped by perspective:
 
 ```
-Review complete.
+## Architecture Review (architect-review)
+[findings]
+
+## Code Quality Review (code-reviewer)
+[findings]
+
+## Security Audit (security-auditor) ← only if --security or --full
+[findings]
+```
+
+Then ask:
+
+```
+Review complete. [N] agents, [M] findings total.
 
 Incorporate feedback? [Yes / No / Pick specific items]
 ```
 
 **If Yes:** Apply all suggestions from the review. Show what was changed. Run the diff again to confirm.
 
-**If Pick specific items:** List the suggestions numbered. User picks which to apply. Apply selected items.
+**If Pick specific items:** List all suggestions numbered (across all agents). User picks which to apply. Apply selected items.
 
 **If No:** Acknowledge and move on. The feedback is visible in the conversation for reference.
 
@@ -133,8 +213,9 @@ Changes applied. You can:
 ## Important notes
 
 - **This reviews code, not designs.** For design review, use `/design --review`.
-- **The review agent reads files.** Pass the diff and file list — let it read full file contents for context. Don't paste entire files into the prompt.
+- **Review agents read files.** Pass the diff and file list — let them read full file contents for context. Don't paste entire files into the prompt.
 - **Coding standards are included automatically.** The command loads matching skills based on file extensions in the changeset.
+- **Agents run in parallel.** Default: 2 agents (architect-review + code-reviewer). With `--security`/`--full`: 3 agents.
 - **This is not blocking.** The user decides when to review and whether to act on feedback.
 - **Works with any git workflow.** Uncommitted changes, commit ranges, or branch diffs.
 
@@ -142,38 +223,65 @@ Changes applied. You can:
 
 ## Examples
 
-### Review before committing
+### Review before committing (default: 2 agents)
 
 ```
 User: /do-review
 
 Claude: Reviewing uncommitted changes (4 files, ~120 lines)...
 
-[Spawns code-review-ai:architect-review]
+[Spawns comprehensive-review:architect-review and comprehensive-review:code-reviewer in parallel]
 
-Review findings:
+## Architecture Review (architect-review)
 
-1. **Security:** Input validation missing in `handle_upload()` — user-supplied
-   filename is used directly in path construction. Use `os.path.basename()`.
+1. **Dependency direction:** `utils/auth.py` imports from `handlers/` — this
+   inverts the dependency direction. Utils should not depend on handlers.
 
-2. **Code quality:** `process_items()` has a nested loop that could be
+## Code Quality Review (code-reviewer)
+
+1. **Error handling:** `process_items()` has a nested loop that could be
    O(n*m). Consider using a dict for lookups.
 
-3. **Standards:** Function `getData` doesn't follow snake_case convention
+2. **Standards:** Function `getData` doesn't follow snake_case convention
    per project standards.
 
-Review complete.
+Review complete. 2 agents, 3 findings total.
 
 Incorporate feedback? [Yes / No / Pick specific items]
 
 User: Yes
 
 Claude: Applied all 3 suggestions. Changes:
-- Added os.path.basename() wrapper in handle_upload()
+- Moved auth logic to handlers/, removed circular import
 - Replaced nested loop with dict lookup in process_items()
 - Renamed getData → get_data
 
 Run /do-review again to verify, or commit your changes.
+```
+
+### Full review with security audit
+
+```
+User: /do-review --full
+
+Claude: Reviewing uncommitted changes (4 files, ~120 lines)...
+
+[Spawns all 3 agents in parallel]
+
+## Architecture Review (architect-review)
+[findings]
+
+## Code Quality Review (code-reviewer)
+[findings]
+
+## Security Audit (security-auditor)
+
+1. **Input validation:** `handle_upload()` uses user-supplied filename directly
+   in path construction. Use `os.path.basename()` to prevent path traversal.
+
+Review complete. 3 agents, 5 findings total.
+
+Incorporate feedback? [Yes / No / Pick specific items]
 ```
 
 ### Review a branch before PR
@@ -183,9 +291,15 @@ User: /do-review --branch
 
 Claude: Reviewing current branch vs main (12 files, ~340 lines across 5 commits)...
 
-[Spawns code-review-ai:architect-review]
+[Spawns comprehensive-review:architect-review and comprehensive-review:code-reviewer in parallel]
 
-Review findings:
+## Architecture Review (architect-review)
+...
+
+## Code Quality Review (code-reviewer)
+...
+
+Review complete. 2 agents, 4 findings total.
 ...
 ```
 
@@ -202,8 +316,8 @@ Claude: Nothing to review. No changes detected.
 ```
 User: /do-review
 
-Claude: code-review-ai plugin is not installed. This command requires it.
+Claude: comprehensive-review plugin is not installed. This command requires it.
 
 Install it: /claude-code-setup → External Plugins
-Or manually: claude plugin marketplace add wshobson/agents && claude plugin install code-review-ai@claude-code-workflows
+Or manually: claude plugin marketplace add wshobson/agents && claude plugin install comprehensive-review@claude-code-workflows
 ```

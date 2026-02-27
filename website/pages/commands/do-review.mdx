@@ -1,6 +1,6 @@
 # /do-review
 
-Code review on your recent changes using the code-review-ai plugin. Step 3 in the Development Flow.
+Code review on your recent changes using the comprehensive-review plugin. Step 3 in the Development Flow.
 
 ## Usage
 
@@ -8,16 +8,28 @@ Code review on your recent changes using the code-review-ai plugin. Step 3 in th
 /do-review                    # Review all uncommitted changes
 /do-review HEAD~3..HEAD       # Review specific commit range
 /do-review --branch           # Review current branch vs main
+/do-review --security         # Include security audit
+/do-review --full             # Run all 3 review agents
 ```
 
 ## What It Does
 
-1. **Checks for the plugin** — requires [code-review-ai](/features/external-plugins/code-review-ai)
+1. **Checks for the plugin** — requires [comprehensive-review](/features/external-plugins/comprehensive-review)
 2. **Gathers changes** — uncommitted, commit range, or branch diff
 3. **Loads coding standards** — matches file extensions to installed skills
-4. **Spawns the review agent** — `code-review-ai:architect-review` via Task tool
-5. **Shows findings** — structured feedback with actionable suggestions
+4. **Spawns review agents** — 2 by default, 3 with `--security`/`--full`
+5. **Shows findings** — grouped by perspective with actionable suggestions
 6. **Offers to apply** — incorporate feedback directly or pick specific items
+
+## Review Agents
+
+| Agent | Focus | When |
+|-------|-------|------|
+| `architect-review` | Architecture, design, SOLID, scalability | Always |
+| `code-reviewer` | Code quality, maintainability, best practices | Always |
+| `security-auditor` | OWASP, vulnerabilities, auth, input validation | `--security` or `--full` |
+
+Agents run **in parallel** — the review takes about as long as the slowest agent, not the sum.
 
 ## Review Scopes
 
@@ -27,6 +39,8 @@ Code review on your recent changes using the code-review-ai plugin. Step 3 in th
 | `/do-review HEAD~3..HEAD` | Specific commit range | Reviewing recent commits |
 | `/do-review --branch` | Current branch vs main | Before creating a PR |
 
+Scope and agent flags combine freely: `/do-review --branch --full`
+
 ## Example Session
 
 ```
@@ -34,17 +48,20 @@ You: /do-review
 
 Claude: Reviewing uncommitted changes (4 files, ~120 lines)...
 
-Review findings:
+## Architecture Review (architect-review)
 
-1. Security: Input validation missing in handle_upload() —
-   user-supplied filename used directly in path construction.
-   Use os.path.basename().
+1. Dependency direction: utils/auth.py imports from handlers/
+   — this inverts the dependency. Utils should not depend on handlers.
 
-2. Code quality: process_items() has a nested loop that
-   could be O(n*m). Consider using a dict for lookups.
+## Code Quality Review (code-reviewer)
 
-3. Standards: Function getData doesn't follow snake_case
-   convention per project standards.
+1. process_items() has a nested loop that could be O(n*m).
+   Consider using a dict for lookups.
+
+2. Function getData doesn't follow snake_case convention
+   per project standards.
+
+Review complete. 2 agents, 3 findings total.
 
 Incorporate feedback? [Yes / No / Pick specific items]
 
@@ -71,12 +88,12 @@ Claude: Applied all 3 suggestions.
 
 `/do-review` fills the gap between implementing and committing. It automates what the Development Flow describes as Step 3.
 
-## What Gets Passed to the Review Agent
+## What Gets Passed to Review Agents
 
 The command automatically gathers:
 
 - **The diff** — what changed
-- **Changed file list** — the agent reads full files for context
+- **Changed file list** — agents read full files for context
 - **Coding standards** — from skills matching the file extensions
 - **Project context** — tech stack and current task from CLAUDE.md
 
@@ -100,17 +117,16 @@ You can narrow with a commit range or review in smaller batches.
 |---|-----------|-----------------|
 | **Reviews** | Code changes (diffs) | Design Records |
 | **When** | After implementing | During design |
-| **Focus** | Architecture, security, code quality, standards | Problem clarity, story quality, completeness |
+| **Focus** | Architecture, code quality, security | Problem clarity, story quality, completeness |
+| **Agents** | architect-review + code-reviewer (+ security-auditor) | architect-review only |
 | **Scope** | Git changes | Record content |
-
-Both use the same `code-review-ai:architect-review` agent but with different context.
 
 ## Prerequisites
 
-Requires the [code-review-ai plugin](/features/external-plugins/code-review-ai). If not installed:
+Requires the [comprehensive-review plugin](/features/external-plugins/comprehensive-review). If not installed:
 
 ```
-code-review-ai plugin is not installed. This command requires it.
+comprehensive-review plugin is not installed. This command requires it.
 
 Install it: /claude-code-setup → External Plugins
 ```
@@ -119,6 +135,7 @@ Install it: /claude-code-setup → External Plugins
 
 - Run after implementing but before committing — catches issues early
 - Use `--branch` before creating PRs for a comprehensive review
+- Add `--full` for security-sensitive changes (auth, API endpoints, data handling)
 - Coding standards are included automatically — no need to mention them
 - You choose what feedback to act on — nothing is applied without your say
 - Works well with `/with-advisor`: advisor during implementation, review after
@@ -126,5 +143,5 @@ Install it: /claude-code-setup → External Plugins
 ## Related
 
 - [/design --review](/commands/design) - Design review (not code review)
-- [code-review-ai](/features/external-plugins/code-review-ai) - The review plugin
+- [comprehensive-review](/features/external-plugins/comprehensive-review) - The review plugin
 - [Workflow](/concepts/workflow) - Where /do-review fits

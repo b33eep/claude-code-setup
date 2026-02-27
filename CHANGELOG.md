@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v55**: Migrate from `code-review-ai` to `comprehensive-review` plugin
+  - `/do-review` now spawns architect-review + code-reviewer by default (2 agents in parallel)
+  - New `--security` / `--full` flags to include security-auditor (3 agents)
+  - Automatic migration for existing users on `--update`
 - **v54**: Custom command overrides, extends & script deployment ([Guide](https://b33eep.github.io/claude-code-setup/guides/customizing))
   - Custom repos can now ship commands that override or extend base commands (e.g., `/catchup` with team-specific steps)
   - Custom repos can ship helper scripts that commands and skills reference
