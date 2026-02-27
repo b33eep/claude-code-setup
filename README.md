@@ -109,7 +109,6 @@ bash <(curl -fsSL https://raw.githubusercontent.com/b33eep/claude-code-setup/mai
 | pdf-reader | Read and analyze PDFs |
 | brave-search | Web search |
 | google-search | Google Custom Search |
-
 ### External Plugins
 
 Install Claude plugins via the installer:

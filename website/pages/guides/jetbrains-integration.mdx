@@ -1,0 +1,107 @@
+# JetBrains Integration
+
+Connect Claude Code to your JetBrains IDE for debugging, code navigation, and more.
+
+Two MCP servers are available for JetBrains IDEs. They complement each other and can run side by side.
+
+## Debugger MCP Server (Plugin)
+
+Gives Claude full control over the IDE's debugger — set breakpoints, step through code, inspect variables, evaluate expressions.
+
+| Field | Value |
+|-------|-------|
+| Plugin | [Debugger MCP Server](https://plugins.jetbrains.com/plugin/29233-debugger-mcp-server) |
+| Source | [GitHub](https://github.com/hechtcarmel/jetbrains-debugger-mcp-plugin) |
+| Transport | SSE |
+| Requires | JetBrains IDE 2025.1+, JVM 21+ |
+
+### What It Does
+
+- **Breakpoints** — Line breakpoints, conditional breakpoints, and tracepoints
+- **Execution control** — Step over, step into, step out, resume, pause, run to line
+- **Variable inspection** — View and modify variables during debugging
+- **Expression evaluation** — Run arbitrary expressions in the current debug context
+- **Stack & threads** — Inspect call stacks and navigate thread states
+- **Session management** — Start/stop debug sessions, get comprehensive status
+
+### Setup
+
+1. In your JetBrains IDE: **Settings → Plugins → Marketplace** → search "Debugger MCP Server" → Install → Restart IDE
+2. Open the **"Debugger MCP Server" tool window** (bottom panel)
+3. Click **"Install on Coding Agents"** → select Claude Code
+
+The plugin configures `~/.claude.json` automatically with the correct port.
+
+### Manual Configuration
+
+If you prefer manual setup:
+
+```bash
+claude mcp add --transport sse jetbrains-debugger http://127.0.0.1:<PORT>/debugger-mcp/sse
+```
+
+Find your port in the plugin's tool window (it shows `Server started at http://127.0.0.1:<PORT>/debugger-mcp/sse`).
+
+### Usage
+
+Start a debug session in your IDE, then ask Claude:
+
+```
+"Set a conditional breakpoint at MyService.java:42 where userId == null"
+"Step through the calculatePremium method and show me the variables"
+"What's the current call stack?"
+"Evaluate this.getConfig().isEnabled() in the current context"
+```
+
+### Supported IDEs
+
+IntelliJ IDEA, PyCharm, WebStorm, GoLand, PhpStorm, RubyMine, CLion, Rider, Android Studio (Community & Professional editions).
+
+---
+
+## Built-in MCP Server (JetBrains 2025.2+)
+
+Since version 2025.2, all JetBrains IDEs include a **built-in MCP server** for IDE features like project navigation, inspections, search, and refactoring.
+
+| Field | Value |
+|-------|-------|
+| Source | Built into all JetBrains IDEs |
+| Docs | [JetBrains Documentation](https://www.jetbrains.com/help/idea/mcp-server.html) |
+| Requires | JetBrains IDE 2025.2+ |
+
+### Setup
+
+1. In your IDE: **Settings → Tools → MCP Server → Enable MCP Server**
+2. In the **Clients Auto-Configuration** section, click **Auto-Configure** for Claude Code
+
+The IDE writes the config to `~/.claude.json` directly. No manual configuration needed.
+
+### What It Does
+
+- Project navigation and file search
+- Code inspections and error analysis
+- Symbol lookup and documentation
+- Run configurations and terminal commands
+
+---
+
+## Using Both Together
+
+The two servers complement each other:
+
+| Capability | Debugger MCP | Built-in MCP |
+|-----------|-------------|-------------|
+| Breakpoints & stepping | Yes | No |
+| Variable inspection | Yes | No |
+| Expression evaluation | Yes | No |
+| Project navigation | No | Yes |
+| Code inspections | No | Yes |
+| Run configurations | No | Yes |
+
+Both can be active simultaneously — they use separate endpoints and don't conflict.
+
+## Notes
+
+- Both MCP servers only work when the IDE is open
+- Each IDE instance uses its own port — check the plugin's tool window or IDE settings for the correct URL
+- Claude will report connection errors if the IDE is closed or the plugin is not installed

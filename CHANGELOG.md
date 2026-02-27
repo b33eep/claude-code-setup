@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documentation
+
+- Add JetBrains Integration guide
+  - Debugger MCP Server plugin: breakpoints, variables, execution control
+  - Built-in MCP Server (2025.2+): project navigation, inspections, search
+
 ### Content Versions
 
 - **v55**: Migrate from `code-review-ai` to `comprehensive-review` plugin
