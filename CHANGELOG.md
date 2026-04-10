@@ -15,6 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v56**: Custom module refresh during upgrades
+  - New `--refresh-custom` flag for `install.sh`: refreshes installed custom skills, commands, and scripts after `git pull`
+  - `/claude-code-setup` "Upgrade custom" now auto-discovers and installs new custom skills and MCP servers
+  - MCPs requiring API keys print a message instead of auto-installing (install separately via `/claude-code-setup`)
+  - CLAUDE.md automatically rebuilt with updated module tables after custom upgrade
 - **v55**: Migrate from `code-review-ai` to `comprehensive-review` plugin
   - `/do-review` now spawns architect-review + code-reviewer by default (2 agents in parallel)
   - New `--security` / `--full` flags to include security-auditor (3 agents)

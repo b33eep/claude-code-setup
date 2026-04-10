@@ -245,3 +245,110 @@ do_update() {
 
     echo ""
 }
+
+# Refresh custom modules after git pull
+# Called by --refresh-custom flag from /claude-code-setup command
+# Non-interactive: auto-installs what it can, skips what needs user input
+do_refresh_custom() {
+    echo ""
+    echo "Claude Code Setup - Refresh Custom Modules"
+    echo "============================================"
+
+    detect_os
+    check_package_manager
+    install_jq
+    init_installed_json
+
+    if [[ ! -d "$CUSTOM_DIR" ]] || [[ ! -d "$CUSTOM_DIR/.git" ]]; then
+        print_warning "No custom repo found at $CUSTOM_DIR"
+        return 0
+    fi
+
+    local name source_dir target_dir
+
+    # 1. Refresh installed custom skills (re-copy from source)
+    print_header "Refreshing Custom Skills"
+
+    local skill
+    while IFS= read -r skill; do
+        [[ -n "$skill" ]] || continue
+        [[ "$skill" == custom:* ]] || continue
+        name="${skill#custom:}"
+        source_dir="$CUSTOM_DIR/skills/$name"
+        target_dir="$CLAUDE_DIR/skills/$name"
+        if [[ -d "$source_dir" ]]; then
+            rm -rf "$target_dir"
+            cp -r "$source_dir" "$target_dir"
+            print_success "$name (refreshed)"
+        else
+            print_warning "$name (source not found, skipped)"
+        fi
+    done < <(get_installed "skills")
+
+    # 2. Refresh custom commands and scripts
+    print_header "Refreshing Custom Commands & Scripts"
+
+    # Re-copy base commands first (so custom extend-mode works correctly)
+    local filename
+    for cmd in "$SCRIPT_DIR/commands/"*.md; do
+        [[ -f "$cmd" ]] || continue
+        filename=$(basename "$cmd")
+        cp "$cmd" "$CLAUDE_DIR/commands/"
+    done
+
+    install_custom_commands || true
+    install_custom_scripts || true
+    print_success "Commands and scripts refreshed"
+
+    # 3. Discover and install new custom skills
+    print_header "Checking for New Custom Modules"
+
+    local new_count=0
+    if [[ -d "$CUSTOM_DIR/skills" ]]; then
+        for d in "$CUSTOM_DIR/skills/"*/; do
+            [[ -d "$d" ]] || continue
+            name=$(basename "$d")
+            if ! is_installed "skills" "custom:$name"; then
+                if install_skill "custom:$name"; then
+                    add_to_installed "skills" "custom:$name"
+                    print_success "$name (new skill installed)"
+                    ((new_count++)) || true
+                fi
+            fi
+        done
+    fi
+
+    # 4. Discover and install new custom MCPs (only those without API keys)
+    if [[ -d "$CUSTOM_DIR/mcp" ]]; then
+        local requires_key
+        for f in "$CUSTOM_DIR/mcp/"*.json; do
+            [[ -f "$f" ]] || continue
+            name=$(basename "$f" .json)
+            if ! is_installed "mcp" "custom:$name"; then
+                requires_key=$(jq -r '.requiresApiKey // false' "$f")
+                if [[ "$requires_key" == "true" ]]; then
+                    print_warning "$name requires API key — install via /claude-code-setup"
+                else
+                    if install_mcp "custom:$name"; then
+                        add_to_installed "mcp" "custom:$name"
+                        print_success "$name (new MCP installed)"
+                        ((new_count++)) || true
+                    fi
+                fi
+            fi
+        done
+    fi
+
+    if [[ "$new_count" -eq 0 ]]; then
+        print_info "No new custom modules found"
+    fi
+
+    # 5. Rebuild CLAUDE.md with updated tables
+    print_header "Rebuilding CLAUDE.md"
+    build_claude_md
+    print_success "CLAUDE.md rebuilt"
+
+    echo ""
+    print_success "Custom modules refreshed!"
+    echo ""
+}
