@@ -71,7 +71,7 @@ Tip: Use /add-custom <url> to add company modules.
 | Action | When shown |
 |--------|-----------|
 | Upgrade base | New version available |
-| Upgrade custom | Custom repo has updates |
+| Upgrade custom | Custom repo has updates (auto-refreshes modules) |
 | Install new skills/MCP | Uninstalled modules exist |
 | Install plugins | Uninstalled plugins exist |
 | Remove modules | Installed modules exist |
@@ -138,6 +138,7 @@ Add patterns to `~/.claude/settings.json` before running the command:
       "Bash(*install.sh --update *)",
       "Bash(*install.sh --add-*)",
       "Bash(*install.sh --remove-*)",
+      "Bash(*install.sh --refresh-custom*)",
       "Bash(rm -rf /tmp/claude-setup-*)"
     ]
   }
@@ -152,6 +153,7 @@ Each pattern matches a specific Bash call:
 | `Bash(*install.sh --update *)` | Phase 3 when upgrading |
 | `Bash(*install.sh --add-*)` | Phase 3 when installing modules |
 | `Bash(*install.sh --remove-*)` | Phase 3 when removing modules |
+| `Bash(*install.sh --refresh-custom*)` | Phase 3 when upgrading custom |
 | `Bash(rm -rf /tmp/claude-setup-*)` | Phase 3 when nothing to do (cleanup only) |
 
 The first pattern covers the discovery prompt. The remaining four cover Phase 3 — you only need the ones matching operations you use. In most cases, the first two patterns (discovery + upgrade) are enough.

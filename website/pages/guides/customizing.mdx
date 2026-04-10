@@ -236,7 +236,12 @@ When you update the custom repo:
 2. Bump `VERSION`
 3. Update `CHANGELOG.md`
 
-Team members update with `/claude-code-setup` — it detects new versions automatically.
+Team members update with `/claude-code-setup` — it detects new versions automatically and runs `--refresh-custom` to:
+- Re-copy updated custom skills to `~/.claude/skills/`
+- Re-apply custom command overrides and scripts
+- Auto-discover and install new custom skills
+- Auto-discover and install new custom MCP servers (if no API key required)
+- Rebuild CLAUDE.md with updated module tables
 
 ## Related
 

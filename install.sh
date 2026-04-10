@@ -74,6 +74,7 @@ show_usage() {
     echo "  --add-mcp <name>        Install a specific MCP server by name"
     echo "  --remove-skill <name>   Remove a specific skill by name"
     echo "  --remove-mcp <name>     Remove a specific MCP server by name"
+    echo "  --refresh-custom        Refresh custom modules after git pull"
     echo ""
     echo "Examples:"
     echo "  ./install.sh --update --yes        Non-interactive update"
@@ -586,6 +587,9 @@ main() {
                 fi
                 remove_mcp_name="$1"
                 ;;
+            --refresh-custom)
+                action="refresh-custom"
+                ;;
             --update|-u)
                 action="update"
                 ;;
@@ -624,6 +628,9 @@ main() {
             ;;
         "remove-mcp")
             do_remove_mcp "$remove_mcp_name"
+            ;;
+        "refresh-custom")
+            do_refresh_custom
             ;;
         "update")
             do_update

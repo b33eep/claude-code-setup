@@ -128,7 +128,7 @@ Build ONE chained Bash command from all user selections. **Cleanup always uses `
 | Action | Command segment |
 |--------|----------------|
 | Upgrade base | `cd "$temp" && ./install.sh --update --yes` |
-| Upgrade custom | `git -C ~/.claude/custom pull && new_v=$(cat ~/.claude/custom/VERSION 2>/dev/null \|\| echo "0") && jq --arg v "$new_v" '.custom_version = ($v \| tonumber)' ~/.claude/installed.json > ~/.claude/installed.json.tmp && mv ~/.claude/installed.json.tmp ~/.claude/installed.json` |
+| Upgrade custom | `git -C ~/.claude/custom pull && new_v=$(cat ~/.claude/custom/VERSION 2>/dev/null \|\| echo "0") && jq --arg v "$new_v" '.custom_version = ($v \| tonumber)' ~/.claude/installed.json > ~/.claude/installed.json.tmp && mv ~/.claude/installed.json.tmp ~/.claude/installed.json && cd "$temp" && ./install.sh --refresh-custom` |
 | Install skill | `cd "$temp" && ./install.sh --add-skill <name>` |
 | Install MCP (no API key) | `cd "$temp" && ./install.sh --add-mcp <name>` |
 | Install MCP (API key) | See "MCP with API key" section below |
@@ -155,6 +155,19 @@ More examples:
 | Install skill + remove MCP | `cd "$temp" && ./install.sh --add-skill X && ./install.sh --remove-mcp Y ; rm -rf "$temp"` |
 | Enable Agent Teams only | `[[ -f ~/.claude/settings.json ]] \|\| echo '{}' > ~/.claude/settings.json; jq '.env = (.env // {}) \| .env.CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1"' ~/.claude/settings.json > ~/.claude/settings.json.tmp && mv ~/.claude/settings.json.tmp ~/.claude/settings.json ; rm -rf "$temp"` |
 | Upgrade + install + remove | `cd "$temp" && ./install.sh --update --yes && ./install.sh --add-skill X && ./install.sh --remove-skill Y ; rm -rf "$temp"` |
+
+### Custom upgrade details
+
+The "Upgrade custom" chain includes `--refresh-custom` which automatically:
+- Re-copies all installed custom skills from source to `~/.claude/skills/`
+- Re-applies custom command overrides and scripts
+- Auto-installs any new custom skills found in the repo
+- Auto-installs new custom MCP servers that don't require API keys
+- Prints a message for new MCPs that require API keys (install separately)
+- Rebuilds CLAUDE.md with updated module tables
+
+This ensures that `git pull` + module registration happen together in one upgrade action.
+The user does NOT need to separately select "Install new skills/MCP" for modules that come with the custom upgrade.
 
 ### MCP with API key (special handling)
 

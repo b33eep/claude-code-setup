@@ -99,6 +99,29 @@ Also works with custom modules using the `custom:` prefix:
 
 These flags are used by `/claude-code-setup` to chain removals into a single command. They're also useful for scripting.
 
+### --refresh-custom
+
+Refresh custom modules after a `git pull` on the custom repo.
+
+```bash
+./install.sh --refresh-custom
+```
+
+This is used by `/claude-code-setup` during "Upgrade custom" and:
+- Re-copies all installed custom skills from `~/.claude/custom/skills/` to `~/.claude/skills/`
+- Re-applies custom command overrides and scripts
+- Auto-installs any new custom skills found in the repo
+- Auto-installs new custom MCP servers that don't require API keys
+- Prints a message for new MCPs that require API keys (install separately)
+- Rebuilds CLAUDE.md with updated module tables
+
+Also works with custom modules using the `custom:` prefix:
+
+```bash
+./install.sh --add-skill custom:my-skill
+./install.sh --add-mcp custom:my-mcp
+```
+
 ### --list
 
 Show what's currently installed.
