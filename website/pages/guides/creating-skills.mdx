@@ -17,10 +17,19 @@ The easiest way to create a skill:
 /skill-creator
 ```
 
-Claude will ask:
-1. What type of skill?
-2. What should it do?
-3. What tech stacks should trigger it?
+The skill walks you through an 8-step flow: use cases, skill type, name + description, problem-first/tool-first framing, pattern selection, folder structure, content drafting, and testing. See the [Skill Creator feature page](/features/skills/skill-creator) for the full outline.
+
+## Progressive Disclosure
+
+Skills use a three-level loading system. Understanding this keeps `SKILL.md` small and performant:
+
+| Level | Loaded when | Budget |
+|-------|-------------|--------|
+| 1 — Frontmatter | Always, in Claude's system prompt | `description` under 1024 chars |
+| 2 — `SKILL.md` body | When the skill is deemed relevant | Under ~5000 words |
+| 3 — Linked files | When Claude navigates to them | No hard limit |
+
+Move depth into `references/` rather than bloating `SKILL.md`. Each `references/NN-*.md` file is self-contained.
 
 ## Manual Creation
 
@@ -114,13 +123,33 @@ When invoked, create an OpenAPI 3.0 specification:
 
 ## Frontmatter Fields
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| `name` | Yes | Skill identifier (kebab-case) |
-| `description` | Yes | What the skill does (single-line) |
-| `type` | Yes | `context` or `command` |
-| `applies_to` | Context only | Tech stack triggers |
-| `file_extensions` | Context only | File extensions for task-based loading (e.g., `[".py"]`) |
+| Field | Required | Scope | Description |
+|-------|----------|-------|-------------|
+| `name` | Yes | Anthropic spec | Skill identifier (kebab-case) |
+| `description` | Yes | Anthropic spec | What the skill does + when to use it (under 1024 chars) |
+| `license` | No | Anthropic spec | For open-source skills (e.g., `MIT`) |
+| `metadata` | No | Anthropic spec | Author, version, tags |
+| `type` | Yes in harness | claude-code-setup only | `context` or `command` |
+| `applies_to` | Context only | claude-code-setup only | Tech stack triggers |
+| `file_extensions` | Context only | claude-code-setup only | File extensions for task-based loading (e.g., `[".py"]`) |
+
+### Security rules
+
+- **No XML angle brackets** (`<` or `>`) anywhere in frontmatter — security restriction to prevent prompt injection.
+- **No `claude-` or `anthropic-` prefix** in the `name` field — reserved by Anthropic.
+- **No `README.md`** inside the skill folder — Anthropic skill convention.
+
+### Writing the description
+
+The description decides whether your skill ever triggers. Structure it as:
+
+> **[What it does]** + **[When to use it, with trigger phrases]** + *(optional)* **[Key capabilities]**
+
+Include concrete phrases a user might actually say — not implementation details. Example:
+
+```yaml
+description: End-to-end customer onboarding for PayFlow. Handles account creation, payment setup, and subscription activation. Use when the user says "onboard new customer", "set up subscription", or "create PayFlow account".
+```
 
 ## Optional Files
 
@@ -130,10 +159,13 @@ Beyond `SKILL.md`, skills can include additional files:
 my-skill/
 ├── SKILL.md              # Required — skill definition
 ├── deps.json             # System dependencies to install
-├── assets/               # Templates, reusable content
 ├── references/           # Reference docs Claude can read
+├── assets/               # Templates, reusable content
+├── scripts/              # Executable code (Python, Bash, Node)
 └── test-project/         # Example project for testing
 ```
+
+Rule of thumb: if Claude **reads and applies** the content, it's a `reference`. If Claude **copies and modifies** the content, it's an `asset`. If the task needs determinism (validation, parsing, math), write a `script` and call it from `SKILL.md`.
 
 ### deps.json
 
@@ -160,11 +192,37 @@ Markdown files that Claude reads alongside the SKILL.md. Useful for code review 
 
 ### assets/
 
-Reusable content like templates. For example, `create-slidev-presentation` includes slide layout templates here.
+Skeletons the user or skill copies and modifies — templates, worked examples, schemas. For example, `create-slidev-presentation` includes deck templates (starter, conference, workshop, lightning) here.
+
+### scripts/
+
+Executable code for deterministic steps. Use when language interpretation is unreliable: validation, parsing, file manipulation, computing metrics. Scripts are deterministic; prose instructions are probabilistic. Call them from `SKILL.md`:
+
+```markdown
+Before processing, validate the input:
+
+\`\`\`bash
+python scripts/validate.py {filename}
+\`\`\`
+
+Do not proceed if the script exits non-zero.
+```
 
 ### test-project/
 
 A working example project. `standards-gradle` includes a full Gradle project that demonstrates the conventions from the skill.
+
+## Common Patterns
+
+Most skills fit one of five patterns — identify which before writing instructions. Full structures in the [Skill Creator patterns reference](/features/skills/skill-creator):
+
+| Pattern | When |
+|---------|------|
+| 1 — Sequential workflow | Multi-step process in a specific order |
+| 2 — Multi-MCP coordination | Workflow spans multiple MCP servers |
+| 3 — Iterative refinement | Quality improves through repeat passes |
+| 4 — Context-aware tool selection | Same outcome, different tools by context |
+| 5 — Domain-specific intelligence | Specialized expertise beyond tool access |
 
 ## Overriding Built-in Skills
 
@@ -179,6 +237,6 @@ Custom:   ~/.claude/custom/skills/standards-python/
 
 ## Related
 
-- [Customizing](/guides/customizing) - Custom commands, scripts, MCP servers
-- [Customizing](/guides/customizing) - Custom commands, scripts, MCP servers
-- [Auto-Loading Skills](/concepts/skills) - How skills load
+- [Skill Creator](/features/skills/skill-creator) — interactive /skill-creator walkthrough with full references
+- [Customizing](/guides/customizing) — custom commands, scripts, MCP servers
+- [Auto-Loading Skills](/concepts/skills) — how context skills load

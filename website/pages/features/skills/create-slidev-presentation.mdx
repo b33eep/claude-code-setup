@@ -2,113 +2,160 @@ import { SkillExtras } from '../../../components/SkillExtras'
 
 # Slidev Presentations
 
-Create professional slide decks using Slidev - a Markdown-based presentation framework.
+Build production-grade Slidev presentations for tech talks, workshops, conference sessions, and live-coding demos. The skill wraps Slidev v52+ with opinionated templates and deep coverage of the features that make a coding presentation memorable — live editors, code-morph animations, type-aware static rendering, and dual-pane demo layouts.
 
 ## Metadata
 
 | Field | Value |
 |-------|-------|
 | Type | command |
-| Invoked by | Asking to create a presentation |
-| Dependencies | Node.js >= 24.0.0 |
+| Invoked by | Asking to create slides, a deck, a presentation, a workshop deck, a conference talk, or edit an existing `slides.md` |
+| Slidev version | v52+ (targets v52.14.2) |
+| Node.js | `>= 20.12.0` (Node 24 recommended) |
+| Package manager | `pnpm` (Slidev's official recommendation; `npm` / `yarn` work too) |
 
-## Included Files
+## Included files
 
 <SkillExtras name="create-slidev-presentation" />
 
 ## Usage
 
-Ask Claude to create a presentation:
+Ask Claude to build a deck — phrase by format:
 
 ```
-Create a presentation about our Q4 results
+Create a conference talk about microservices (30 minutes, 30 slides)
 ```
 
-Or be more specific:
-
 ```
-Create a 10-slide presentation about microservices architecture
-with code examples and a Mermaid diagram
+Build a workshop deck for a hands-on Git session with dual-pane demos
 ```
 
-## What It Creates
-
 ```
-presentation/
-├── slides.md          # Main presentation content
-├── package.json       # Slidev dependencies
-└── components/        # Custom Vue components (if needed)
+Make a 5-minute lightning talk about a bug I just found
 ```
 
-## Features
+Or ask to modify an existing one:
 
-### Layouts
+```
+Add a section on error handling to slides.md, after the existing "Request flow" section
+```
 
-17 built-in layouts including:
-- `cover` - Title slide
-- `two-cols` - Two-column layout
-- `image-right` - Content with image on right
-- `quote` - Quote highlight
-- `section` - Section divider
+## What the skill gives you
 
-### Code Blocks
+### Four ready-to-copy deck templates
 
-Live code editors with syntax highlighting:
+| Template | Use when |
+|----------|----------|
+| `starter-deck.md` | Simple deck, no opinionated structure |
+| `conference-talk-deck.md` | 20–40 min narrative arc with Q&A close |
+| `workshop-deck.md` | Hands-on, dual-pane demo slots, exercise markers |
+| `lightning-talk-deck.md` | 5–10 min, punchy, high animation |
+
+Plus a reproducible `package.json` template pinning Slidev, Playwright (for PDF export), and icon collections.
+
+### Ten reference files loaded on demand
+
+| Reference | Covers |
+|-----------|--------|
+| `01-syntax.md` | Slide separator, headmatter, speaker notes, external imports |
+| `02-layouts.md` | All 17 built-in layouts + custom `.vue` layouts |
+| `03-components.md` | `<v-clicks>`, `v-motion`, `<Link>`, `<Toc>`, icon sets |
+| `04-code-presentation.md` | Shiki, Magic-Move, TwoSlash, Monaco, code groups |
+| `05-diagrams-math.md` | Mermaid, PlantUML, KaTeX, chemistry |
+| `06-themes-styling.md` | Theme gallery, fonts (Geist default), UnoCSS, projector legibility |
+| `07-config.md` | Full headmatter schema, `slidev.config.ts`, project structure |
+| `08-export-deploy.md` | PDF / PPTX / PNG export, GitHub Pages, Vercel, Netlify, accessibility |
+| `09-live-demo-patterns.md` | Dual-pane choreography, demo fallback slides, audience interaction |
+| `10-troubleshooting.md` | Cache, Monaco, Playwright, Mermaid, fonts |
+| `11-quality-checklist.md` | Pre-ship checks: content, frontmatter, notes, runtime, a11y |
+
+## Features worth knowing about
+
+### Shiki Magic-Move — code that morphs
+
+Show code evolving between versions. Tokens morph in place between steps:
 
 ````markdown
-```python {1|2-3|all}
-def hello():
-    print("Hello")
-    return True
+````md magic-move
+```ts
+function greet(name) {
+  return 'Hello, ' + name
+}
+```
+
+```ts
+const greet = (name: string): string => `Hello, ${name}`
+```
+````
+````
+
+Better than "here's the before, here's the after" slides — the transformation itself is the explanation.
+
+### TwoSlash — types rendered inline
+
+Type info baked in at build time. Works in static builds and PDF exports:
+
+````markdown
+```ts twoslash
+const user = { name: 'Alice', age: 30 }
+//    ^?
 ```
 ````
 
-Line highlighting with click-through animations.
+The `^?` marker renders `user` 's inferred type directly on the slide. Built into Slidev since v0.46 — no install needed, just TypeScript + a `tsconfig.json` in the project.
 
-### Diagrams
+### Monaco — live editable code
 
-Mermaid diagrams render automatically:
+For audience interaction — the code block becomes a runnable editor:
 
 ````markdown
-```mermaid
-graph LR
-    A[Client] --> B[API]
-    B --> C[Database]
+```ts {monaco-run}
+function fib(n: number): number {
+  return n < 2 ? n : fib(n - 1) + fib(n - 2)
+}
+console.log(fib(10))
 ```
 ````
 
-### Math
+### Dual-pane for live demos
 
-LaTeX math expressions:
+Left pane: terminal / commands. Right pane: resulting state (a diagram, a Mermaid `gitGraph`, a screenshot). Perfect for git tutorials, CLI demos, architecture walkthroughs. A full `dual-pane.vue` layout template ships with the skill.
 
-```markdown
-$E = mc^2$
+### Default font pair — Geist
 
-$$
-\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
-$$
-```
+The skill ships with Geist Sans + Geist Mono as defaults. Modern 2024+ aesthetic, on Google Fonts, with `fallbacks: true` so first-run without network still renders cleanly. Alternative pairs documented for corporate, academic, and dark-only contexts.
 
-## Running Presentations
+## Getting started
 
 ```bash
-cd presentation
-npm install
-npm run dev
+# Skill scaffolds this for you when invoked
+pnpm create slidev my-deck
+cd my-deck
+
+# Replace slides.md with a template from the skill
+# then:
+pnpm dev --open
 ```
 
-Opens at http://localhost:3030
+Preview at `http://localhost:3030`. Presenter mode at `/presenter/`.
 
-## Export Options
+## Export options
 
 ```bash
-npm run export           # PDF
-npm run export -- --format pptx  # PowerPoint
-npm run export -- --format png   # PNG images
+pnpm export                     # PDF
+pnpm export --with-clicks       # one page per click animation
+pnpm export --format pptx       # PowerPoint
+pnpm export --format png        # one PNG per slide
+pnpm build                      # static site → dist/
+```
+
+PDF export requires `playwright-chromium`:
+
+```bash
+pnpm add -D playwright-chromium
+pnpm exec playwright install chromium
 ```
 
 ## Attribution
 
 Based on [Slidev](https://sli.dev) by Anthony Fu.
-
-Skill inspired by [AJBcoding/claude-skill-eval](https://github.com/AJBcoding/claude-skill-eval).
