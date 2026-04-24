@@ -1,13 +1,19 @@
+import { SkillExtras } from '../../../components/SkillExtras'
+
 # Skill Creator
 
-Interactive wizard for creating custom skills.
+Interactive 8-step guide for creating, reviewing, and fixing custom skills. Structured around Anthropic's *Complete Guide to Building Skills for Claude* (Jan 2026) with the three-level Progressive Disclosure model baked into every step.
 
 ## Metadata
 
 | Field | Value |
 |-------|-------|
 | Type | command |
-| Invoked by | `/skill-creator` |
+| Invoked by | `/skill-creator`, or asking to create a skill, build a skill, make a new slash command skill, add a coding standards skill, review an existing skill, update a skill, or fix a skill that doesn't trigger |
+
+## Included files
+
+<SkillExtras name="skill-creator" />
 
 ## Usage
 
@@ -15,88 +21,90 @@ Interactive wizard for creating custom skills.
 /skill-creator
 ```
 
-## What It Does
-
-Guides you through creating a custom skill:
-
-1. **Choose skill type**
-   - Context skill (auto-loads based on tech stack)
-   - Command skill (invoked manually)
-
-2. **Define metadata**
-   - Name (kebab-case)
-   - Description
-   - For context: `applies_to` tech stacks
-
-3. **Write content**
-   - Standards, guidelines, or instructions
-   - Examples and code snippets
-
-4. **Save skill**
-   - Creates `~/.claude/custom/skills/your-skill/SKILL.md`
-
-## Example Session
+Or natural language:
 
 ```
-You: /skill-creator
-
-Claude: What type of skill do you want to create?
-        1) Context skill - Auto-loads based on tech stack
-        2) Command skill - Invoked with /skill-name
-
-You: 1
-
-Claude: What's the skill name? (kebab-case, e.g., api-standards)
-
-You: api-standards
-
-Claude: What tech stacks should trigger this skill?
-        (comma-separated, e.g., python, typescript, nodejs)
-
-You: python, typescript, fastapi, express
-
-Claude: Describe what standards this skill should enforce:
-
-You: REST API design standards for our team...
-
-Claude: Created ~/.claude/custom/skills/api-standards/SKILL.md
+Help me build a new skill for deploying to our staging environment
 ```
 
-## Output Location
-
-Skills are saved to:
-
 ```
-~/.claude/custom/skills/
-└── your-skill/
-    └── SKILL.md
+I have a skill that never triggers — can you review it?
 ```
 
-## Skill Format
+## The 8-step flow
 
-The wizard generates:
+| Step | Focus |
+|------|-------|
+| 1 | Gather 2–3 concrete use cases |
+| 2 | Pick skill type (command vs. context) |
+| 3 | Write name + description with trigger phrases |
+| 4 | Frame as problem-first vs. tool-first |
+| 4b | Pick a pattern (sequential / multi-MCP / iterative / context-aware / domain-specific) |
+| 5 | Decide folder structure (just `SKILL.md`, or add `references/` / `assets/` / `scripts/`) |
+| 6 | Write the `SKILL.md` body |
+| 7 | Test triggering / functional / performance |
+| 8 | Save, activate via `./install.sh --refresh-custom`, verify |
 
-```markdown
----
-name: your-skill
-description: Your description
-type: context
-applies_to: [python, typescript]
-file_extensions: [".py", ".ts"]
----
+## Progressive Disclosure
 
-# Your Skill Title
+The skill uses the three-level model from Anthropic's spec:
 
-Content you provided...
+- **Level 1 — YAML frontmatter** (always loaded): `name` + `description` — Claude's trigger matcher reads this on every request. Under 1024 characters.
+- **Level 2 — SKILL.md body** (loaded when relevant): decision flow, critical rules. Under ~5000 words.
+- **Level 3 — Linked files** (loaded on demand): `references/` for docs, `assets/` for templates, `scripts/` for deterministic code.
+
+Each reference file in the bundled eight covers one level-3 topic in depth — load only what the current task needs.
+
+## Reference files
+
+| Reference | Covers |
+|-----------|--------|
+| `01-progressive-disclosure.md` | The 3-level system; when to use references / assets / scripts |
+| `02-frontmatter.md` | All YAML fields, security rules, reserved names, harness-vs-spec distinction |
+| `03-writing-descriptions.md` | Trigger phrases, what+when structure, good/bad examples |
+| `04-writing-instructions.md` | Specificity, structure, error handling, when to reach for scripts |
+| `05-patterns.md` | The 5 common patterns with full example structures + Skills+MCP story |
+| `06-testing.md` | Triggering / functional / performance testing methods, ≥90% benchmark |
+| `07-troubleshooting.md` | Upload errors, trigger diagnosis, MCP issues, large-context issues |
+| `08-checklist.md` | Pre-upload and post-upload checklists |
+| `09-distribution.md` | Sharing skills via Claude.ai, Messages API, and GitHub |
+
+## Worked examples
+
+Three asset templates you can copy and modify:
+
+- **`skill-template.md`** — minimal `SKILL.md` scaffold with placeholders
+- **`command-skill-example.md`** — a complete `deploy-staging` command skill with real `kubectl` / `docker` commands, error handling, rollback
+- **`context-skill-example.md`** — a complete Python coding-standards context skill covering naming, FastAPI conventions, SQLAlchemy, pytest
+
+## Skill types
+
+The `claude-code-setup` harness recognises two invocation styles on top of the Anthropic Skills spec:
+
+| Type | Frontmatter | How it loads |
+|------|-------------|--------------|
+| Command | `type: command` | User invokes with `/skill-name` |
+| Context | `type: context` + `applies_to: [...]` | Harness auto-loads when the project's Tech Stack matches |
+
+Both produce folders that are portable — the same folder works on Claude.ai, Claude Code, and the Messages API. The `type` / `applies_to` / `file_extensions` fields are harness-specific and are ignored by upstream Anthropic surfaces.
+
+## Output location
+
+Skills created through the flow are saved to:
+
+```
+~/.claude/custom/skills/<skill-name>/
 ```
 
-## Tips
+This location is separate from the base installation (`~/.claude/skills/`) and survives `claude-code-setup` upgrades. Activate a newly created skill with:
 
-- Include examples in your standards - Claude follows concrete examples better than abstract rules
-- One topic per skill, don't mix concerns
-- Test with a matching project to see if the standards actually load
+```bash
+./install.sh --refresh-custom
+```
+
+or via `/claude-code-setup` → Upgrade custom.
 
 ## Related
 
-- [Creating Skills](/guides/creating-skills) - Manual skill creation
-- [Customizing](/guides/customizing) - Share custom modules with your team
+- [Creating Skills](/guides/creating-skills) — conceptual guide to skill architecture
+- [Customizing](/guides/customizing) — share custom modules with your team
