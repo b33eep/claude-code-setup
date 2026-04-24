@@ -293,6 +293,35 @@ Generate audit report on demand via `scripts/audit_report.py`.
 
 **Canonical examples:** financial compliance, legal contract review, medical triage, safety-critical approvals, security audits.
 
+## Skills that wrap an MCP
+
+A special class of skill: the user already has an MCP server connected (Notion, Linear, Figma), and the skill teaches Claude how to use it well. This doesn't replace patterns 1–5 — it's a framing that usually lands on pattern 1 (sequential) or pattern 5 (domain-specific).
+
+**The split of responsibilities:**
+
+| MCP (Connectivity) | Skill (Knowledge) |
+|---|---|
+| Connects Claude to the service | Teaches Claude how to use the service effectively |
+| Provides real-time data + tool invocation | Captures workflows and best practices |
+| Tells Claude **what** it can do | Tells Claude **how** it should do it |
+
+**Why bother?** Without a skill, users connect an MCP and don't know what to do next. Conversations start from scratch. Each user prompts differently; results are inconsistent. The skill closes this gap — a pre-built workflow activates when needed.
+
+**When to write an MCP-wrapping skill:**
+
+- You built (or use) an MCP server with a non-trivial workflow (more than "call one tool, get an answer")
+- You find yourself re-explaining the same sequence of MCP calls across sessions
+- Support questions follow the pattern "how do I do X with your integration?"
+
+**Structure tips:**
+
+- Identify the top 2–3 workflows users actually want (talk to real users, don't guess)
+- For each, map out the MCP tool sequence with parameters and dependencies
+- Embed the best-practice guidance in SKILL.md — error handling, validation, idempotency
+- Store longer tool-reference material in `references/tool-reference.md` rather than SKILL.md
+
+**Typical pattern fit:** patterns 1 (sequential workflow), 2 (multi-MCP if the workflow spans services), or 5 (domain-specific if the skill adds expertise beyond raw tool access).
+
 ## Blending patterns
 
 Skills sometimes combine patterns. Common combinations:

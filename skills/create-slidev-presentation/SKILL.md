@@ -130,20 +130,9 @@ Ask the user what they need:
 - **Static site**: `pnpm build` produces `dist/`.
 - **GitHub Pages / Vercel / Netlify**: see `references/08-export-deploy.md` for ready CI snippets.
 
-## Quality Checklist (before reporting a deck done)
+## Quality Checklist
 
-Run through this list before telling the user the deck is ready:
-
-- [ ] Every code block has a language tag
-- [ ] No slide exceeds 6 bullets / 6 words per bullet (or speaker note explains why)
-- [ ] Lists with 3+ items use `<v-clicks>`
-- [ ] Headmatter has `title`, `author`, `theme`, `fonts`, `lang`
-- [ ] Speaker notes exist for every content slide (HTML comment at slide end)
-- [ ] Section dividers (`layout: section`) break the deck into chapters
-- [ ] Final slide uses `layout: end` with a clear takeaway or Q&A cue
-- [ ] `pnpm dev` runs without console errors
-- [ ] If Monaco is used: `monaco: dev` or `monaco: true` in headmatter
-- [ ] If PDF export is promised: `playwright-chromium` installed; `pnpm export` tested
+Before reporting a deck done, run through `references/11-quality-checklist.md`. Covers content, frontmatter, speaker notes, runtime checks, and accessibility.
 
 ## Anti-Patterns (do not do)
 
@@ -169,6 +158,7 @@ When details are needed beyond this file, **read the specific reference**, don't
 - `references/08-export-deploy.md` — PDF, PPTX, static, GitHub Pages, Vercel, Netlify, CI
 - `references/09-live-demo-patterns.md` — dual-pane layouts, demo choreography, fallback slides
 - `references/10-troubleshooting.md` — cache, Monaco, Playwright export, common errors
+- `references/11-quality-checklist.md` — pre-ship checks for content, frontmatter, speaker notes, runtime, accessibility
 
 **Asset templates (bundled, copy-then-modify):**
 - `assets/starter-deck.md` — minimal deck

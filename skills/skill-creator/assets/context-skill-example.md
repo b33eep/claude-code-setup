@@ -1,3 +1,12 @@
+<!--
+This is a worked example — copy and adapt for your team.
+
+BEFORE SAVING TO `~/.claude/custom/skills/`:
+1. Rename `name: standards-python-example` to something distinct (e.g. `standards-python-acme`)
+   — otherwise it can collide with any existing `standards-python-*` skill.
+2. Adjust the Python/FastAPI/SQLAlchemy/pytest conventions to match your team.
+3. Narrow or widen `applies_to` as needed.
+-->
 ---
 name: standards-python-example
 description: Team Python coding standards for backend services — naming, structure, testing, error handling. Auto-loads for any Python project. Covers FastAPI, SQLAlchemy, and pytest conventions specific to this team.
@@ -12,6 +21,8 @@ metadata:
 # Python Coding Standards (Example)
 
 > This is a worked example of a context skill. It auto-loads whenever the project's Tech Stack includes Python, FastAPI, or SQLAlchemy, or when the user edits a `.py` file.
+>
+> **Rename `name` before saving** — `standards-python-example` is a placeholder, not a production skill.
 
 ## Overview
 

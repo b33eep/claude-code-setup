@@ -16,7 +16,7 @@ ls -la my-skill/
 # Should show "SKILL.md", not "skill.md", "Skill.md", or "SKILL.MD"
 ```
 
-Rename with `mv skill.md SKILL.md` (on case-insensitive filesystems, use a two-step rename: `mv skill.md _tmp && mv _tmp SKILL.md`).
+Rename with `mv skill.md SKILL.md`. On macOS/APFS this usually works in one step (case-insensitive-but-case-preserving). On HFS+, Windows CI, or strict case-insensitive filesystems, use a two-step rename: `mv skill.md _tmp && mv _tmp SKILL.md`.
 
 ### `Error: "Invalid frontmatter"`
 
@@ -99,7 +99,7 @@ Common issues:
 - **Too generic** — `"Helps with projects"` never triggers for anything specific
 - **Missing triggers** — the description explains the skill but doesn't include phrases users would actually say
 - **Technical framing** — `"Implements the Project entity model"` doesn't match user intent ("create a project")
-- **Description under 100 chars** — rarely enough to include what + when + triggers
+- **Description under ~100 chars** — as a rule-of-thumb, rarely enough room for what + when + 2–4 trigger phrases
 
 **Fix:** rewrite per `03-writing-descriptions.md`.
 
@@ -215,7 +215,9 @@ See `04-writing-instructions.md` → "When to reach for scripts."
 
 ### Cause 5: model "laziness"
 
-Some tasks require explicit encouragement to do them thoroughly:
+Some tasks require explicit encouragement to do them thoroughly. **Important:** adding this to the **user prompt** is more effective than adding it to SKILL.md. Try the user-prompt approach first.
+
+If the task needs encouragement baked in (because the skill is always invoked against high-stakes work), add it to SKILL.md as a last resort:
 
 ```markdown
 ## Performance notes
@@ -224,8 +226,6 @@ Some tasks require explicit encouragement to do them thoroughly:
 - Quality is more important than speed
 - Do not skip validation steps
 ```
-
-**Note:** adding this to user prompts is often more effective than adding it to SKILL.md.
 
 ## MCP connection issues
 
@@ -253,7 +253,7 @@ Some tasks require explicit encouragement to do them thoroughly:
 
 ## Large-context issues
 
-**Symptom:** Slidev feels slow, responses degrade over long conversations, tokens drain fast.
+**Symptom:** Skill loads feel slow, responses degrade over long conversations, tokens drain fast.
 
 ### Causes
 

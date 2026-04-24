@@ -32,10 +32,12 @@ Run all three before shipping. Each catches different bugs.
 - "Fix this bug in main.py"                                  (coding, touches none of the skill's domain)
 ```
 
-Target:
+Target (per Anthropic's aspirational benchmarks):
 
-- **Triggers on 4+ out of 5 "should trigger"** — especially the paraphrased ones
+- **≥ 90% trigger rate on "should trigger"** — including paraphrased ones
 - **Zero triggers on "should NOT trigger"** — false positives are usually more expensive than false negatives
+
+Measure with 10–20 test queries. These are aspirational, not hard thresholds — aim for rigor, accept some vibes.
 
 If triggering is wrong, the **description is the first suspect**. Rewrite per `03-writing-descriptions.md`.
 
@@ -103,6 +105,18 @@ If the skill doesn't improve the numbers, something's wrong. Common causes:
 
 Performance failures often mean **the skill's scope is wrong** — too broad, too narrow, or in the wrong place.
 
+## Iterate on a single task before expanding
+
+Counter-intuitive but proven: rather than writing a broad skill then testing across cases, **iterate on one challenging task until Claude succeeds unaided**, then extract the winning approach into a skill. This leverages Claude's in-context learning and gives faster signal than broad testing.
+
+Workflow:
+
+1. Pick the hardest single task the skill should support
+2. In a fresh conversation (no skill loaded), prompt and refine until Claude solves it cleanly
+3. Note what worked: which clarifications, which examples, which order of steps
+4. Crystallise those into the skill's instructions
+5. Then expand to the full test suite above
+
 ## Iteration loop
 
 Testing isn't one-and-done. Skills are living artifacts.
@@ -150,10 +164,6 @@ done
 ```
 
 Manual testing is fine for small personal skills; automated testing is a must for skills shared across a team. Keep the test suite in the skill's own repo alongside the code.
-
-## When Anthropic's skill-creator disagrees with your own testing
-
-The skill-creator can suggest improvements and flag issues, but **it does not run automated tests**. Trust your concrete test runs over abstract feedback. Use the skill-creator for design review; use real conversations for correctness.
 
 ## Testing checklist
 

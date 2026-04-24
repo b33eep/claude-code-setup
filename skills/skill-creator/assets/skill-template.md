@@ -1,3 +1,7 @@
+<!--
+Replace all [bracketed placeholders] before saving.
+Delete any sections you don't need — they're all optional except Overview and Decision Flow.
+-->
 ---
 name: your-skill-name
 description: [What it does in one phrase]. Use when the user says "[trigger phrase 1]", "[trigger phrase 2]", or "[trigger phrase 3]".

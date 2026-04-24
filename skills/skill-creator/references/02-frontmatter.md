@@ -42,33 +42,7 @@ Structure:
 
 Full writing guide with examples: `03-writing-descriptions.md`.
 
-### `type`
-
-One of:
-
-- `command` — invoked explicitly via `/skill-name`
-- `context` — auto-loads when Tech Stack matches
-
 ## Optional fields
-
-### For context skills only
-
-```yaml
-applies_to: [python, fastapi, django]
-file_extensions: [".py", ".pyi"]
-```
-
-- `applies_to` — list of Tech Stack tokens that trigger auto-load. Match is case-insensitive substring.
-- `file_extensions` — extensions that trigger the skill even when Tech Stack doesn't include the language. Useful for task-based loading.
-
-Common `applies_to` values:
-
-| Category | Values |
-|---|---|
-| Languages | `python`, `typescript`, `javascript`, `rust`, `go`, `java`, `kotlin`, `ruby`, `php`, `csharp`, `swift` |
-| Frameworks | `fastapi`, `django`, `flask`, `react`, `nextjs`, `vue`, `svelte`, `express`, `rails`, `spring` |
-| Tools | `docker`, `kubernetes`, `terraform`, `ansible`, `aws`, `gcp`, `azure` |
-| Build | `gradle`, `maven`, `cargo`, `npm`, `pnpm`, `make`, `bazel` |
 
 ### `license`
 
@@ -118,6 +92,44 @@ source: https://github.com/user/repo
 ```
 
 Free-text pointer to the skill's origin. Useful when skills are ported from other repos.
+
+## Harness-specific fields (claude-code-setup)
+
+These fields are **not part of the upstream Anthropic spec**. They are recognised only by the `claude-code-setup` harness — Claude.ai uploads and direct API use will ignore (or reject) them. If you're shipping a skill outside this repo, remove these before distribution.
+
+### `type`
+
+```yaml
+type: command   # or: context
+```
+
+- `command` — skill is invoked explicitly via `/skill-name`
+- `context` — skill is auto-loaded by the harness when the project's Tech Stack or a file extension matches
+
+### `applies_to` (context skills only)
+
+```yaml
+applies_to: [python, fastapi, django]
+```
+
+A list of Tech Stack tokens that trigger auto-load. The harness (per `templates/base/global-CLAUDE.md` and [Record 010](../../../docs/records/010-improved-skill-autoloading.md)) matches by checking whether any project Tech Stack item appears in the skill's `applies_to` list. Matching is done at runtime by Claude reading the instructions; de facto case-insensitive string containment.
+
+Common values:
+
+| Category | Values |
+|---|---|
+| Languages | `python`, `typescript`, `javascript`, `rust`, `go`, `java`, `kotlin`, `ruby`, `php`, `csharp`, `swift` |
+| Frameworks | `fastapi`, `django`, `flask`, `react`, `nextjs`, `vue`, `svelte`, `express`, `rails`, `spring` |
+| Tools | `docker`, `kubernetes`, `terraform`, `ansible`, `aws`, `gcp`, `azure` |
+| Build | `gradle`, `maven`, `cargo`, `npm`, `pnpm`, `make`, `bazel` |
+
+### `file_extensions` (context skills only)
+
+```yaml
+file_extensions: [".py", ".pyi"]
+```
+
+Extensions that trigger the skill even when the Tech Stack doesn't include the language. Useful when a user edits a single file whose language isn't on the project's main stack.
 
 ## Full example
 
@@ -208,15 +220,15 @@ file_extensions: [".py"]
 
 ## Field naming quick reference
 
-| Field | Required | For |
-|---|---|---|
-| `name` | yes | All skills |
-| `description` | yes | All skills |
-| `type` | yes | All skills |
-| `applies_to` | when `type: context` | Context skills |
-| `file_extensions` | no | Context skills — file-triggered loading |
-| `license` | no | Open-source skills |
-| `compatibility` | no | Environment notes |
-| `allowed-tools` | no | Sandboxed skills |
-| `metadata` | no | Custom author/version/tags |
-| `source` | no | Attribution |
+| Field | Required | Scope | For |
+|---|---|---|---|
+| `name` | yes | Anthropic spec | All skills |
+| `description` | yes | Anthropic spec | All skills |
+| `license` | no | Anthropic spec | Open-source skills |
+| `compatibility` | no | Anthropic spec | Environment notes |
+| `allowed-tools` | no | Anthropic spec | Sandboxed skills |
+| `metadata` | no | Anthropic spec | Custom author/version/tags |
+| `source` | no | Convention | Attribution |
+| `type` | yes in harness | **claude-code-setup only** | Invocation style (`command`/`context`) |
+| `applies_to` | when `type: context` | **claude-code-setup only** | Tech Stack match |
+| `file_extensions` | no | **claude-code-setup only** | File-extension trigger |

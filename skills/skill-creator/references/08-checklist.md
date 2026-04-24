@@ -20,6 +20,9 @@ Run through these before and after shipping a skill. Catches most problems befor
 - [ ] `description` includes 2–4 concrete trigger phrases users might actually say
 - [ ] `description` under 1024 characters
 - [ ] No XML angle brackets (`<` or `>`) anywhere in frontmatter
+
+### claude-code-setup harness fields (skip if distributing to Claude.ai / API directly)
+
 - [ ] `type` is `command` or `context`
 - [ ] For context skills: `applies_to` lists at least one tech-stack token
 - [ ] For context skills: `file_extensions` includes relevant file types

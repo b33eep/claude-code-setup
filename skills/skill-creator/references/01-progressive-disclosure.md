@@ -64,14 +64,15 @@ File naming: `NN-topic.md` (e.g. `01-api-reference.md`, `02-error-codes.md`). Nu
 
 #### `assets/`
 
-Templates, fonts, icons, schemas — the **source material** for outputs the skill produces. Claude copies and modifies these rather than generating from scratch.
+**Skeletons the user or skill copies and modifies** — templates, worked examples, fonts, icons, schemas. Anything Claude shouldn't generate from scratch when a stable starting point exists.
 
 Use for:
 - Report/letter/document templates
-- Boilerplate structures (e.g. starter decks, repo scaffolds)
+- Boilerplate structures (starter decks, repo scaffolds)
 - Config files the skill writes with user-specific values
+- **Worked examples** — full, usable reference implementations the user adapts (distinct from terse `references/*.md` docs)
 
-Rule: if Claude is generating something from a pattern and the pattern is stable, put it in `assets/`.
+Rule: if it's *copied and modified*, it's an asset. If it's *read and applied*, it's a reference.
 
 #### `scripts/`
 

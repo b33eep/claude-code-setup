@@ -1,3 +1,8 @@
+<!--
+This is a worked example — copy and adapt for your team.
+Replace `registry.example.com`, `https://staging.example.com`, and `https://wiki.example.com/...`
+with your real registry, staging domain, and internal runbook URLs.
+-->
 ---
 name: deploy-staging
 description: Deploy the current branch to the staging environment. Handles building the Docker image, pushing to the registry, and rolling out to the staging cluster. Use when the user says "deploy to staging", "push to staging", "rollout staging", or "test this in staging".
