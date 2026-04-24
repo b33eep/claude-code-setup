@@ -70,6 +70,19 @@ Context skill — auto-loaded by tech stack or file extension
    Con: consumes context tokens on every matching project
 ```
 
+Minimal frontmatter for each type (harness-specific fields — see `references/02-frontmatter.md`):
+
+```yaml
+# Command skill
+type: command
+```
+
+```yaml
+# Context skill
+type: context
+applies_to: [python, fastapi]
+```
+
 ### Step 3 — Name + description
 
 Propose a **kebab-case** name based on the use cases. The folder name, frontmatter `name`, and directory must all match.
