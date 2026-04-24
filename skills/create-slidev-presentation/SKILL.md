@@ -1,558 +1,185 @@
 ---
 name: create-slidev-presentation
-description: This skill should be used when asked to create or edit Slidev (sli.dev) presentation slide decks.
+description: Build or edit Slidev (sli.dev) presentations for tech talks, workshops, conference sessions, and live-coding demos. Use when the user asks to create slides, a deck, a presentation, a workshop deck, a conference talk, or edit an existing slides.md.
 type: command
-source: https://github.com/AJBcoding/claude-skill-eval
-author: AJBcoding
+source: https://github.com/b33eep/claude-code-setup
 ---
 
-# Slidev
+# Slidev Presentation Skill
 
 ## Overview
 
-Enable creation and editing of high-quality Slidev presentations. Slidev is a web-based presentation framework that uses Markdown with Vue 3 components, providing features like live code editing, syntax highlighting, animations, and export to multiple formats.
+Create and edit high-quality Slidev presentations. Slidev turns a single Markdown file into a presentation with live code, animations, diagrams, and PDF/PPTX export. It is the strongest tool available for **tech talks** because slides can show code the way code actually behaves — Monaco editors run inline, Shiki Magic-Move morphs code between states, TwoSlash surfaces TypeScript type info, and the whole deck is a git-versionable markdown file.
 
-**Key capabilities**:
-- Create presentations from markdown with YAML configuration
-- Use 17 built-in layouts plus custom layouts
-- Add click animations, transitions, and motion effects
-- Embed live code editors (Monaco) with TypeScript support
-- Include diagrams (Mermaid, PlantUML), LaTeX math, and media
-- Export to PDF, PPTX, PNG, or static web application
+**Primary use cases this skill supports:**
+- Conference talks (20–40 min, narrative arc, Q&A)
+- Workshops and hands-on sessions (live coding, exercises, dual-pane cmd/result)
+- Lightning talks (5–10 min, punchy, high animation)
+- Live-coding demos embedded in any deck
+- Edits to an existing Slidev project
 
-**Requirements**: Node.js >= 24.0.0
+**Runtime requirements:** Node.js ≥ 20.12.0 (Node 24 recommended; Slidev's own `create-slidev` pins `engines.node >=20.12.0`). `pnpm` is the preferred package manager (matches Slidev's official docs); `npm` and `yarn` work identically.
 
-## Quick Start
+**Slidev version this skill targets:** v52+ (Shiki Magic-Move, TwoSlash, MDC syntax, modern Monaco API all available).
 
-### Creating a New Presentation
+## Decision Flow
+
+Follow this order when the user asks to work with slides.
+
+### 1. Is this a new deck or an existing one?
+
+**New deck** → Go to §2 (Pick a template).
+**Existing deck** → Read `slides.md` first. Never rewrite; make targeted edits. Jump to §7 (Editing workflow).
+
+### 2. Pick the right starting template
+
+Ask the user (or infer from their phrasing) which of these fits best:
+
+| User signal | Template | When |
+|---|---|---|
+| "quick slides", "simple deck", "just a few slides" | `assets/starter-deck.md` | Minimal, no opinionated structure |
+| "conference talk", "30 minutes", "keynote-ish" | `assets/conference-talk-deck.md` | Narrative: cover → agenda → sections → Q&A |
+| "workshop", "hands-on", "tutorial", "live coding heavy" | `assets/workshop-deck.md` | Mixed: explanation + dual-pane demo slots + exercise markers |
+| "lightning talk", "5 minute", "quick demo" | `assets/lightning-talk-deck.md` | 8–12 slides, high animation, one core idea |
+
+If none fits cleanly, start from `starter-deck.md` and compose. **Don't invent a new structure** — copy an asset and modify.
+
+### 3. Bootstrap the project
+
+Run the following (adapt cwd):
 
 ```bash
-# Initialize project
-pnpm create slidev
-
-# Or with specific entry file
-pnpm create slidev my-slides
-
-# Start development server
-cd my-slides
-pnpm run dev
+# Create project directory and scaffold (interactive prompt accepts defaults)
+pnpm create slidev my-deck
+cd my-deck
 ```
 
-### Minimal Presentation Structure
+Then **replace** the generated `slides.md` with the selected template from `assets/`. Keep the generated `package.json`, `netlify.toml` (if any), and `.gitignore`.
 
-```markdown
----
-theme: default
-title: My Presentation
----
+For a manual bootstrap without the interactive prompt, see `references/07-config.md` → "Minimal project scaffold".
 
-# Welcome
+### 4. Configure headmatter
 
-Introduction slide
+Every deck has one YAML block at the top (headmatter) that configures the whole deck. Start with this **opinionated default** and add options as needed:
 
----
-
-# Second Slide
-
-Content here
-
----
-layout: end
----
-
-# Thank You
-```
-
-**Slide separator**: Three dashes (`---`) padded with new lines
-
-## Creating Presentations
-
-### Structure Decision Tree
-
-**Is this a new presentation?**
-- Yes → Use template from `assets/slide-templates.md` or `assets/example-configurations.md`
-- No → See "Editing Presentations" section
-
-**What type of presentation?**
-- **Business/Professional** → Use `seriph` theme, simple transitions
-- **Technical/Code-heavy** → Enable `monaco`, `lineNumbers`, use code templates
-- **Conference/Workshop** → Enable `drawings`, `record`, `presenter` mode
-- **Educational** → Use clear layouts, diagrams, progressive disclosure
-- **Design-focused** → Minimalist theme, `fade` transitions, large typography
-
-### Configuration Approach
-
-Start with minimal headmatter, add features as needed:
-
-**Step 1 - Minimal** (always include):
-```yaml
----
-theme: default
-title: Presentation Title
----
-```
-
-**Step 2 - Add features** (based on content):
 ```yaml
 ---
 theme: seriph
-title: Presentation Title
-author: Your Name
-mdc: true
-lineNumbers: true  # For code
-monaco: dev        # For live code
-transition: slide-left
----
-```
-
-**Step 3 - Optimize** (for specific use case):
-- Code presentations: Add `twoslash`, higher `canvasWidth` (1200)
-- Media-heavy: Set `aspectRatio: 16/9`, optimize fonts
-- Export-focused: Configure `export` options, set `exportFilename`
-
-### Layout Selection
-
-Use appropriate layout for each slide's purpose:
-
-| Slide Purpose    | Layout             | Example                   |
-|------------------|--------------------|---------------------------|
-| Title slide      | `cover`            | Opening slide             |
-| Section divider  | `section`          | New topic                 |
-| Standard content | `default`          | Bullet points, text       |
-| Centred content  | `center`           | Short quotes              |
-| Two columns      | `two-cols`         | Comparisons               |
-| Image + text     | `image-left/right` | Diagrams with explanation |
-| Big number/stat  | `fact`             | Key metrics               |
-| Quote            | `quote`            | Testimonials              |
-| Final slide      | `end`              | Thank you, Q&A            |
-
-Specify layout in per-slide frontmatter:
-```yaml
----
-layout: two-cols
----
-```
-
-**Reference**: `references/layouts-reference.md` for all 17 layouts with examples
-
-### Component Usage
-
-Built-in components for common needs:
-
-**Click animations**:
-```markdown
-<v-clicks>
-
-- Item 1
-- Item 2
-- Item 3
-
-</v-clicks>
-```
-
-**Media embedding**:
-```markdown
-<Youtube id="dQw4w9WgXcQ" />
-<Tweet id="1234567890" />
-```
-
-**Navigation**:
-```markdown
-<Link to="42">Go to slide 42</Link>
-<Toc minDepth="1" maxDepth="2" />
-```
-
-**Reference**: `references/components-reference.md` for complete component library
-
-### Code Presentation
-
-**Basic code block**:
-````markdown
-```typescript
-const greeting: string = 'Hello, Slidev!'
-console.log(greeting)
-```
-````
-
-**With line highlighting** (incremental):
-````markdown
-```ts {1|3-4|all}
-const step1 = 'First'
-// Highlight line 1
-const step2 = 'Second'
-const step3 = 'Third'
-// Then highlight lines 3-4
-// Finally highlight all
-```
-````
-
-**Interactive editor**:
-````markdown
-```ts {monaco-run}
-console.log('Runs in browser!')
-```
-````
-
-**Best practices**:
-1. Always specify language for syntax highlighting
-2. Use incremental highlighting to guide attention
-3. Keep code blocks under 20 lines (use `{maxHeight:'200px'}` if longer)
-4. Enable `lineNumbers: true` for code-heavy presentations
-
-### Animations
-
-**Progressive disclosure** (most common):
-```markdown
-<v-clicks>
-
-- Point 1
-- Point 2
-- Point 3
-
-</v-clicks>
-```
-
-**Element-level control**:
-```markdown
-<div v-click>Appears on click 1</div>
-<div v-click>Appears on click 2</div>
-<div v-click="3">Appears on click 3</div>
-```
-
-**Motion animations**:
-```markdown
-<div
-  v-motion
-  :initial="{ x: -80, opacity: 0 }"
-  :enter="{ x: 0, opacity: 1 }"
->
-  Animated entrance
-</div>
-```
-
-**Slide transitions**:
-```yaml
----
-transition: slide-left
----
-```
-
-Options: `fade`, `slide-left`, `slide-right`, `slide-up`, `slide-down`, `view-transition`
-
-## Editing Presentations
-
-### Modification Strategy
-
-**Step 1 - Read and understand**:
-1. Read `slides.md` to understand structure
-2. Identify headmatter (first frontmatter block)
-3. Note layouts and components used
-
-**Step 2 - Make targeted changes**:
-- **Add slides**: Insert `---` separator and new content
-- **Modify content**: Edit markdown between separators
-- **Change layouts**: Update per-slide frontmatter
-- **Adjust config**: Modify headmatter or create `slidev.config.ts`
-
-**Step 3 - Test changes**:
-```bash
-slidev  # Verify in dev server
-```
-
-### Common Editing Tasks
-
-**Add slide after specific slide**:
-1. Find target slide content
-2. Add separator (`---`) after it
-3. Add new slide content
-
-**Change slide layout**:
-```markdown
----
-layout: two-cols  # Change this
----
-```
-
-**Add click animations to list**:
-```markdown
-<v-clicks>
-
-- Existing item 1
-- Existing item 2
-
-</v-clicks>
-```
-
-**Enable feature globally**:
-Update headmatter:
-```yaml
----
-# Add/update these
-monaco: dev
-lineNumbers: true
----
-```
-
-**Split long presentation**:
-Create `pages/section1.md`, then in main `slides.md`:
-```markdown
----
-src: ./pages/section1.md
----
-```
-
-## Common Patterns
-
-Use pre-built templates from `assets/slide-templates.md`:
-
-**Title slide pattern**:
-```markdown
----
-layout: cover
-background: /cover.jpg
-class: text-center
----
-
-# Title
-
-## Subtitle
-
-Author · Date
-```
-
-**Code demo pattern**:
-````markdown
----
-layout: two-cols
----
-
-```ts {monaco-run}
-// Interactive code
-```
-
-::right::
-
-# Explanation
-
-- Point 1
-- Point 2
-````
-
-**Comparison pattern**:
-```markdown
----
-layout: two-cols
----
-
-# Before
-
-Old approach
-
-::right::
-
-# After
-
-New approach
-```
-
-**Section divider pattern**:
-```markdown
----
-layout: section
-background: linear-gradient(to right, #667eea, #764ba2)
-class: text-white
----
-
-# Part 2: Implementation
-```
-
-**Complete examples**: See `assets/example-configurations.md` for full presentation templates
-
-## Export & Build
-
-### Export to PDF
-
-```bash
-# Basic export
-slidev export
-
-# With options
-slidev export --output presentation.pdf
-slidev export --with-clicks  # Include animations
-slidev export --dark         # Dark mode
-slidev export --range 1,4-8  # Specific slides
-```
-
-**Prerequisites**: Install playwright-chromium
-```bash
-pnpm add -D playwright-chromium
-```
-
-### Export to Other Formats
-
-```bash
-slidev export --format pptx   # PowerPoint
-slidev export --format png    # PNG images
-slidev export --format md     # Markdown with PNGs
-```
-
-### Build Static Site
-
-```bash
-slidev build
-slidev build --base /slides/  # For subdirectory hosting
-```
-
-Deploy `dist/` directory to static hosting (Netlify, Vercel, GitHub Pages).
-
-## Configuration Reference
-
-### Essential Headmatter Options
-
-```yaml
----
-# Theme
-theme: seriph  # or: default, apple-basic, carbon, dracula, nord, etc.
-
-# Metadata
-title: Presentation Title
-author: Your Name
+title: Your Talk Title
 info: |
-  ## Description
-  Multi-line supported
-
-# Features
-mdc: true              # Enable MDC syntax
-monaco: dev            # Enable Monaco editor
-lineNumbers: true      # Line numbers in code
-twoslash: true         # TypeScript type info
-download: true         # PDF download button
-
-# Appearance
-colorSchema: auto      # auto, light, or dark
-transition: slide-left # Global transition
-
-# Layout
-aspectRatio: 16/9
-canvasWidth: 980
-
-# Fonts
+  One-line description — shows in browser tab, PDF metadata, presenter mode.
+author: Speaker Name
+keywords: [tag1, tag2]
+colorSchema: auto
+transition: slide-left
+mdc: true
+lineNumbers: false
+drawings:
+  persist: false
 fonts:
-  sans: Inter
-  mono: JetBrains Mono
-  weights: '300,400,600,700'
+  sans: 'Geist'
+  serif: 'Geist'
+  mono: 'Geist Mono'
   provider: google
-
-# Export
-exportFilename: my-presentation
-export:
-  format: pdf
-  withClicks: false
-  dark: false
+  weights: '400,500,600,700'
+lang: en
 ---
 ```
 
-**Complete reference**: See `references/configuration-reference.md`
+**When to change what** — see `references/07-config.md` for a complete field reference.
 
-### Per-Slide Frontmatter
+### 5. Write the slide body
 
-```yaml
----
-layout: center           # Slide layout
-background: /image.jpg   # Background image
-class: text-white        # CSS classes
-transition: fade         # Override global
-clicks: 5                # Number of clicks
-hideInToc: true         # Hide from TOC
-zoom: 0.8               # Scale content
-routeAlias: solutions   # Navigation alias
----
-```
+Open the chosen asset template and modify it. Key rules:
 
-## Troubleshooting
+- **One concept per slide.** If a slide has two headings, split it.
+- **6×6 rule.** Max 6 bullets, max 6 words per bullet. Anything more belongs in speaker notes.
+- **Progressive disclosure.** Wrap bullet lists in `<v-clicks>` so the speaker reveals one point at a time.
+- **Code blocks always get a language** (` ```ts ` not ` ``` `). Otherwise Shiki cannot highlight.
+- **Speaker notes go in HTML comments at the end of each slide.** They only appear in presenter mode.
 
-### Common Issues
+### 6. Choose the right feature for each idea
 
-**Slides not updating**:
-```bash
-slidev --force  # Clear cache
-```
+Use the feature that matches the intent. Don't reach for Monaco when line highlighting is enough.
 
-**Layout not found**:
-- Check layout name spelling (case-sensitive)
-- Verify theme includes layout
-- Create custom layout in `./layouts/`
+| Intent | Feature | Doc |
+|---|---|---|
+| "Explain this code line by line" | Shiki line highlighting: ` ```ts {1\|3-5\|all} ` | `references/04-code-presentation.md` |
+| "Show code evolving between versions" | **Shiki Magic-Move** — morphs between code states | `references/04-code-presentation.md` |
+| "Let the audience run the code" | Monaco editor: ` ```ts {monaco-run} ` | `references/04-code-presentation.md` |
+| "Show TypeScript type info inline" | **TwoSlash** — type hover & errors rendered static | `references/04-code-presentation.md` |
+| "Reveal bullets one by one" | `<v-clicks>` wrapper | `references/03-components.md` |
+| "Animate an element sliding in" | `v-motion` directive | `references/03-components.md` |
+| "Flow diagram / sequence / architecture" | Mermaid fenced block | `references/05-diagrams-math.md` |
+| "Math formula" | KaTeX: `$ E = mc^2 $` inline, `$$...$$` block | `references/05-diagrams-math.md` |
+| "Split slide: cmd left, result right" | `layout: two-cols` (or a custom `dual-pane` layout) | `references/09-live-demo-patterns.md` |
 
-**Code not highlighting**:
-- Specify language: ` ```typescript ` not ` ``` `
-- Check for syntax errors
-- Clear cache: `slidev --force`
+### 7. Editing an existing deck
 
-**Export fails or hangs**:
-```bash
-pnpm add -D playwright-chromium  # Install first
-slidev export --timeout 60000    # Increase timeout
-slidev export --wait 2000         # Add wait time
-```
+1. **Read `slides.md` in full** before any edit. Understand the headmatter, the slide count, the layouts used, the theme.
+2. **Locate the target slide** by heading or content.
+3. **Make the smallest possible edit** — add a slide with `---`, change a layout line, add a `<v-clicks>` wrapper. Never reformat unrelated slides.
+4. If the change affects the whole deck (e.g. theme change), update only the headmatter.
+5. Run `pnpm dev --open` in the deck directory; the user verifies in the browser.
 
-**Monaco not working**:
-- Set `monaco: 'dev'` or `monaco: true` in headmatter
-- Clear cache
-- Check browser console for errors
+### 8. Export or deploy
 
-**Images not loading**:
-- Path must start with `/` for public folder
-- Verify file in `public/` directory
-- Check browser console for 404s
+Ask the user what they need:
 
-**Complete guide**: See `references/troubleshooting.md`
+- **PDF** (most common for hand-outs): `pnpm export` — requires `playwright-chromium` as dev dep.
+- **Static site**: `pnpm build` produces `dist/`.
+- **GitHub Pages / Vercel / Netlify**: see `references/08-export-deploy.md` for ready CI snippets.
 
-## Best Practices
+## Quality Checklist (before reporting a deck done)
 
-### Content Organisation
-1. **One idea per slide** - Don't overcrowd
-2. **6x6 rule** - Max 6 lines, 6 words per line
-3. **Visual hierarchy** - Use heading levels consistently
-4. **Progressive disclosure** - Use `<v-clicks>` for lists
-5. **Consistent styling** - Stick to theme
+Run through this list before telling the user the deck is ready:
 
-### Code Presentation
-1. **Specify language** - Always enable syntax highlighting
-2. **Line highlighting** - Guide attention: `{1|3-5|all}`
-3. **Keep it short** - Under 20 lines per block
-4. **Use Monaco** - For interactive demos
-5. **Font size** - Ensure readability (use `zoom` if needed)
+- [ ] Every code block has a language tag
+- [ ] No slide exceeds 6 bullets / 6 words per bullet (or speaker note explains why)
+- [ ] Lists with 3+ items use `<v-clicks>`
+- [ ] Headmatter has `title`, `author`, `theme`, `fonts`, `lang`
+- [ ] Speaker notes exist for every content slide (HTML comment at slide end)
+- [ ] Section dividers (`layout: section`) break the deck into chapters
+- [ ] Final slide uses `layout: end` with a clear takeaway or Q&A cue
+- [ ] `pnpm dev` runs without console errors
+- [ ] If Monaco is used: `monaco: dev` or `monaco: true` in headmatter
+- [ ] If PDF export is promised: `playwright-chromium` installed; `pnpm export` tested
 
-### Performance
-1. **Optimise images** - Compress, use WebP
-2. **Lazy load** - `preload: false` on heavy slides
-3. **Limit animations** - Balance engagement vs. performance
-4. **Local assets** - Use `/public` folder
-5. **Disable unused features** - `monaco: false` if not needed
+## Anti-Patterns (do not do)
 
-### Accessibility
-1. **Colour contrast** - Minimum 4.5:1 ratio
-2. **Alt text** - Describe images
-3. **Font size** - Minimum 24pt body text
-4. **Test keyboard navigation** - Arrow keys should work
-5. **Avoid flashing** - No rapid animations (<3/second)
+- **Do not paste novels.** If a slide body is longer than ~80 words, split the slide.
+- **Do not generate lorem-ipsum content.** Ask the user for real content, or leave `TODO:` markers.
+- **Do not use untyped code blocks.** ` ``` code ``` ` → always specify the language.
+- **Do not add a README.md inside the skill folder.** (Anthropic skill convention.) Repo-level READMEs are fine.
+- **Do not inline an entire reference into SKILL.md.** If you're tempted, you're in the wrong layer — move it to `references/`.
+- **Do not recommend themes not in the Slidev theme gallery** unless the user asked for a custom theme.
 
 ## Resources
 
-This skill includes comprehensive documentation:
+When details are needed beyond this file, **read the specific reference**, don't guess. Each `references/` file is self-contained.
 
-### `references/`
-- **layouts-reference.md** - All 17 built-in layouts with examples
-- **components-reference.md** - Complete component library and custom patterns
-- **configuration-reference.md** - All configuration options and setup files
-- **troubleshooting.md** - Common issues and solutions
+**Internal (bundled, read on demand):**
+- `references/01-syntax.md` — markdown conventions, headmatter, slide separators, notes, imports
+- `references/02-layouts.md` — all built-in layouts with side-by-side comparison
+- `references/03-components.md` — v-click, v-motion, Toc, Link, icons, Youtube, Tweet
+- `references/04-code-presentation.md` — Shiki, Magic-Move, TwoSlash, Monaco, code groups
+- `references/05-diagrams-math.md` — Mermaid, PlantUML, KaTeX, chemistry
+- `references/06-themes-styling.md` — theme gallery, colorSchema, fonts, UnoCSS, scoped CSS
+- `references/07-config.md` — complete headmatter schema + `slidev.config.ts`
+- `references/08-export-deploy.md` — PDF, PPTX, static, GitHub Pages, Vercel, Netlify, CI
+- `references/09-live-demo-patterns.md` — dual-pane layouts, demo choreography, fallback slides
+- `references/10-troubleshooting.md` — cache, Monaco, Playwright export, common errors
 
-### `assets/`
-- **slide-templates.md** - Ready-to-use templates for common slide types
-- **example-configurations.md** - Complete example configurations for different use cases
+**Asset templates (bundled, copy-then-modify):**
+- `assets/starter-deck.md` — minimal deck
+- `assets/conference-talk-deck.md` — 20–40 min narrative structure
+- `assets/workshop-deck.md` — hands-on, dual-pane demo slots
+- `assets/lightning-talk-deck.md` — 5–10 min, punchy
+- `assets/package-json-template.json` — reproducible Slidev + Playwright pinning
 
-### Official Documentation
-- Website: https://sli.dev
-- Docs: https://sli.dev/guide/
-- GitHub: https://github.com/slidevjs/slidev
-- Themes: https://sli.dev/resources/theme-gallery
+**Official:**
+- Website: <https://sli.dev>
+- Syntax guide: <https://sli.dev/guide/syntax>
+- Theme gallery: <https://sli.dev/resources/theme-gallery>
+- Addon gallery: <https://sli.dev/resources/addons>
+- GitHub: <https://github.com/slidevjs/slidev>

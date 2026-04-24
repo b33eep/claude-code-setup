@@ -29,7 +29,6 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 | Todo | Priority | Problem | Solution |
 |------|----------|---------|----------|
 | Docker Matrix Tests | Low | deps.json install commands not tested on real distros | GitHub Actions with Docker matrix ([Record 022](docs/records/022-docker-matrix-tests.md)) |
-| Slidev skill type review | Low | `create-slidev-presentation` is command but could benefit from auto-loading | Consider changing to context with `applies_to: [slidev]` |
 
 ---
 
@@ -37,6 +36,7 @@ A modular, minimal setup for Claude Code with clear workflow and persistent memo
 
 | Date | Decision | Why |
 |------|----------|-----|
+| 2026-04-24 | Keep `create-slidev-presentation` as `type: command` | Auto-loading (context) would pull 10+ reference files on any "slidev" match; "slidev" also isn't a tech-stack users list in CLAUDE.md. Progressive disclosure via explicit invocation preserves context budget. |
 | 2026-02-27 | 2 agents default + `--security`/`--full` flag for 3rd | Balance between review quality and token cost; security-auditor not needed for every review |
 | 2026-02-27 | Tracking update after plugin install, not before | Prevents state mismatch if `claude plugin install` fails (review feedback) |
 | 2026-02-11 | Replaced team-setup.mdx with customizing.mdx | All custom module topics (skills, commands, scripts, MCP) belong in one page; team-setup was redundant; Solo vs Team already in init-project |

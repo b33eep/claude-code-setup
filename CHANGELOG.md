@@ -15,6 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v57**: Rewrite `create-slidev-presentation` skill for Slidev v52+
+  - Restructured around Progressive Disclosure: 10 reference files + 5 deck templates (starter, conference-talk, workshop, lightning-talk)
+  - First-class coverage of Shiki Magic-Move, TwoSlash, Monaco live editors, and dual-pane live-demo patterns
+  - Adds sections on projector legibility, accessibility, and audience interaction (QR codes, Slido embeds)
+  - Fixes broken references in the old skill to files that never existed
 - **v56**: Custom module refresh during upgrades
   - New `--refresh-custom` flag for `install.sh`: refreshes installed custom skills, commands, and scripts after `git pull`
   - `/claude-code-setup` "Upgrade custom" now auto-discovers and installs new custom skills and MCP servers
