@@ -105,6 +105,59 @@ cp "$CUSTOM_DIR/scripts/helper.sh" "$CLAUDE_DIR/scripts/helper.sh"
 chmod +x "$CLAUDE_DIR/scripts/helper.sh"
 
 # ============================================
+# Add UNTRACKED custom artifacts (real-world case: artifacts exist on disk
+# but were never tracked in installed.json, e.g. from a partial install)
+# ============================================
+
+# Untracked custom skill: source in custom/skills/, copy in ~/.claude/skills/,
+# but NO entry in installed.json.skills[]
+mkdir -p "$CUSTOM_DIR/skills/orphan-skill"
+cat > "$CUSTOM_DIR/skills/orphan-skill/SKILL.md" << 'EOF'
+---
+name: orphan-skill
+description: Untracked custom skill
+type: context
+applies_to: [test]
+---
+# Orphan Skill
+EOF
+cp -r "$CUSTOM_DIR/skills/orphan-skill" "$CLAUDE_DIR/skills/orphan-skill"
+
+# Untracked custom MCP: config in custom/mcp/, entry in ~/.claude.json,
+# but NO entry in installed.json.mcp[]
+cat > "$CUSTOM_DIR/mcp/orphan-mcp.json" << 'EOF'
+{
+  "name": "orphan-mcp",
+  "description": "Untracked custom MCP",
+  "config": {
+    "type": "stdio",
+    "command": "echo",
+    "args": ["orphan"]
+  },
+  "requiresApiKey": false
+}
+EOF
+jq '.mcpServers["orphan-mcp"] = {"type":"stdio","command":"echo","args":["orphan"]}' \
+    "$MCP_CONFIG_FILE" > "$MCP_CONFIG_FILE.tmp" && mv "$MCP_CONFIG_FILE.tmp" "$MCP_CONFIG_FILE"
+
+# Untracked custom script: source in custom/scripts/, copy in ~/.claude/scripts/,
+# but NO entry in installed.json.scripts[]
+cat > "$CUSTOM_DIR/scripts/orphan.sh" << 'EOF'
+#!/bin/bash
+echo "orphan"
+EOF
+chmod +x "$CUSTOM_DIR/scripts/orphan.sh"
+cp "$CUSTOM_DIR/scripts/orphan.sh" "$CLAUDE_DIR/scripts/orphan.sh"
+chmod +x "$CLAUDE_DIR/scripts/orphan.sh"
+
+# Untracked override: custom command for an existing base (wrapup.md),
+# materialised on disk but NOT in command_overrides[]
+cat > "$CUSTOM_DIR/commands/wrapup.md" << 'EOF'
+# Custom Wrapup Override (Untracked)
+EOF
+cp "$CUSTOM_DIR/commands/wrapup.md" "$CLAUDE_DIR/commands/wrapup.md"
+
+# ============================================
 # Verify initial state
 # ============================================
 
@@ -206,6 +259,41 @@ if [[ -f "$CLAUDE_DIR/scripts/helper.sh" ]]; then
     fail "helper.sh should be deleted"
 else
     pass "helper.sh deleted"
+fi
+
+scenario "Untracked custom artifacts also removed (source as ground truth)"
+
+# orphan-skill was on disk and in custom/skills/ but not in installed.json
+if [[ -d "$CLAUDE_DIR/skills/orphan-skill" ]]; then
+    fail "orphan-skill directory should be removed (untracked)"
+else
+    pass "orphan-skill removed despite no tracking"
+fi
+
+# orphan-mcp was in ~/.claude.json but not in installed.json.mcp[]
+if jq -e '.mcpServers["orphan-mcp"]' "$MCP_CONFIG_FILE" > /dev/null 2>&1; then
+    fail "orphan-mcp should be removed from .claude.json"
+else
+    pass "orphan-mcp removed from .claude.json despite no tracking"
+fi
+
+# orphan.sh was on disk but not in installed.json.scripts[]
+if [[ -f "$CLAUDE_DIR/scripts/orphan.sh" ]]; then
+    fail "orphan.sh should be removed (untracked)"
+else
+    pass "orphan.sh removed despite no tracking"
+fi
+
+# wrapup.md was an untracked override of a base command — base should be restored
+if grep -q "Custom Wrapup Override (Untracked)" "$CLAUDE_DIR/commands/wrapup.md" 2>/dev/null; then
+    fail "wrapup.md should be restored to base, not still custom"
+else
+    pass "wrapup.md restored to base despite no tracking"
+fi
+if diff -q "$PROJECT_DIR/commands/wrapup.md" "$CLAUDE_DIR/commands/wrapup.md" > /dev/null 2>&1; then
+    pass "wrapup.md matches base from repo"
+else
+    fail "wrapup.md should match base from repo"
 fi
 
 if jq -e '.scripts | length > 0' "$INSTALLED_FILE" > /dev/null 2>&1; then
