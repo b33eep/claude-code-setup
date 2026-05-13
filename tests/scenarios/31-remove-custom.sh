@@ -124,6 +124,7 @@ assert_json_eq "$INSTALLED_FILE" '.custom_url' "git@example.com:test/repo.git" "
 # Run --remove-custom
 # ============================================
 
+REMOVE_RC=0
 REMOVE_OUTPUT=$(HOME="$TEST_DIR" \
 CLAUDE_DIR="$CLAUDE_DIR" \
 CUSTOM_DIR="$CUSTOM_DIR" \
@@ -131,7 +132,13 @@ MCP_CONFIG_FILE="$MCP_CONFIG_FILE" \
 INSTALLED_FILE="$INSTALLED_FILE" \
 SKIP_SKILL_DEPS=1 \
 SKIP_EXTERNAL_PLUGINS=1 \
-"$PROJECT_DIR/install.sh" --remove-custom 2>&1) || true
+"$PROJECT_DIR/install.sh" --remove-custom 2>&1) || REMOVE_RC=$?
+
+if [[ $REMOVE_RC -eq 0 ]]; then
+    pass "--remove-custom exited 0"
+else
+    fail "--remove-custom exited with rc=$REMOVE_RC (output: $REMOVE_OUTPUT)"
+fi
 
 # ============================================
 # Assertions
@@ -267,6 +274,7 @@ fi
 
 scenario "Re-running --remove-custom is idempotent"
 
+REMOVE_RC2=0
 REMOVE_OUTPUT2=$(HOME="$TEST_DIR" \
 CLAUDE_DIR="$CLAUDE_DIR" \
 CUSTOM_DIR="$CUSTOM_DIR" \
@@ -274,7 +282,13 @@ MCP_CONFIG_FILE="$MCP_CONFIG_FILE" \
 INSTALLED_FILE="$INSTALLED_FILE" \
 SKIP_SKILL_DEPS=1 \
 SKIP_EXTERNAL_PLUGINS=1 \
-"$PROJECT_DIR/install.sh" --remove-custom 2>&1) || true
+"$PROJECT_DIR/install.sh" --remove-custom 2>&1) || REMOVE_RC2=$?
+
+if [[ $REMOVE_RC2 -eq 0 ]]; then
+    pass "idempotent re-run exited 0"
+else
+    fail "idempotent re-run exited with rc=$REMOVE_RC2"
+fi
 
 if echo "$REMOVE_OUTPUT2" | grep -q "No custom repo registered"; then
     pass "second run reports nothing to remove"
@@ -294,6 +308,7 @@ jq '.custom_url = "git@example.com:test/repo.git" |
     .skills = (.skills + ["custom:ghost-skill"])' \
     "$INSTALLED_FILE" > "$INSTALLED_FILE.tmp" && mv "$INSTALLED_FILE.tmp" "$INSTALLED_FILE"
 
+REMOVE_RC3=0
 REMOVE_OUTPUT3=$(HOME="$TEST_DIR" \
 CLAUDE_DIR="$CLAUDE_DIR" \
 CUSTOM_DIR="$CUSTOM_DIR" \
@@ -301,7 +316,13 @@ MCP_CONFIG_FILE="$MCP_CONFIG_FILE" \
 INSTALLED_FILE="$INSTALLED_FILE" \
 SKIP_SKILL_DEPS=1 \
 SKIP_EXTERNAL_PLUGINS=1 \
-"$PROJECT_DIR/install.sh" --remove-custom 2>&1) || true
+"$PROJECT_DIR/install.sh" --remove-custom 2>&1) || REMOVE_RC3=$?
+
+if [[ $REMOVE_RC3 -eq 0 ]]; then
+    pass "partial-state run exited 0"
+else
+    fail "partial-state run exited with rc=$REMOVE_RC3"
+fi
 
 if jq -e '.custom_url' "$INSTALLED_FILE" > /dev/null 2>&1; then
     fail "custom_url should still be cleared in partial state"
@@ -320,6 +341,42 @@ if echo "$REMOVE_OUTPUT3" | grep -q "Removing Custom Repo"; then
     pass "partial state still runs through removal flow"
 else
     fail "partial state should still run removal flow (output: $REMOVE_OUTPUT3)"
+fi
+
+# ============================================
+# Scenario: installed.json missing entirely
+# ============================================
+
+scenario "Missing installed.json: early-return path"
+
+rm -f "$INSTALLED_FILE"
+
+REMOVE_RC4=0
+REMOVE_OUTPUT4=$(HOME="$TEST_DIR" \
+CLAUDE_DIR="$CLAUDE_DIR" \
+CUSTOM_DIR="$CUSTOM_DIR" \
+MCP_CONFIG_FILE="$MCP_CONFIG_FILE" \
+INSTALLED_FILE="$INSTALLED_FILE" \
+SKIP_SKILL_DEPS=1 \
+SKIP_EXTERNAL_PLUGINS=1 \
+"$PROJECT_DIR/install.sh" --remove-custom 2>&1) || REMOVE_RC4=$?
+
+if [[ $REMOVE_RC4 -eq 0 ]]; then
+    pass "missing installed.json exits 0"
+else
+    fail "missing installed.json should exit 0 (rc=$REMOVE_RC4)"
+fi
+
+if echo "$REMOVE_OUTPUT4" | grep -q "No installation found"; then
+    pass "missing installed.json shows correct message"
+else
+    fail "missing installed.json should say 'No installation found' (output: $REMOVE_OUTPUT4)"
+fi
+
+if [[ -f "$INSTALLED_FILE" ]]; then
+    fail "installed.json should not be recreated"
+else
+    pass "installed.json not recreated"
 fi
 
 # ============================================
