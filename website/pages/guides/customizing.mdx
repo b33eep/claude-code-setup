@@ -243,8 +243,13 @@ Team members update with `/claude-code-setup` — it detects new versions automa
 - Auto-discover and install new custom MCP servers (if no API key required)
 - Rebuild CLAUDE.md with updated module tables
 
+## Removing a Custom Repository
+
+To uninstall the custom modules repo entirely, run [`/remove-custom`](/commands/remove-custom) (or `./install.sh --remove-custom` from the CLI). It removes the git clone, every installed custom skill / MCP / command / script, clears the tracking fields in `installed.json`, restores base versions of overridden commands, and rebuilds CLAUDE.md.
+
 ## Related
 
 - [Creating Skills](/guides/creating-skills) - Detailed skill examples and deps.json format
 - [/add-custom](/commands/add-custom) - Install custom modules for your team
-- [Module Management](/features/module-management) - `--list`, `--update`, `--remove`
+- [/remove-custom](/commands/remove-custom) - Remove the active custom repo and all its artifacts
+- [Module Management](/features/module-management) - `--list`, `--update`, `--remove`, `--remove-custom`

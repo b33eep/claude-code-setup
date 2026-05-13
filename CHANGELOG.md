@@ -15,6 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v58**: Full custom-repo removal via `/remove-custom`
+  - New slash command `/remove-custom` removes the active custom modules repo and all its installed artifacts (skills, MCP servers, command overrides, scripts) with zero residue
+  - Override commands that shadow base commands are restored to their base versions; custom-only commands are deleted
+  - New `--remove-custom` CLI flag in `install.sh` for non-interactive use (CI, scripts)
+  - Cleans up `~/.claude/custom/`, the `custom:` entries in `installed.json`, and the `custom_url`/`custom_version` tracking fields; rebuilds `CLAUDE.md`
 - **v57**: Rewrite `create-slidev-presentation` and `skill-creator` around Progressive Disclosure
   - `create-slidev-presentation` — 10 references + 5 deck templates; first-class coverage of Shiki Magic-Move, TwoSlash, Monaco, dual-pane live-demo patterns, projector legibility, accessibility, audience interaction
   - `skill-creator` — 8 references + 3 worked examples; aligned with Anthropic's Skills Guide (Jan 2026); covers progressive disclosure, description writing, the 5 skill patterns, and testing methodology

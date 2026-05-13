@@ -75,6 +75,7 @@ show_usage() {
     echo "  --remove-skill <name>   Remove a specific skill by name"
     echo "  --remove-mcp <name>     Remove a specific MCP server by name"
     echo "  --refresh-custom        Refresh custom modules after git pull"
+    echo "  --remove-custom         Remove custom modules repo and all installed artifacts"
     echo ""
     echo "Examples:"
     echo "  ./install.sh --update --yes        Non-interactive update"
@@ -83,6 +84,7 @@ show_usage() {
     echo "  ./install.sh --remove-skill standards-kotlin"
     echo "  ./install.sh --remove-mcp brave-search"
     echo "  ./install.sh --remove              Remove installed modules"
+    echo "  ./install.sh --remove-custom      Remove entire custom repo"
     echo ""
     echo "Custom Modules:"
     echo "  Place custom modules in ~/.claude/custom/"
@@ -590,6 +592,9 @@ main() {
             --refresh-custom)
                 action="refresh-custom"
                 ;;
+            --remove-custom)
+                action="remove-custom"
+                ;;
             --update|-u)
                 action="update"
                 ;;
@@ -631,6 +636,9 @@ main() {
             ;;
         "refresh-custom")
             do_refresh_custom
+            ;;
+        "remove-custom")
+            do_remove_custom
             ;;
         "update")
             do_update

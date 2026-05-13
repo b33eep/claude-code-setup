@@ -122,6 +122,28 @@ Also works with custom modules using the `custom:` prefix:
 ./install.sh --add-mcp custom:my-mcp
 ```
 
+### --remove-custom
+
+Remove the active custom modules repository and all its installed artifacts in one step.
+
+```bash
+./install.sh --remove-custom
+```
+
+Equivalent slash command: [`/remove-custom`](/commands/remove-custom).
+
+Only one custom repo can be active at a time, so no URL argument is needed. The flag:
+
+- Removes every `custom:`-prefixed skill from `~/.claude/skills/` and `installed.json`
+- Removes every `custom:`-prefixed MCP server from `~/.claude.json` and `installed.json`
+- Deletes every custom command override; restores base versions where a base command of the same name exists
+- Deletes every custom script from `~/.claude/scripts/`
+- Deletes `~/.claude/custom/` (the git clone)
+- Clears `custom_url` and `custom_version` from `installed.json`
+- Rebuilds `~/.claude/CLAUDE.md`
+
+If MCP servers were removed, restart Claude Code to deactivate them.
+
 ### --list
 
 Show what's currently installed.

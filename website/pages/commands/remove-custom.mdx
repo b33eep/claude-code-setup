@@ -1,0 +1,59 @@
+# /remove-custom
+
+Remove the active custom modules repository and all its installed artifacts.
+
+## Usage
+
+```
+/remove-custom
+```
+
+Only one custom repo can be active at a time (the clone lives at a fixed path `~/.claude/custom/`), so no URL argument is needed.
+
+## What It Does
+
+1. **Removes installed skills** — every `custom:`-prefixed entry in `installed.json.skills[]` is deleted from `~/.claude/skills/` and untracked.
+2. **Removes installed MCP servers** — every `custom:`-prefixed entry in `installed.json.mcp[]` is removed from `~/.claude.json` and untracked.
+3. **Removes custom commands** — every entry in `installed.json.command_overrides[]` is deleted from `~/.claude/commands/`. If a base command of the same name exists in the claude-code-setup repo, the base version is restored.
+4. **Removes custom scripts** — every entry in `installed.json.scripts[]` is deleted from `~/.claude/scripts/` and untracked.
+5. **Deletes the git clone** — `~/.claude/custom/` is removed entirely.
+6. **Clears tracking fields** — `custom_url` and `custom_version` are deleted from `installed.json`.
+7. **Rebuilds CLAUDE.md** — removed modules disappear from the tables.
+
+## Output
+
+```
+Removing Custom Repo: git@company.com:team/claude-modules.git
+
+  ✓ Removed skill: my-skill
+  ✓ Removed MCP server: my-mcp
+  ✓ Restored base command: catchup.md
+  ✓ Removed script: helper.sh
+  ✓ Removed /Users/you/.claude/custom
+  ✓ Cleared custom_url and custom_version from installed.json
+
+Rebuilding CLAUDE.md
+  ✓ CLAUDE.md updated
+
+Removal Complete
+
+Removed:
+  - 1 skill(s)
+  - 1 MCP server(s)
+  - 1 command(s)
+  - 1 script(s)
+
+⚠️  IMPORTANT: Restart Claude Code to deactivate removed MCP servers.
+```
+
+## CLI Equivalent
+
+```bash
+./install.sh --remove-custom
+```
+
+## Related
+
+- [/add-custom](/commands/add-custom) - Install custom modules for your team
+- [Customizing](/guides/customizing) - Custom modules guide
+- [Module Management](/features/module-management) - All install/update/remove flags
