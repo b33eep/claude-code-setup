@@ -60,13 +60,19 @@ uninstall_skill() {
 
 # Remove a custom command override; restore base version if it exists.
 # Usage: uninstall_custom_command <filename>   # e.g. "catchup.md"
+# Returns: 0 on success (file removed or base restored). Non-zero if the
+# base copy fails — tracking is left intact in that case so the user can
+# retry without losing the override entry.
 uninstall_custom_command() {
     local filename=$1
     local target="$CLAUDE_DIR/commands/$filename"
     local base="$SCRIPT_DIR/commands/$filename"
 
     if [[ -f "$base" ]]; then
-        cp "$base" "$target"
+        if ! cp "$base" "$target"; then
+            print_warning "Failed to restore base command: $filename"
+            return 1
+        fi
     else
         rm -f "$target"
     fi
@@ -335,12 +341,24 @@ do_remove_custom() {
         print_header "Removing Custom Repo"
     fi
 
-    # Build inventory from installed.json (snapshot before mutation)
+    # Build inventory from installed.json (snapshot before mutation).
+    # Skills and MCPs carry a "custom:" prefix because they share a tracking
+    # array with base modules. command_overrides[] and scripts[] do NOT — by
+    # design they belong solely to the custom repo (base commands aren't
+    # tracked there, base ships no scripts), so we take the arrays as-is.
     local custom_skills custom_mcps custom_cmds custom_scripts
     custom_skills=$(jq -r '.skills[]? | select(startswith("custom:"))' "$INSTALLED_FILE" 2>/dev/null || true)
     custom_mcps=$(jq -r '.mcp[]? | select(startswith("custom:"))' "$INSTALLED_FILE" 2>/dev/null || true)
     custom_cmds=$(jq -r '.command_overrides[]? // empty' "$INSTALLED_FILE" 2>/dev/null || true)
     custom_scripts=$(jq -r '.scripts[]? // empty' "$INSTALLED_FILE" 2>/dev/null || true)
+
+    # External plugins are installed via claude-CLI from a marketplace; the
+    # custom repo can REGISTER additional marketplaces/plugins via
+    # external-plugins.json, but installed.json doesn't track which plugins
+    # originated from the custom source vs. base. We cannot safely remove
+    # them automatically, so we surface a notice if any are installed.
+    local external_count
+    external_count=$(jq -r '.external_plugins // [] | length' "$INSTALLED_FILE" 2>/dev/null || echo 0)
 
     local skills_removed=0
     local mcps_removed=0
@@ -348,61 +366,56 @@ do_remove_custom() {
     local scripts_removed=0
     local item
 
+    # Counters tally SUCCESSFUL removals only. When uninstall_skill/uninstall_mcp
+    # fail because the artifact is already gone, we still clean up the tracking
+    # entry via remove_from_installed, but don't count it toward the totals.
+    #
+    # Note: `: $((var++))` (not `((var++))`) avoids `set -e` exiting when the
+    # pre-increment expression returns 0. The `:` no-op consumes the value.
+
     # 1. Skills
-    # uninstall_skill / uninstall_mcp fail when the artifact is already gone,
-    # leaving the tracking entry behind. For a full custom-repo removal we
-    # also want stale tracking entries cleaned up, so fall back to
-    # remove_from_installed if the artifact-level uninstall returns non-zero.
-    if [[ -n "$custom_skills" ]]; then
-        while IFS= read -r item; do
-            [[ -z "$item" ]] && continue
-            if uninstall_skill "$item"; then
-                print_success "Removed skill: ${item#custom:}"
-            else
-                remove_from_installed "skills" "$item"
-            fi
-            ((skills_removed++)) || true
-        done <<< "$custom_skills"
-    fi
+    while IFS= read -r item; do
+        [[ -z "$item" ]] && continue
+        if uninstall_skill "$item"; then
+            print_success "Removed skill: ${item#custom:}"
+            : $((skills_removed++))
+        else
+            remove_from_installed "skills" "$item"
+        fi
+    done <<< "$custom_skills"
 
     # 2. MCPs
-    if [[ -n "$custom_mcps" ]]; then
-        while IFS= read -r item; do
-            [[ -z "$item" ]] && continue
-            if uninstall_mcp "$item"; then
-                print_success "Removed MCP server: ${item#custom:}"
-            else
-                remove_from_installed "mcp" "$item"
-            fi
-            ((mcps_removed++)) || true
-        done <<< "$custom_mcps"
-    fi
+    while IFS= read -r item; do
+        [[ -z "$item" ]] && continue
+        if uninstall_mcp "$item"; then
+            print_success "Removed MCP server: ${item#custom:}"
+            : $((mcps_removed++))
+        else
+            remove_from_installed "mcp" "$item"
+        fi
+    done <<< "$custom_mcps"
 
     # 3. Commands (restore base where available)
-    if [[ -n "$custom_cmds" ]]; then
-        while IFS= read -r item; do
-            [[ -z "$item" ]] && continue
-            if uninstall_custom_command "$item"; then
-                if [[ -f "$SCRIPT_DIR/commands/$item" ]]; then
-                    print_success "Restored base command: $item"
-                else
-                    print_success "Removed custom command: $item"
-                fi
-                ((cmds_removed++)) || true
+    while IFS= read -r item; do
+        [[ -z "$item" ]] && continue
+        if uninstall_custom_command "$item"; then
+            if [[ -f "$SCRIPT_DIR/commands/$item" ]]; then
+                print_success "Restored base command: $item"
+            else
+                print_success "Removed custom command: $item"
             fi
-        done <<< "$custom_cmds"
-    fi
+            : $((cmds_removed++))
+        fi
+    done <<< "$custom_cmds"
 
     # 4. Scripts
-    if [[ -n "$custom_scripts" ]]; then
-        while IFS= read -r item; do
-            [[ -z "$item" ]] && continue
-            if uninstall_custom_script "$item"; then
-                print_success "Removed script: $item"
-                ((scripts_removed++)) || true
-            fi
-        done <<< "$custom_scripts"
-    fi
+    while IFS= read -r item; do
+        [[ -z "$item" ]] && continue
+        if uninstall_custom_script "$item"; then
+            print_success "Removed script: $item"
+            : $((scripts_removed++))
+        fi
+    done <<< "$custom_scripts"
 
     # 5. Delete the git clone
     if [[ -d "$CUSTOM_DIR" ]]; then
@@ -432,8 +445,17 @@ do_remove_custom() {
     echo "  - $cmds_removed command(s)"
     echo "  - $scripts_removed script(s)"
     echo ""
+    if (( external_count > 0 )); then
+        print_warning "$external_count external plugin(s) remain installed."
+        echo "    External plugins are managed via the claude CLI and may have been"
+        echo "    registered by the custom repo. Review with:"
+        echo "      jq '.external_plugins' \"$INSTALLED_FILE\""
+        echo "    Remove with:"
+        echo "      claude plugin remove <id>"
+        echo ""
+    fi
     if (( mcps_removed > 0 )); then
-        echo "⚠️  IMPORTANT: Restart Claude Code to deactivate removed MCP servers."
+        echo "IMPORTANT: Restart Claude Code to deactivate removed MCP servers."
         echo ""
     fi
 }
