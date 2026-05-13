@@ -58,6 +58,34 @@ uninstall_skill() {
     return 0
 }
 
+# Remove a custom command override; restore base version if it exists.
+# Usage: uninstall_custom_command <filename>   # e.g. "catchup.md"
+uninstall_custom_command() {
+    local filename=$1
+    local target="$CLAUDE_DIR/commands/$filename"
+    local base="$SCRIPT_DIR/commands/$filename"
+
+    if [[ -f "$base" ]]; then
+        cp "$base" "$target"
+    else
+        rm -f "$target"
+    fi
+
+    remove_from_installed "command_overrides" "$filename"
+    return 0
+}
+
+# Remove a custom script that was installed from ~/.claude/custom/scripts/.
+# Usage: uninstall_custom_script <filename>
+uninstall_custom_script() {
+    local filename=$1
+    local target="$CLAUDE_DIR/scripts/$filename"
+
+    rm -f "$target"
+    remove_from_installed "scripts" "$filename"
+    return 0
+}
+
 # Remove external plugin via claude CLI
 uninstall_external_plugin() {
     local name=$1
@@ -263,4 +291,149 @@ do_remove() {
     echo "⚠️  IMPORTANT: Restart Claude Code now."
     echo "   Tools (Read, Bash, etc.) may not work until restart."
     echo ""
+}
+
+# Remove the entire custom modules repo and ALL its installed artifacts.
+# Usage: do_remove_custom
+# No arguments — only one custom repo can be active at a time (CUSTOM_DIR is a
+# single hardcoded path), so there's nothing to disambiguate.
+#
+# Removes:
+#   - all custom skills (skills[] entries with custom: prefix)
+#   - all custom MCPs (mcp[] entries with custom: prefix)
+#   - all custom command overrides (restores base versions if available)
+#   - all custom scripts
+#   - $CUSTOM_DIR (the git clone)
+#   - custom_url and custom_version fields from installed.json
+# Rebuilds CLAUDE.md at the end.
+do_remove_custom() {
+    echo ""
+    echo "Claude Code Setup - Remove Custom Repo"
+    echo "======================================="
+
+    install_jq
+
+    if [[ ! -f "$INSTALLED_FILE" ]]; then
+        echo ""
+        echo "No installation found. Nothing to remove."
+        return 0
+    fi
+
+    local custom_url
+    custom_url=$(jq -r '.custom_url // empty' "$INSTALLED_FILE" 2>/dev/null || echo "")
+
+    if [[ -z "$custom_url" ]] && [[ ! -d "$CUSTOM_DIR" ]]; then
+        echo ""
+        echo "No custom repo registered (installed.json has no custom_url, and"
+        echo "$CUSTOM_DIR does not exist). Nothing to remove."
+        return 0
+    fi
+
+    if [[ -n "$custom_url" ]]; then
+        print_header "Removing Custom Repo: $custom_url"
+    else
+        print_header "Removing Custom Repo"
+    fi
+
+    # Build inventory from installed.json (snapshot before mutation)
+    local custom_skills custom_mcps custom_cmds custom_scripts
+    custom_skills=$(jq -r '.skills[]? | select(startswith("custom:"))' "$INSTALLED_FILE" 2>/dev/null || true)
+    custom_mcps=$(jq -r '.mcp[]? | select(startswith("custom:"))' "$INSTALLED_FILE" 2>/dev/null || true)
+    custom_cmds=$(jq -r '.command_overrides[]? // empty' "$INSTALLED_FILE" 2>/dev/null || true)
+    custom_scripts=$(jq -r '.scripts[]? // empty' "$INSTALLED_FILE" 2>/dev/null || true)
+
+    local skills_removed=0
+    local mcps_removed=0
+    local cmds_removed=0
+    local scripts_removed=0
+    local item
+
+    # 1. Skills
+    # uninstall_skill / uninstall_mcp fail when the artifact is already gone,
+    # leaving the tracking entry behind. For a full custom-repo removal we
+    # also want stale tracking entries cleaned up, so fall back to
+    # remove_from_installed if the artifact-level uninstall returns non-zero.
+    if [[ -n "$custom_skills" ]]; then
+        while IFS= read -r item; do
+            [[ -z "$item" ]] && continue
+            if uninstall_skill "$item"; then
+                print_success "Removed skill: ${item#custom:}"
+            else
+                remove_from_installed "skills" "$item"
+            fi
+            ((skills_removed++)) || true
+        done <<< "$custom_skills"
+    fi
+
+    # 2. MCPs
+    if [[ -n "$custom_mcps" ]]; then
+        while IFS= read -r item; do
+            [[ -z "$item" ]] && continue
+            if uninstall_mcp "$item"; then
+                print_success "Removed MCP server: ${item#custom:}"
+            else
+                remove_from_installed "mcp" "$item"
+            fi
+            ((mcps_removed++)) || true
+        done <<< "$custom_mcps"
+    fi
+
+    # 3. Commands (restore base where available)
+    if [[ -n "$custom_cmds" ]]; then
+        while IFS= read -r item; do
+            [[ -z "$item" ]] && continue
+            if uninstall_custom_command "$item"; then
+                if [[ -f "$SCRIPT_DIR/commands/$item" ]]; then
+                    print_success "Restored base command: $item"
+                else
+                    print_success "Removed custom command: $item"
+                fi
+                ((cmds_removed++)) || true
+            fi
+        done <<< "$custom_cmds"
+    fi
+
+    # 4. Scripts
+    if [[ -n "$custom_scripts" ]]; then
+        while IFS= read -r item; do
+            [[ -z "$item" ]] && continue
+            if uninstall_custom_script "$item"; then
+                print_success "Removed script: $item"
+                ((scripts_removed++)) || true
+            fi
+        done <<< "$custom_scripts"
+    fi
+
+    # 5. Delete the git clone
+    if [[ -d "$CUSTOM_DIR" ]]; then
+        rm -rf "$CUSTOM_DIR"
+        print_success "Removed $CUSTOM_DIR"
+    fi
+
+    # 6. Clear custom_url and custom_version from installed.json
+    if jq 'del(.custom_url) | del(.custom_version)' "$INSTALLED_FILE" > "$INSTALLED_FILE.tmp"; then
+        mv "$INSTALLED_FILE.tmp" "$INSTALLED_FILE"
+        print_success "Cleared custom_url and custom_version from installed.json"
+    else
+        rm -f "$INSTALLED_FILE.tmp"
+        print_warning "Failed to update installed.json"
+    fi
+
+    # 7. Rebuild CLAUDE.md
+    print_header "Rebuilding CLAUDE.md"
+    build_claude_md
+    print_success "CLAUDE.md updated"
+
+    print_header "Removal Complete"
+    echo ""
+    echo "Removed:"
+    echo "  - $skills_removed skill(s)"
+    echo "  - $mcps_removed MCP server(s)"
+    echo "  - $cmds_removed command(s)"
+    echo "  - $scripts_removed script(s)"
+    echo ""
+    if (( mcps_removed > 0 )); then
+        echo "⚠️  IMPORTANT: Restart Claude Code to deactivate removed MCP servers."
+        echo ""
+    fi
 }
