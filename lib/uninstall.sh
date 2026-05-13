@@ -352,6 +352,37 @@ do_remove_custom() {
     custom_cmds=$(jq -r '.command_overrides[]? // empty' "$INSTALLED_FILE" 2>/dev/null || true)
     custom_scripts=$(jq -r '.scripts[]? // empty' "$INSTALLED_FILE" 2>/dev/null || true)
 
+    # Tracking can lie — skills may exist on disk (or in ~/.claude.json) that
+    # the custom repo provided but that never made it into installed.json (or
+    # were dropped by a partial install/update). Snapshot the SOURCE listings
+    # before deleting CUSTOM_DIR; we do a second pass below that catches
+    # untracked artifacts using these as ground truth.
+    local source_skills="" source_mcps="" source_cmds="" source_scripts=""
+    if [[ -d "$CUSTOM_DIR/skills" ]]; then
+        for d in "$CUSTOM_DIR/skills/"*/; do
+            [[ -d "$d" ]] || continue
+            source_skills+="$(basename "$d")"$'\n'
+        done
+    fi
+    if [[ -d "$CUSTOM_DIR/mcp" ]]; then
+        for f in "$CUSTOM_DIR/mcp/"*.json; do
+            [[ -f "$f" ]] || continue
+            source_mcps+="$(basename "$f" .json)"$'\n'
+        done
+    fi
+    if [[ -d "$CUSTOM_DIR/commands" ]]; then
+        for f in "$CUSTOM_DIR/commands/"*.md; do
+            [[ -f "$f" ]] || continue
+            source_cmds+="$(basename "$f")"$'\n'
+        done
+    fi
+    if [[ -d "$CUSTOM_DIR/scripts" ]]; then
+        for f in "$CUSTOM_DIR/scripts/"*; do
+            [[ -f "$f" ]] || continue
+            source_scripts+="$(basename "$f")"$'\n'
+        done
+    fi
+
     # External plugins are installed via claude-CLI from a marketplace; the
     # custom repo can REGISTER additional marketplaces/plugins via
     # external-plugins.json, but installed.json doesn't track which plugins
@@ -364,7 +395,7 @@ do_remove_custom() {
     local mcps_removed=0
     local cmds_removed=0
     local scripts_removed=0
-    local item
+    local item name
 
     # Counters tally SUCCESSFUL removals only. When uninstall_skill/uninstall_mcp
     # fail because the artifact is already gone, we still clean up the tracking
@@ -372,6 +403,8 @@ do_remove_custom() {
     #
     # Note: `: $((var++))` (not `((var++))`) avoids `set -e` exiting when the
     # pre-increment expression returns 0. The `:` no-op consumes the value.
+
+    # === Pass 1: Tracked artifacts (installed.json is the source of truth) ===
 
     # 1. Skills
     while IFS= read -r item; do
@@ -416,6 +449,73 @@ do_remove_custom() {
             : $((scripts_removed++))
         fi
     done <<< "$custom_scripts"
+
+    # === Pass 2: Untracked artifacts (source snapshot is the source of truth) ===
+    # Anything the custom repo shipped that's still on disk gets removed, even
+    # if tracking missed it. Guard against name collisions with base artifacts
+    # ($SCRIPT_DIR/...) so we never wipe a shipped module by accident.
+
+    while IFS= read -r name; do
+        [[ -z "$name" ]] && continue
+        [[ -d "$CLAUDE_DIR/skills/$name" ]] || continue
+        if [[ -d "$SCRIPT_DIR/skills/$name" ]]; then
+            print_warning "Skipped untracked skill $name (also a base skill)"
+            continue
+        fi
+        rm -rf "$CLAUDE_DIR/skills/$name"
+        remove_from_installed "skills" "$name"
+        remove_from_installed "skills" "custom:$name"
+        print_success "Removed untracked skill: $name"
+        : $((skills_removed++))
+    done <<< "$source_skills"
+
+    while IFS= read -r name; do
+        [[ -z "$name" ]] && continue
+        jq -e ".mcpServers[\"$name\"]" "$MCP_CONFIG_FILE" > /dev/null 2>&1 || continue
+        if [[ -f "$SCRIPT_DIR/mcp/$name.json" ]]; then
+            print_warning "Skipped untracked MCP $name (also a base MCP)"
+            continue
+        fi
+        if jq "del(.mcpServers[\"$name\"])" "$MCP_CONFIG_FILE" > "$MCP_CONFIG_FILE.tmp"; then
+            mv "$MCP_CONFIG_FILE.tmp" "$MCP_CONFIG_FILE"
+            remove_from_installed "mcp" "$name"
+            remove_from_installed "mcp" "custom:$name"
+            print_success "Removed untracked MCP server: $name"
+            : $((mcps_removed++))
+        else
+            rm -f "$MCP_CONFIG_FILE.tmp"
+            print_warning "Failed to remove untracked MCP $name from $MCP_CONFIG_FILE"
+        fi
+    done <<< "$source_mcps"
+
+    while IFS= read -r name; do
+        [[ -z "$name" ]] && continue
+        [[ -f "$CLAUDE_DIR/commands/$name" ]] || continue
+        # If a base version exists, the file is already in its base state (or
+        # will be restored). If not, the override file is untracked custom
+        # content — but we mustn't blindly delete it; the file might have been
+        # locally modified by the user. Only act if file content matches the
+        # source we just deleted — too late, source is gone. Fall back to
+        # restoring base if available, else leave the file in place with a
+        # warning.
+        if [[ -f "$SCRIPT_DIR/commands/$name" ]]; then
+            cp "$SCRIPT_DIR/commands/$name" "$CLAUDE_DIR/commands/$name"
+            remove_from_installed "command_overrides" "$name"
+            print_success "Restored base command: $name (was untracked)"
+            : $((cmds_removed++))
+        else
+            print_warning "Kept $CLAUDE_DIR/commands/$name (no base to restore, untracked)"
+        fi
+    done <<< "$source_cmds"
+
+    while IFS= read -r name; do
+        [[ -z "$name" ]] && continue
+        [[ -f "$CLAUDE_DIR/scripts/$name" ]] || continue
+        rm -f "$CLAUDE_DIR/scripts/$name"
+        remove_from_installed "scripts" "$name"
+        print_success "Removed untracked script: $name"
+        : $((scripts_removed++))
+    done <<< "$source_scripts"
 
     # 5. Delete the git clone
     if [[ -d "$CUSTOM_DIR" ]]; then

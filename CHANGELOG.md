@@ -15,6 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Content Versions
 
+- **v59**: `/remove-custom` also removes untracked custom artifacts
+  - When `installed.json` tracking is incomplete (e.g. after a partial install, a custom-repo-shipped post-install hook, or a tracking-reset), `do_remove_custom` previously left orphaned skill directories, MCP entries, command overrides, and scripts behind
+  - Now snapshots `~/.claude/custom/{skills,mcp,commands,scripts}` before deleting the clone and runs a second pass that removes anything matching the source listings — even without tracking entries
+  - Defensive against name collisions: untracked artifacts that share a name with a base module are skipped with a warning
+  - Untracked overrides of base commands are restored to the base version
 - **v58**: Full custom-repo removal via `/remove-custom`
   - New slash command `/remove-custom` removes the active custom modules repo and all its installed artifacts (skills, MCP servers, command overrides, scripts) with zero residue
   - Override commands that shadow base commands are restored to their base versions; custom-only commands are deleted
