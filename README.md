@@ -18,6 +18,15 @@
 [![WSL](https://img.shields.io/badge/platform-WSL-blue.svg)](https://docs.microsoft.com/en-us/windows/wsl/)
 [![Content v59](https://img.shields.io/badge/content-v59-blue.svg)](CHANGELOG.md)
 
+> [!IMPORTANT]
+> **This project is archived and no longer maintained.**
+>
+> Claude Code Setup has not been developed for a while. Its concepts now live on in our own Claude Code plugins. The session workflow with `/catchup` and `/wrapup` proved itself in daily work, and the plugins extend it with `/concept`, `/handover` and `/implement`. Records stayed as they were: decisions and designs as Markdown files in the repo.
+>
+> The repository stays readable, and the installer still works, but there will be no fixes or updates.
+>
+> Thank you to everyone who used this setup, opened issues and sent feedback. Much of it ended up in what came after.
+
 **Persistent memory for Claude Code via Markdown files.**
 
 > 📖 **[Read the Documentation](https://b33eep.github.io/claude-code-setup/)** for detailed guides, tutorials, and reference.

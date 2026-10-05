@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Archived
+
+- The project is archived (2026-10-05) and no longer maintained. Its concepts moved into our own Claude Code plugins.
+
 ### Documentation
 
 - Add JetBrains Integration guide

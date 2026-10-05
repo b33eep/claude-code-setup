@@ -3,6 +3,11 @@ export default {
   project: {
     link: 'https://github.com/b33eep/claude-code-setup'
   },
+  banner: {
+    key: 'archived-2026-10',
+    dismissible: false,
+    content: 'This project is archived and no longer maintained.'
+  },
   docsRepositoryBase: 'https://github.com/b33eep/claude-code-setup/tree/main/website',
   darkMode: false,
   nextThemes: {
